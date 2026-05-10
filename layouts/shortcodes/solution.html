@@ -1,4 +1,4 @@
-{{- $label := .Get "label" | default (.Get 0) | default "Show solution" -}}
+{{- $label := .Get "label" | default (.Get 0) | default (i18n "solution") -}}
 <details class="solution">
   <summary class="solution__summary">{{ $label }}</summary>
   <div class="solution__body">

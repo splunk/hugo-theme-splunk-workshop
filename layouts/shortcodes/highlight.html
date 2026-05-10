@@ -20,7 +20,7 @@
 <div class="code-block">
   <div class="code-block__header">
     <span class="code-block__file"><span class="code-block__lang">{{ $type }}</span></span>
-    <button class="code-block__copy" type="button" aria-label="Copy code">Copy</button>
+    <button class="code-block__copy" type="button" aria-label="{{ i18n "copyCode" }} code">{{ i18n "copyCode" }}</button>
   </div>
   {{ highlight (trim .Inner "\n\r") $type $opts }}
 </div>

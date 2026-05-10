@@ -1,10 +1,4 @@
-{{- $title := .Get "title" | default (.Get 0) -}}
-<div class="callout callout--danger">
-  <span class="callout__icon" aria-hidden="true">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-  </span>
-  <div class="callout__body">
-    <p class="callout__title">{{ $title | default "Danger" }}</p>
-    {{ .Inner | .Page.RenderString }}
-  </div>
-</div>
+{{- partial "callout-render.html" (dict
+    "type"  "danger"
+    "title" (.Get "title" | default (.Get 0))
+    "inner" (.Inner | .Page.RenderString)) -}}

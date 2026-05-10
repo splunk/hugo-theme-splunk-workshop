@@ -87,6 +87,14 @@
   translation: "Checkpoint"
 - id: quickCheck
   translation: "Quick check"
+- id: quizQuestion
+  translation: "Question"
+- id: exerciseDefault
+  translation: "Try it"
+- id: expand
+  translation: "Expand"
+- id: details
+  translation: "Details"
 - id: whatYouLearn
   translation: "What you'll learn"
 - id: beforeYouStart

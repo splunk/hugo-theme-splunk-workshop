@@ -3,4 +3,10 @@
   Use this in inline contexts where Hugo's native {{< relref >}} would also work.
 */ -}}
 {{- $ref := .Get 0 | default (.Get "page") -}}
-{{- with .Page.GetPage $ref }}{{ .RelPermalink }}{{ else }}#{{ end -}}
+{{- if not $ref -}}{{ errorf "{{< relref >}} requires a page reference (positional or page=)" }}{{- end -}}
+{{- with .Page.GetPage $ref -}}
+  {{- .RelPermalink -}}
+{{- else -}}
+  {{- errorf "{{< relref %q >}} could not find page (called from %s)" $ref $.Page.RelPermalink -}}
+  #
+{{- end -}}

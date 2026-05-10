@@ -7,7 +7,7 @@
     {{< quiz-feedback >}}`stats count` aggregates events.{{< /quiz-feedback >}}
     {{< /quiz >}}
 */ -}}
-{{- $q       := .Get "question" | default (.Get 0) | default "Question" -}}
+{{- $q       := .Get "question" | default (.Get 0) | default (i18n "quizQuestion") -}}
 {{- $optsKey := printf "_quiz_opts_%d" .Ordinal -}}
 {{- $fbKey   := printf "_quiz_fb_%d"   .Ordinal -}}
 {{- /* let children run */ -}}
@@ -15,7 +15,7 @@
 {{- $opts := .Page.Scratch.Get $optsKey | default slice -}}
 {{- $fb   := .Page.Scratch.Get $fbKey -}}
 <section class="quiz" data-quiz>
-  <p class="quiz__label">Quick check</p>
+  <p class="quiz__label">{{ i18n "quickCheck" }}</p>
   <p class="quiz__question">{{ $q }}</p>
   <ul class="quiz__options">
     {{ range $i, $o := $opts }}

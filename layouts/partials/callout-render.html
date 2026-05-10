@@ -1,0 +1,40 @@
+{{- /*
+  Render a callout. Single source of truth for the callout markup, the icon
+  SVG per type, and the default title (resolved via i18n).
+
+  Usage:
+      {{ partial "callout-render.html" (dict
+           "type"  "tip"           // required: tip|note|info|warning|danger|success
+           "title" "Custom title"  // optional; falls back to i18n lookup of $type
+           "inner" $renderedHTML   // required: already piped through .Page.RenderString
+           "page"  .Page) }}
+
+  The caller is responsible for rendering Inner via .Page.RenderString so this
+  partial doesn't need to know about the Page context.
+*/ -}}
+{{- $type  := .type | default "note" -}}
+{{- $title := .title -}}
+{{- $inner := .inner -}}
+{{- /* Per-type icon paths. Kept colocated with the markup so visual tweaks
+       and theme decisions stay in one file. */ -}}
+{{- $icons := dict
+  "tip"     `<path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/>`
+  "note"    `<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M9 13h6 M9 17h6"/>`
+  "info"    `<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>`
+  "warning" `<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>`
+  "danger"  `<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>`
+  "success" `<polyline points="20 6 9 17 4 12"/>`
+-}}
+{{- $iconSVG := index $icons $type | default (index $icons "note") -}}
+{{- /* `success` uses a thicker stroke for the checkmark to read at small sizes. */ -}}
+{{- $stroke := cond (eq $type "success") "2.5" "2" -}}
+{{- $resolvedTitle := $title | default (i18n $type) | default (humanize $type) -}}
+<div class="callout callout--{{ $type }}">
+  <span class="callout__icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{{ $stroke }}" stroke-linecap="round" stroke-linejoin="round">{{ $iconSVG | safeHTML }}</svg>
+  </span>
+  <div class="callout__body">
+    <p class="callout__title">{{ $resolvedTitle }}</p>
+    {{ $inner | safeHTML }}
+  </div>
+</div>

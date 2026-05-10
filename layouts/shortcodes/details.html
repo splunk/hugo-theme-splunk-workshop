@@ -1,7 +1,7 @@
 {{- /*
   Relearn-compatible details — alias of expand using `summary` arg name.
 */ -}}
-{{- $summary := .Get "summary" | default (.Get "title") | default "Details" -}}
+{{- $summary := .Get "summary" | default (.Get "title") | default (i18n "details") -}}
 {{- $open    := eq (.Get "open" | default "") "true" -}}
 {{- $name    := .Get "name" -}}
 <details class="solution expand"{{ if $open }} open{{ end }}{{ with $name }} name="{{ . }}"{{ end }}>

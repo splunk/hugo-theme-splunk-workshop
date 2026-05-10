@@ -2,9 +2,9 @@
   Exercise — boxed problem statement, optionally collapsible solution.
   Use a nested `{{< solution >}}` shortcode for the answer.
 */ -}}
-{{- $title := .Get "title" | default (.Get 0) | default "Try it" -}}
+{{- $title := .Get "title" | default (.Get 0) | default (i18n "exerciseDefault") -}}
 <section class="exercise">
-  <p class="exercise__label">Exercise</p>
+  <p class="exercise__label">{{ i18n "exercise" }}</p>
   <h3 class="exercise__title">{{ $title }}</h3>
   <div class="exercise__body">
     {{ .Inner | .Page.RenderString }}
