@@ -14,12 +14,18 @@ html {
 
 body {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   line-height: 1.6;
   font-family: var(--font-body);
   background: var(--color-paper);
   color: var(--color-ink);
   transition: background-color 0.2s ease, color 0.2s ease;
 }
+
+/* Sticky footer: main grows to fill available space so the footer sits
+   flush to the viewport bottom on short pages. */
+body > main { flex: 1 0 auto; }
 
 img, picture, video, canvas, svg {
   display: block;
