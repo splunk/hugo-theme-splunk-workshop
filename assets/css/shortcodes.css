@@ -135,7 +135,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: var(--color-accent);
+  color: var(--color-accent-text);
   margin-bottom: 0.5rem;
 }
 .exercise__label::before { content: "\25C8"; font-size: 0.85rem; }
@@ -236,7 +236,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: var(--color-accent);
+  color: var(--color-accent-text);
   margin-bottom: 0.25rem;
 }
 .checkpoint__title {
@@ -282,7 +282,7 @@
 .tabs__icon { display: inline-flex; width: 0.95rem; height: 0.95rem; margin-right: 0.4rem; vertical-align: -0.1rem; }
 .tabs__icon svg { width: 100%; height: 100%; }
 .tabs__btn.is-active {
-  color: var(--color-accent);
+  color: var(--color-accent-text);
   border-bottom-color: var(--color-accent);
   background: var(--color-paper);
 }

@@ -77,7 +77,7 @@ a:hover { color: var(--color-accent); text-decoration: underline; }
   outline-offset: 4px;
 }
 .tabs__btn:focus-visible {
-  outline-offset: -2px;
+  outline-offset: 2px;
   border-radius: 4px;
 }
 

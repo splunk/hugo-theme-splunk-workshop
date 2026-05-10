@@ -92,7 +92,7 @@ p, ul, ol, blockquote, dl, table, pre {
 
 ul, ol { padding-inline-start: 1.5em; }
 li { margin-block: 0.4em; }
-li::marker { color: var(--color-accent); }
+li::marker { color: var(--color-accent-text); }
 
 ol { list-style: decimal; }
 ol > li::marker { font-family: var(--font-mono); font-weight: 500; }
@@ -108,13 +108,13 @@ small { font-size: var(--fs-sm); }
   font-size: 0.875em;
   padding: 0.15em 0.4em;
   background: var(--color-surface-alt);
-  color: var(--color-accent);                /* Splunk Magenta 50 — brand pink */
+  color: var(--color-accent-text);           /* AA-contrast Magenta 60 (light) / 30 (dark) */
   border-radius: 4px;
   border: 1px solid var(--color-border);
   font-feature-settings: "calt" 0;
 }
 [data-theme="dark"] :not(pre):not(.terminal__body) > code {
-  color: var(--color-accent);
+  color: var(--color-accent-text);
   background: var(--color-surface);
 }
 /* Terminal's <code> wrapper must inherit cleanly */
@@ -137,8 +137,8 @@ blockquote {
   font-weight: 400;
   color: var(--color-ink-muted);
 }
-blockquote p:first-child::before { content: "\201C"; margin-right: 0.1em; color: var(--color-accent); }
-blockquote p:last-child::after  { content: "\201D"; margin-left: 0.1em;  color: var(--color-accent); }
+blockquote p:first-child::before { content: "\201C"; margin-right: 0.1em; color: var(--color-accent-text); }
+blockquote p:last-child::after  { content: "\201D"; margin-left: 0.1em;  color: var(--color-accent-text); }
 
 /* ---- Horizontal rule — gradient version ---- */
 hr {
@@ -189,8 +189,13 @@ dd { margin-inline-start: 1rem; color: var(--color-ink-muted); }
 h1:hover .heading-anchor,
 h2:hover .heading-anchor,
 h3:hover .heading-anchor,
-h4:hover .heading-anchor { opacity: 0.6; }
-.heading-anchor:hover { opacity: 1 !important; color: var(--color-accent); }
+h4:hover .heading-anchor,
+h1:focus-within .heading-anchor,
+h2:focus-within .heading-anchor,
+h3:focus-within .heading-anchor,
+h4:focus-within .heading-anchor { opacity: 0.6; }
+.heading-anchor:hover,
+.heading-anchor:focus-visible { opacity: 1 !important; color: var(--color-accent-text); }
 
 /* ---- Lead paragraph (used at top of pages) ---- */
 .lead {
@@ -221,7 +226,7 @@ h4:hover .heading-anchor { opacity: 0.6; }
   text-transform: uppercase;
   letter-spacing: 0.14em;
   font-weight: 500;
-  color: var(--color-accent);
+  color: var(--color-accent-text);
 }
 .eyebrow::before {
   content: "";

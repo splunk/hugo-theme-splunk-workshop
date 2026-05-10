@@ -13,7 +13,7 @@
                              for project-pages baseURLs and external URLs get
                              target=_blank automatically. */ -}}
         {{- with .Params.eyebrow | default $p.brandTagline }}
-        <p class="eyebrow">{{ . | safeHTML }}</p>
+        <p class="eyebrow">{{ . }}</p>
         {{- end }}
         {{- with .Title }}
         <h1 class="hero__title">{{ . | markdownify }}</h1>

@@ -121,7 +121,7 @@
   transition: all 0.15s ease;
 }
 .theme-toggle:hover {
-  color: var(--color-accent);
+  color: var(--color-accent-text);
   border-color: var(--color-accent);
 }
 .theme-toggle svg { width: 1rem; height: 1rem; }
@@ -227,7 +227,7 @@
   color: var(--color-ink-muted);
   min-width: 1.5rem;
 }
-.sidebar__link.is-active .sidebar__num { color: var(--color-accent); }
+.sidebar__link.is-active .sidebar__num { color: var(--color-accent-text); }
 
 .sidebar__back {
   display: inline-flex;
@@ -240,7 +240,7 @@
   color: var(--color-ink-muted);
   margin-bottom: 1.5rem;
 }
-.sidebar__back:hover { color: var(--color-accent); }
+.sidebar__back:hover { color: var(--color-accent-text); }
 
 /* ---- Main content — fills the middle column edge-to-edge ---- */
 .content {
@@ -285,7 +285,7 @@
 }
 .toc nav a:hover { color: var(--color-ink); }
 .toc nav a.is-active {
-  color: var(--color-accent);
+  color: var(--color-accent-text);
   border-left-color: var(--color-accent);
   font-weight: 500;
 }

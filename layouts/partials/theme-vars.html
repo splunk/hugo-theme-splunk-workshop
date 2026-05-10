@@ -5,11 +5,14 @@
 {{- $p := .Site.Params -}}
 <style>
   :root {
-    /* Splunk official brand gradient: Magenta 50 → Orange 50 */
+    /* Splunk official brand gradient: Magenta 50 → Orange 50.
+       --color-accent     = decorative (gradients, large display text, icons, borders, shadows)
+       --color-accent-text = body-text use, AA-contrast (Magenta 60 light / Magenta 30 dark) */
     --color-accent:       {{ $p.colorAccent      | default "#FF007F" }};
     --color-accent-2:     {{ $p.colorAccent2     | default "#FF9000" }};
     --color-accent-3:     {{ $p.colorAccent3     | default "#FFAB0F" }};
     --color-accent-dark:  {{ $p.colorAccentDark  | default "#D4006B" }};
+    --color-accent-text:  {{ $p.colorAccentText  | default "#BD0D5F" }};
 
     /* Light mode tokens */
     --color-ink:           {{ $p.colorInk           | default "#0C1724" }};
@@ -49,5 +52,6 @@
     --color-surface-alt:   {{ $p.colorSurfaceAltDark    | default "#1B2740" }};
     --color-border:        {{ $p.colorBorderDark        | default "#1F2C44" }};
     --color-border-strong: {{ $p.colorBorderStrongDark  | default "#2A3A56" }};
+    --color-accent-text:   {{ $p.colorAccentTextDark    | default "#FF7DBA" }};
   }
 </style>

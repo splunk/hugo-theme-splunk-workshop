@@ -58,13 +58,17 @@ enableGitInfo = false
 
   # ---- Colors (light mode) — Official Splunk brand gradient ---------------
   # Magenta 50 → Orange 50, 10%/90% stops. Source: Splunk brand guidelines.
-  colorAccent      = "#FF007F"   # Magenta 50  · rgb(255, 0, 127)   · Pantone 213 C
+  colorAccent      = "#FF007F"   # Magenta 50  · rgb(255, 0, 127)   · Pantone 213 C — decorative only
   colorAccent2     = "#FF9000"   # Orange 50   · rgb(255, 144, 0)   · Pantone 151 C
   colorAccent3     = "#FFAB0F"   # supplementary amber (used for warm callouts only)
   colorAccentDark  = "#D4006B"   # reserved for borders/shadows; brand pink text is always #FF007F
+  # WCAG-AA-safe accent for body text (Magenta 50 fails contrast at body sizes).
+  # Magenta 60 (#BD0D5F) hits 5.4:1 on white. Magenta 30 (#FF7DBA) hits 8:1 on Splunk dark navy.
+  colorAccentText     = "#BD0D5F"   # Magenta 60 — light mode body links/inline code/markers
+  colorAccentTextDark = "#FF7DBA"   # Magenta 30 — dark mode body links/inline code/markers
 
   colorInk          = "#0C1724"
-  colorInkMuted     = "#4B4D52"
+  colorInkMuted     = "#585B61"   # bumped from #4B4D52 to clear the AA threshold (≈4.6:1)
   colorPaper        = "#FFFFFF"
   colorSurface      = "#F7F6F3"
   colorSurfaceAlt   = "#EFEDE7"

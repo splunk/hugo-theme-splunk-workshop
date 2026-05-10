@@ -27,5 +27,5 @@
       </li>
     {{ end }}
   </ul>
-  {{ with $fb }}<div class="quiz__feedback">{{ . | safeHTML }}</div>{{ end }}
+  {{ with $fb }}<div class="quiz__feedback" role="status" aria-live="polite" aria-atomic="true">{{ . | safeHTML }}</div>{{ end }}
 </section>
