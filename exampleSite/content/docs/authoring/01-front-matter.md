@@ -68,6 +68,34 @@ When `true`, suppresses the prev/next pager on this specific page. Useful for:
 
 The page still appears in the sidebar and search; only the pager block is hidden.
 
+## Home page hero
+
+The hero block on the site root (rendered from `content/_index.md`) is fully driven by front matter — no template editing required:
+
+```toml
++++
+title       = "Learn by *building*."
+eyebrow     = "Workshops · Hands-on, opinionated"
+description = "..."
+
+[[cta]]
+label = "Browse workshops"
+href  = "/workshops/"
+style = "primary"
+
+[[cta]]
+label = "View on GitHub"
+href  = "https://github.com/you/your-repo"
+style = "ghost"
++++
+```
+
+- **`title`** is markdownified — wrap a word in `*asterisks*` to render it as `<em>` (the brand-gradient italic).
+- **`eyebrow`** is the kicker line above the title. Falls back to `params.brandTagline` if unset.
+- **`description`** is the lead paragraph. Falls back to `params.description` if unset.
+- **`cta`** is a list of buttons. `style` is `primary` (filled, with arrow) or `ghost` (outline). Internal hrefs like `/workshops/` are auto-prefixed for project-pages baseURLs; external (`http*`) hrefs get `target="_blank"` automatically.
+- Any markdown body below the front matter renders below the hero.
+
 ## Workshop meta row
 
 The block at the top of a workshop page showing duration, difficulty, author, and tags is composed from these front-matter keys. If you don't set any, the row is suppressed.

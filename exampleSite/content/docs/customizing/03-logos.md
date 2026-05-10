@@ -63,7 +63,7 @@ The bundled defaults are the official Splunk brand assets and ship in the theme'
 The image is sized with `background-size: cover` and anchored `right top`, so the bloom always pokes out of the top-right regardless of viewport width. If your asset has a different focal point, override `.light-trails--hero` in your own CSS to tweak the positioning.
 
 {{< tip "Image format" >}}
-Use a 16:9 PNG or JPG. SVG works too if your gradient is simple. Avoid heavy file sizes — the image loads on every page that has a hero, so 1MB+ assets can hurt first-paint. The bundled Splunk assets are ~5MB each and would benefit from compression for production sites.
+Use 16:9 WebP — gradient blooms compress beautifully at quality 85–95 and stay around 100 KB each. The bundled Splunk assets ship as WebP at ~100 KB. PNG, JPG, and SVG also work, but the image loads on every page that has a hero, so keep it tight: 1 MB+ assets noticeably hurt first paint.
 {{< /tip >}}
 
 ## OG / Twitter card image
