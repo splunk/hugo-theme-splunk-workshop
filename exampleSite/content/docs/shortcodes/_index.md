@@ -2,12 +2,12 @@
 title       = "Shortcodes"
 linkTitle   = "Shortcodes"
 description = "Live, copy-pasteable examples of every shortcode shipped with the theme."
-weight      = 30
+weight      = 40
 layout      = "chapter"
 subtitle    = "Chapter · Reference"
 +++
 
-The theme ships with **50+ shortcodes** organized into five categories. Each page below renders the live result alongside the markdown that produced it.
+The theme ships with **50+ shortcodes** organized into six categories. Each page below renders the live result alongside the markdown that produced it.
 
 ## Argument conventions
 

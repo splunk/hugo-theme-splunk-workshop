@@ -2,7 +2,7 @@
 title       = "Authoring"
 linkTitle   = "Authoring"
 description = "Front matter, archetypes, hidden pages, and how the navigation model works."
-weight      = 40
+weight      = 20
 layout      = "chapter"
 subtitle    = "Chapter · Content"
 +++

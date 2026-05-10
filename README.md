@@ -1,6 +1,8 @@
 # Splunk Workshop Theme
 
-A modern Hugo theme for technical workshops. Branded for Splunk out of the box (the official Magenta 50 → Orange 50 brand gradient), and rebrand-able to any company via Hugo `params`.
+**Reach for this theme if you're building hands-on technical workshops** with multi-chapter structure and want dark mode, fuzzy search, presenter notes, keyboard navigation, and 50+ workshop-specific shortcodes (steps, exercises, solutions, quizzes, terminal blocks, file trees, callouts, tabs, …) out of the box. Splunk-branded by default; fully rebrand-able via `params` for any company.
+
+If you're writing self-paced reference docs rather than workshops, [hugo-theme-relearn](https://github.com/McShelby/hugo-theme-relearn) or [hugo-theme-docsy](https://github.com/google/docsy) may fit better — this theme is opinionated about the *workshop* format (linear chapter flow, presenter mode, pedagogy shortcodes) and trades some general-purpose flexibility for that.
 
 ![Splunk Workshop Theme](images/screenshot.png)
 

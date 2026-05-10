@@ -2,7 +2,7 @@
 title       = "Customizing"
 linkTitle   = "Customizing"
 description = "Rebrand the theme without touching CSS — every visual choice is a Hugo param."
-weight      = 20
+weight      = 30
 layout      = "chapter"
 subtitle    = "Chapter · Brand"
 +++

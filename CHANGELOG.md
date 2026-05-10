@@ -17,7 +17,7 @@ versions follow [Semantic Versioning](https://semver.org/).
 - Keyboard navigation between workshop pages (`←` / `→`).
 - Chapter-as-self-contained-unit pager: section landings have no Previous, last lessons have no Next.
 - Skip-to-content link, `:focus-visible` rings, ARIA-correct tabs, `aria-current` on active sidebar.
-- 50+ shortcodes covering callouts, structure, layout, embedded media, and heavyweight content.
+- 50+ shortcodes covering callouts, structure, layout, code blocks, heavyweights (math, diagrams, video, presenter), and utilities.
 - Relearn-compatible aliases: `notice`, `expand`, `details`, `cards`, `children`, `tabs`+`tab` (with `groupid`), `button`, `icon`, `attachments`, `resources`, `siteparam`, `relref`, `tree`, `highlight`, `math`, `mermaid`.
 - Splunk-specific shortcodes: `otel-version`, `linkedin`, `presenter` (with floating toggle and `P`×2 hotkey), `textcolor`.
 - KaTeX and Mermaid loaded on demand via per-page `Page.Store` flags.
