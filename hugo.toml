@@ -49,8 +49,8 @@ enableGitInfo = false
 
   # ---- Hero background (the "light trails" gradient bloom) ----------------
   # Set both to "" to fall back to the bundled CSS radial gradient.
-  heroBackgroundLight = "images/background_Splunk-light-mode2_16x9.png"
-  heroBackgroundDark  = "images/background_Splunk-dark-mode2_16x9.png"
+  heroBackgroundLight = "images/background_Splunk-light-mode2_16x9.webp"
+  heroBackgroundDark  = "images/background_Splunk-dark-mode2_16x9.webp"
 
   # ---- Mode --------------------------------------------------------------
   defaultMode     = "auto"

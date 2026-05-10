@@ -54,8 +54,8 @@ The hero section on the home page and chapter landings shows a Splunk-branded ba
 
 ```toml
 [params]
-  heroBackgroundLight = "images/background_Splunk-light-mode2_16x9.png"
-  heroBackgroundDark  = "images/background_Splunk-dark-mode2_16x9.png"
+  heroBackgroundLight = "images/background_Splunk-light-mode2_16x9.webp"
+  heroBackgroundDark  = "images/background_Splunk-dark-mode2_16x9.webp"
 ```
 
 The bundled defaults are the official Splunk brand assets and ship in the theme's `static/images/` directory. Override the params to use your own. Set both to `""` (empty string) to suppress the background entirely.

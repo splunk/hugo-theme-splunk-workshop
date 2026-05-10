@@ -28,7 +28,7 @@ versions follow [Semantic Versioning](https://semver.org/).
 - Render hooks for code (with `{file=…}` filename header + copy button), images (zoomable + lightbox), headings (anchor permalinks), and external links (auto target + arrow icon).
 - IBM Plex typography (Sans + Mono) matching `splunk.github.io/observability-workshop`.
 - Splunk brand palette: official Magenta 50 `#FF007F` → Orange 50 `#FF9000` gradient with 10/90 stops, plus supplementary amber `#FFAB0F` for warm callouts.
-- Brand-asset hero backgrounds — official Splunk-light and Splunk-dark gradient bloom PNGs swap automatically with theme mode (`heroBackgroundLight` / `heroBackgroundDark` params).
+- Brand-asset hero backgrounds — official Splunk-light and Splunk-dark gradient bloom WebP images swap automatically with theme mode (`heroBackgroundLight` / `heroBackgroundDark` params).
 - Full-bleed responsive layout pinning sidebar/TOC to viewport edges with a flexing content column.
 - Hugo Modules support via `go.mod`.
 - `exampleSite/` with a minimal Getting Started workshop.
