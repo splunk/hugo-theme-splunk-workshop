@@ -104,6 +104,7 @@ function buildModal() {
 export function initSearch() {
   let modal, input, results, empty;
   let activeIdx = -1;
+  let scrollY = 0;
   let lastResults = [];
 
   const open = () => {
@@ -119,14 +120,26 @@ export function initSearch() {
     }
     loadIndex();
     modal.classList.add("is-open");
-    document.documentElement.style.overflow = "hidden";
+    // Scroll-lock the page while the modal is open. Use the body-position
+    // technique rather than `documentElement.style.overflow = "hidden"`
+    // because iOS Safari ignores the latter on the html element, which
+    // would let the page scroll underneath the modal.
+    scrollY = window.scrollY;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
     setTimeout(() => input.focus(), 30);
   };
 
   const close = () => {
     if (!modal) return;
     modal.classList.remove("is-open");
-    document.documentElement.style.overflow = "";
+    document.body.style.position = "";
+    document.body.style.top = "";
+    document.body.style.left = "";
+    document.body.style.right = "";
+    window.scrollTo(0, scrollY);
     activeIdx = -1;
   };
 

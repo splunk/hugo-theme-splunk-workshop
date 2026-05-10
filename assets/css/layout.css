@@ -296,8 +296,8 @@
    Material for MkDocs. */
 .site-footer {
   margin-top: 6rem;
-  background: #141E2F;                 /* brand surface dark */
-  color: #F4F1EA;                      /* brand ink dark */
+  background: var(--color-surface-dark);
+  color: var(--color-ink-dark);
   position: relative;
   overflow: hidden;
 }
@@ -320,16 +320,16 @@
   gap: 0.5rem;
   max-width: 38rem;
 }
-.site-footer__brand .brand { color: #F4F1EA; gap: 0.6rem; }
-.site-footer__brand .brand__mark { color: #F4F1EA; }
+.site-footer__brand .brand { color: var(--color-ink-dark); gap: 0.6rem; }
+.site-footer__brand .brand__mark { color: var(--color-ink-dark); }
 .site-footer__brand .brand__tag {
-  color: #9CA3AF;
+  color: var(--color-ink-muted-dark);
   border-left-color: rgba(244, 241, 234, 0.15);
 }
 .site-footer__brand .brand__logo { height: var(--logo-h, 28px); width: auto; }
 .site-footer__desc {
   margin: 0;
-  color: #9CA3AF;
+  color: var(--color-ink-muted-dark);
   max-width: 36ch;
   font-size: var(--fs-sm);
   line-height: 1.55;
@@ -353,7 +353,7 @@
   width: 2.25rem;
   height: 2.25rem;
   border-radius: 999px;
-  color: #9CA3AF;
+  color: var(--color-ink-muted-dark);
   transition: color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
 }
 .site-footer__social a:hover {
@@ -374,15 +374,14 @@
   align-items: center;
   gap: 0.5rem 1.5rem;
   padding: 1rem var(--gutter);
-  background: #0C1724;                 /* Splunk Black — true bottom strip */
+  background: var(--color-paper-dark);
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   font-family: var(--font-mono);
   font-size: 0.72rem;
-  /*letter-spacing: 0.04em;*/
-  color: #6E7891;
+  color: color-mix(in oklab, var(--color-ink-muted-dark) 80%, var(--color-paper-dark));
 }
 .site-footer__legal a {
-  color: #9CA3AF;
+  color: var(--color-ink-muted-dark);
   text-decoration: none;
   border-bottom: 1px dotted rgba(255, 255, 255, 0.18);
 }

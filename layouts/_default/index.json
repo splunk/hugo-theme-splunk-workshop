@@ -1,6 +1,10 @@
 {{- /*
   Search index — emitted at /index.json on the home page.
   Used by assets/js/search.js to power the in-header search box.
+
+  The summary field uses .Content piped through plainify rather than
+  .Plain so that text emitted by shortcodes (tabs, cards, exercise,
+  terminal, …) is searchable. .Plain only covers raw markdown.
 */ -}}
 {{- $pages := where .Site.RegularPages "Params.hidden" "!=" true -}}
 {{- $idx := slice -}}
@@ -14,7 +18,7 @@
     "section"     $section
     "url"         .RelPermalink
     "tags"        (.Params.tags | default slice)
-    "summary"     (.Plain | truncate 600 "")
+    "summary"     (.Content | plainify | truncate 600 "")
   -}}
   {{- $idx = $idx | append $entry -}}
 {{- end -}}

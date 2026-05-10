@@ -14,7 +14,7 @@
     --color-accent-dark:  {{ $p.colorAccentDark  | default "#D4006B" }};
     --color-accent-text:  {{ $p.colorAccentText  | default "#BD0D5F" }};
 
-    /* Light mode tokens */
+    /* Light mode tokens (the page paints with these unless data-theme=dark) */
     --color-ink:           {{ $p.colorInk           | default "#0C1724" }};
     --color-ink-muted:     {{ $p.colorInkMuted      | default "#4B4D52" }};
     --color-paper:         {{ $p.colorPaper         | default "#FFFFFF" }};
@@ -22,6 +22,16 @@
     --color-surface-alt:   {{ $p.colorSurfaceAlt    | default "#EFEDE7" }};
     --color-border:        {{ $p.colorBorder        | default "#E5E2DA" }};
     --color-border-strong: {{ $p.colorBorderStrong  | default "#D6D2C8" }};
+
+    /* Dark-tier tokens emitted at :root so components that are always dark
+       (e.g. the site footer) can reference them regardless of theme mode. */
+    --color-ink-dark:           {{ $p.colorInkDark           | default "#F4F1EA" }};
+    --color-ink-muted-dark:     {{ $p.colorInkMutedDark      | default "#9CA3AF" }};
+    --color-paper-dark:         {{ $p.colorPaperDark         | default "#0C1724" }};
+    --color-surface-dark:       {{ $p.colorSurfaceDark       | default "#141E2F" }};
+    --color-surface-alt-dark:   {{ $p.colorSurfaceAltDark    | default "#1B2740" }};
+    --color-border-dark:        {{ $p.colorBorderDark        | default "#1F2C44" }};
+    --color-border-strong-dark: {{ $p.colorBorderStrongDark  | default "#2A3A56" }};
 
     /* Typography */
     --font-display: {{ $p.fontDisplay | default "'Bricolage Grotesque', ui-serif, Georgia, serif" | safeCSS }};
@@ -45,13 +55,13 @@
   }
 
   [data-theme="dark"] {
-    --color-ink:           {{ $p.colorInkDark           | default "#F4F1EA" }};
-    --color-ink-muted:     {{ $p.colorInkMutedDark      | default "#9CA3AF" }};
-    --color-paper:         {{ $p.colorPaperDark         | default "#0C1724" }};
-    --color-surface:       {{ $p.colorSurfaceDark       | default "#141E2F" }};
-    --color-surface-alt:   {{ $p.colorSurfaceAltDark    | default "#1B2740" }};
-    --color-border:        {{ $p.colorBorderDark        | default "#1F2C44" }};
-    --color-border-strong: {{ $p.colorBorderStrongDark  | default "#2A3A56" }};
+    --color-ink:           var(--color-ink-dark);
+    --color-ink-muted:     var(--color-ink-muted-dark);
+    --color-paper:         var(--color-paper-dark);
+    --color-surface:       var(--color-surface-dark);
+    --color-surface-alt:   var(--color-surface-alt-dark);
+    --color-border:        var(--color-border-dark);
+    --color-border-strong: var(--color-border-strong-dark);
     --color-accent-text:   {{ $p.colorAccentTextDark    | default "#FF7DBA" }};
   }
 </style>
