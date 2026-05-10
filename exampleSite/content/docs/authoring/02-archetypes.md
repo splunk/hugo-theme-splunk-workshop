@@ -5,10 +5,10 @@ weight      = 20
 +++
 
 {{< lead >}}
-Archetypes are templates that Hugo uses when you run `hugo new`. The theme ships three: `default`, `workshop`, and `chapter`.
+Archetypes are templates that Hugo uses when you run `hugo new`. The theme ships five: `default`, `chapter`, `workshop`, `lesson`, and `exercise`. Pick the one that matches the shape of the page you're creating.
 {{< /lead >}}
 
-## The three archetypes
+## The five archetypes
 
 ### `default` — generic page
 
@@ -86,6 +86,29 @@ Discover what this chapter is about. Use this as the chapter intro.
 ```
 
 The `layout = 'chapter'` is what enables the gradient-weight hero.
+
+### `lesson` — richer lesson scaffold
+
+```bash
+hugo new --kind lesson content/workshops/foo/02-concept.md
+```
+
+Like `workshop`, but seeded with a fuller body structure that mirrors how strong workshop lessons are typically written: a one-line lead, an explicit *What you'll learn* objectives block, a *Concept* section for the prose, a *Walkthrough* for the hands-on portion, and a *Wrap up* that pivots to the next lesson. Reach for this when you want a more opinionated starting point than `workshop`.
+
+### `exercise` — hands-on lab page
+
+```bash
+hugo new --kind exercise content/workshops/foo/03-build-a-query.md
+```
+
+A scaffold for hands-on labs that sit alongside reading lessons. Pre-seeds:
+
+- `nopager = true` (exercises are usually launched from a parent lesson, not stepped through linearly)
+- A `prerequisites` callout up top
+- Three `{{</* step */>}}` blocks with a `terminal` example and a `solution` reveal
+- A `{{</* checkpoint */>}}` to confirm completion
+
+Use this when the page is a thing the reader *does*, not a thing they read.
 
 ## Custom archetypes
 
