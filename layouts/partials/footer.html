@@ -11,7 +11,7 @@
   {{ if $p.showLightTrails }}<div class="light-trails light-trails--footer" aria-hidden="true"></div>{{ end }}
   <div class="site-footer__meta">
     <div class="site-footer__brand">
-      <a href="{{ "/" | relURL }}" class="brand brand--block brand--footer">
+      <a href="{{ partial "site-href.html" "/" }}" class="brand brand--block brand--footer">
         {{- if $p.logoLight -}}
           {{- /* In the dark footer, prefer the dark-mode logo if available. */ -}}
           {{- $logo := $p.logoDark | default $p.logoLight -}}
@@ -34,7 +34,7 @@
       {{ with .youtube  }}<li><a href="{{ . }}" target="_blank" rel="noopener" aria-label="YouTube">{{ partial "icon-svg.html" "youtube"  }}</a></li>{{ end }}
       {{ with .mastodon }}<li><a href="{{ . }}" target="_blank" rel="noopener me" aria-label="Mastodon">{{ partial "icon-svg.html" "mastodon" }}</a></li>{{ end }}
       {{ with .bluesky  }}<li><a href="{{ . }}" target="_blank" rel="noopener" aria-label="Bluesky">{{ partial "icon-svg.html" "bluesky"  }}</a></li>{{ end }}
-      {{ with .rss      }}<li><a href="{{ . }}" rel="alternate" type="application/rss+xml" aria-label="RSS">{{ partial "icon-svg.html" "rss"      }}</a></li>{{ end }}
+      {{ with .rss      }}<li><a href="{{ partial "site-href.html" . }}" rel="alternate" type="application/rss+xml" aria-label="RSS">{{ partial "icon-svg.html" "rss"      }}</a></li>{{ end }}
     </ul>
     {{- end }}
     {{ end }}

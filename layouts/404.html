@@ -3,6 +3,6 @@
   <p class="eyebrow eyebrow--center">{{ i18n "notFoundEyebrow" }}</p>
   <h1 class="hero__title gradient-text not-found__title">{{ i18n "notFoundTitle" }}</h1>
   <p class="hero__lead not-found__lead">{{ i18n "notFoundLead" }}</p>
-  <div class="not-found__cta"><a href="{{ "/" | relURL }}" class="btn btn--primary">{{ i18n "takeMeHome" }} <span class="btn__arrow">&rarr;</span></a></div>
+  <div class="not-found__cta"><a href="{{ partial "site-href.html" "/" }}" class="btn btn--primary">{{ i18n "takeMeHome" }} <span class="btn__arrow">&rarr;</span></a></div>
 </main>
 {{ end }}

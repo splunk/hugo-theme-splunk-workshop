@@ -3,11 +3,12 @@
   Relearn-compatible API: title, href, icon, image, color, content (Inner).
   Backward-compatible: positional 0=title, 1=url; old `url` arg also accepted.
 */ -}}
-{{- $title  := .Get "title" | default (.Get 0) -}}
-{{- $href   := .Get "href"  | default (.Get "url") | default (.Get 1) -}}
-{{- $icon   := .Get "icon" -}}
-{{- $image  := .Get "image" -}}
-{{- $color  := .Get "color" -}}
+{{- $title   := .Get "title" | default (.Get 0) -}}
+{{- $hrefRaw := .Get "href"  | default (.Get "url") | default (.Get 1) -}}
+{{- $href    := partial "site-href.html" $hrefRaw -}}
+{{- $icon    := .Get "icon" -}}
+{{- $image   := .Get "image" -}}
+{{- $color   := .Get "color" -}}
 {{- $content := .Inner | .Page.RenderString -}}
 
 {{- /* If a parent {{< cards >}} exists, push to its bucket and emit nothing. */ -}}

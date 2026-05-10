@@ -4,7 +4,8 @@
     {{% button href="/install/" icon="download" %}}Install now{{% /button %}}
     {{% button href="https://example.com" target="_blank" style="primary" %}}Open{{% /button %}}
 */ -}}
-{{- $href     := .Get "href" -}}
+{{- $hrefRaw := .Get "href" -}}
+{{- $href    := partial "site-href.html" $hrefRaw -}}
 {{- $style    := .Get "style" | default "primary" -}}
 {{- $color    := .Get "color" -}}
 {{- $icon     := .Get "icon" -}}

@@ -10,7 +10,7 @@
   <article class="content" id="content">
     {{- /* Breadcrumb */ -}}
     <nav class="breadcrumb" aria-label="Breadcrumb">
-      <a href="{{ "/" | relURL }}">{{ i18n "home" }}</a>
+      <a href="{{ partial "site-href.html" "/" }}">{{ i18n "home" }}</a>
       {{- $pages := .Ancestors.Reverse -}}
       {{- range $pages -}}
         {{- if ne .RelPermalink "/" }}

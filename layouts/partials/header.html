@@ -1,7 +1,7 @@
 {{- $p := .Site.Params -}}
 <header class="site-header">
   <div class="site-header__inner">
-    <a href="{{ "/" | relURL }}" class="brand" aria-label="{{ .Site.Title }} — home">
+    <a href="{{ partial "site-href.html" "/" }}" class="brand" aria-label="{{ .Site.Title }} — home">
       {{- if $p.logoLight -}}
         <img class="brand__logo brand__logo--light" src="{{ $p.logoLight | relURL }}" alt="{{ .Site.Title }}">
         {{ with $p.logoDark }}<img class="brand__logo brand__logo--dark" src="{{ . | relURL }}" alt="{{ $.Site.Title }}">{{ end }}
