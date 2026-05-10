@@ -1,0 +1,7 @@
+{{- $label := .Get "label" | default (.Get 0) | default "Show solution" -}}
+<details class="solution">
+  <summary class="solution__summary">{{ $label }}</summary>
+  <div class="solution__body">
+    {{ .Inner | .Page.RenderString }}
+  </div>
+</details>

@@ -1,0 +1,51 @@
+{{- /*
+  Relearn-compatible children — list child pages of the current section.
+  Args:
+    page         - section path (default: current page)
+    type         - "card" | "list" | "h2" | "h3" | "h4"  (relearn canonical)
+    style        - alias of type
+    depth        - how deep to recurse (default 1) — currently shallow only
+    description  - "true" to include description (default true)
+    showhidden   - "true" to include hidden pages (default false)
+    sort         - weight | title  (default weight)
+
+  IMPORTANT: this template emits HTML on a single contiguous block with no leading
+  whitespace, so it works inside `{{% children %}}` (percent form, which re-runs
+  Goldmark and would otherwise treat indented HTML as a code block).
+*/ -}}
+{{- $page  := .Get "page" -}}
+{{- $type  := .Get "type"  | default (.Get "style") | default "list" -}}
+{{- $depth := int (.Get "depth" | default 1) -}}
+{{- $desc  := ne (.Get "description" | default "true") "false" -}}
+{{- $sort  := .Get "sort" | default "weight" -}}
+{{- $hide  := ne (.Get "showhidden" | default "false") "true" -}}
+
+{{- $start := .Page -}}
+{{- if $page -}}
+  {{- with $.Page.GetPage $page }}{{ $start = . }}{{ end -}}
+{{- end -}}
+
+{{- $items := $start.Pages -}}
+{{- if $start.Sections }}{{ $items = $items | union $start.Sections }}{{ end -}}
+{{- if $hide }}{{ $items = where $items "Params.hidden" "!=" true }}{{ end -}}
+{{- if eq $sort "title" }}{{ $items = $items.ByTitle }}{{ else }}{{ $items = $items.ByWeight }}{{ end -}}
+
+{{- if eq $type "card" -}}
+<div class="cards cards--shortcode">
+{{- range $items -}}
+<a class="shortcode-card shortcode-card--children" href="{{ .RelPermalink }}"><p class="shortcode-card__title">{{ .LinkTitle }}</p>{{ if and $desc .Description }}<div class="shortcode-card__body"><p>{{ .Description }}</p></div>{{ end }}<div class="shortcode-card__meta">{{ with .Params.duration }}<span>{{ . }}</span>{{ end }}{{ with .Params.time }}<span>{{ . }}</span>{{ end }}{{ with .Params.difficulty }}<span>{{ . }}</span>{{ end }}{{ $leaves := where .RegularPagesRecursive "Params.hidden" "!=" true }}{{ if gt (len $leaves) 1 }}<span>{{ i18n "pagesCount" (dict "Count" (len $leaves)) }}</span>{{ end }}</div></a>
+{{- end -}}
+</div>
+{{- else if or (eq $type "h2") (eq $type "h3") (eq $type "h4") -}}
+<div class="children-headings children-headings--{{ $type }}">
+{{- range $items -}}
+<{{ $type }}><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></{{ $type }}>{{ if and $desc .Description }}<p>{{ .Description }}</p>{{ end }}
+{{- end -}}
+</div>
+{{- else -}}
+<ul class="children-list">
+{{- range $items -}}
+<li><a href="{{ .RelPermalink }}"><strong>{{ .LinkTitle }}</strong></a>{{ if and $desc .Description }}<span class="children-list__desc"> &mdash; {{ .Description }}</span>{{ end }}</li>
+{{- end -}}
+</ul>
+{{- end -}}

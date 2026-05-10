@@ -1,0 +1,26 @@
+{{- /* Alias of attachments — same listing logic. */ -}}
+{{- $_unused := .Inner -}}
+{{- $title   := .Get "title" | default "Resources" -}}
+{{- $pattern := .Get "pattern" -}}
+{{- $sort    := .Get "sort" | default "asc" -}}
+{{- $icon    := .Get "icon" | default "file" -}}
+{{- $items   := .Page.Resources -}}
+{{- if $pattern }}{{ $items = where $items "Name" "regexp" $pattern }}{{ end -}}
+{{- $items = where $items "ResourceType" "ne" "image" -}}
+{{- $items = sort $items "Title" -}}
+{{- if eq $sort "desc" }}{{ $items = sort $items "Title" "desc" }}{{ end -}}
+{{- if $items }}
+<aside class="attachments">
+  <p class="attachments__title">{{ $title }}</p>
+  <ul class="attachments__list">
+    {{ range $items }}
+      <li class="attachments__item">
+        <a href="{{ .RelPermalink }}" download>
+          <span class="attachments__icon">{{ partial "icon-svg.html" $icon }}</span>
+          <span class="attachments__name">{{ .Title | default .Name }}</span>
+        </a>
+      </li>
+    {{ end }}
+  </ul>
+</aside>
+{{ end -}}

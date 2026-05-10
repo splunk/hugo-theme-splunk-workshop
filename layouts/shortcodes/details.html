@@ -1,0 +1,12 @@
+{{- /*
+  Relearn-compatible details — alias of expand using `summary` arg name.
+*/ -}}
+{{- $summary := .Get "summary" | default (.Get "title") | default "Details" -}}
+{{- $open    := eq (.Get "open" | default "") "true" -}}
+{{- $name    := .Get "name" -}}
+<details class="solution expand"{{ if $open }} open{{ end }}{{ with $name }} name="{{ . }}"{{ end }}>
+  <summary class="solution__summary">{{ $summary }}</summary>
+  <div class="solution__body">
+    {{ .Inner | .Page.RenderString }}
+  </div>
+</details>

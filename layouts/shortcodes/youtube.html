@@ -1,0 +1,10 @@
+{{- /*
+  YouTube embed — accepts the video ID as the first arg.
+  {{< youtube "dQw4w9WgXcQ" >}}
+  {{< youtube id="abc123" title="Intro" >}}
+*/ -}}
+{{- $id    := .Get "id"    | default (.Get 0) -}}
+{{- $title := .Get "title" | default "YouTube video" -}}
+<div class="youtube">
+  <iframe src="https://www.youtube-nocookie.com/embed/{{ $id }}" title="{{ $title }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div>

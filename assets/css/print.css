@@ -1,0 +1,131 @@
+/* ==========================================================================
+   Print — strip chrome, force light, keep code intact
+   ========================================================================== */
+
+@media print {
+  :root {
+    --color-paper:        #ffffff;
+    --color-ink:          #000000;
+    --color-ink-muted:    #444444;
+    --color-surface:      #f4f4f4;
+    --color-border:       #cccccc;
+    --color-border-strong:#999999;
+    --header-h:           0px;
+  }
+
+  /* Hide all chrome and interactive controls */
+  .site-header,
+  .progress,
+  .skip-link,
+  .sidebar,
+  .toc,
+  .pager,
+  .pager__hint,
+  .theme-toggle,
+  .menu-btn,
+  .light-trails,
+  .presenter-toggle,
+  .code-block__copy,
+  .edit-link,
+  .hero-cta-row,
+  .site-footer__inner,
+  .site-search,
+  .site-search-trigger {
+    display: none !important;
+  }
+
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 11pt;
+    line-height: 1.45;
+  }
+
+  /* Drop the grid — single readable column */
+  .page,
+  .page--narrow,
+  .page--with-sidebar-only {
+    display: block !important;
+    grid-template-columns: none !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .content {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  /* Headings — break-after, never orphaned */
+  h1, h2, h3, h4 {
+    page-break-after: avoid;
+    break-after: avoid;
+    color: #000 !important;
+  }
+  h2 { border-top: 1px solid #999 !important; }
+  h2::before { display: none !important; }
+
+  /* Code, terminal, file-tree — print as a single block, never break across pages */
+  pre,
+  .code-block,
+  .terminal,
+  .file-tree,
+  .callout,
+  .exercise,
+  .checkpoint,
+  .step,
+  .quiz,
+  table,
+  .figure,
+  .mermaid,
+  .math {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  pre, .code-block, .terminal {
+    border: 1px solid #999 !important;
+    background: #fafafa !important;
+    color: #000 !important;
+  }
+  .terminal__bar { background: #ddd !important; }
+  .terminal__body { color: #000 !important; }
+  .terminal__prompt, .terminal__cursor { display: none !important; }
+
+  /* Force pink/orange/amber accent to a print-safe gray for backgrounds —
+     keeps the gradient text readable when ink is forced to black */
+  .gradient-text,
+  .hero__title em,
+  .chapter__weight {
+    background: none !important;
+    -webkit-text-fill-color: #000 !important;
+    color: #000 !important;
+  }
+
+  /* Anchors — show URL after links so the print page is useful offline */
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+    color: #555;
+    word-break: break-all;
+  }
+  /* …but not for in-page anchors or links that are just URL text */
+  a[href^="#"]::after,
+  a[href^="javascript:"]::after,
+  .heading-anchor::after,
+  .breadcrumb a::after,
+  .nav__link::after,
+  .brand::after { content: "" !important; }
+
+  /* Workshop meta + breadcrumb compact */
+  .breadcrumb { font-size: 9pt; margin-bottom: 0.5rem; }
+  .workshop-meta { gap: 0.5rem 1rem; padding: 0.5rem 0; }
+
+  /* Remove animation/transition costs on print preview */
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    box-shadow: none !important;
+  }
+}

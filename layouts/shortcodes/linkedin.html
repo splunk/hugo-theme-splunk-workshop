@@ -1,0 +1,27 @@
+{{- /*
+  LinkedIn "Add Certification" deep link. Wraps the official
+  LinkedIn profile-edit URL with the cert details pre-filled.
+
+  Args (named, all overridable):
+    name             - certification name (default from site params)
+    organizationId   - LinkedIn company ID for Splunk (20226)
+    certUrl          - URL of the certificate image
+    text             - link text (default "LinkedIn")
+    color            - link color (default white, for use on dark CTAs)
+
+  Site param fallbacks (set under [params]):
+    linkedinCertName, linkedinOrgId, linkedinCertUrl
+
+  Usage (without backticks; the angle/percent forms are equivalent):
+    linkedin
+    linkedin name="My Course" certUrl="https://example.com/cert.png"
+*/ -}}
+{{- $name   := .Get "name"           | default $.Site.Params.linkedinCertName | default "Splunk Workshop" -}}
+{{- $org    := .Get "organizationId" | default $.Site.Params.linkedinOrgId    | default "20226" -}}
+{{- $url    := .Get "certUrl"        | default $.Site.Params.linkedinCertUrl  | default "" -}}
+{{- $text   := .Get "text"           | default "LinkedIn" -}}
+{{- $color  := .Get "color"          | default "#ffffff" -}}
+{{- $year   := now.Format "2006" -}}
+{{- $month  := time.Now.Month | int -}}
+{{- $href := printf "https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=%s&organizationId=%s&issueYear=%s&issueMonth=%d%s" ($name | urlquery) $org $year $month (cond (ne $url "") (printf "&certUrl=%s" ($url | urlquery)) "") -}}
+<a href="{{ $href | safeURL }}" style="color: {{ $color | safeCSS }};" target="_blank" rel="noopener">{{ $text }}</a>

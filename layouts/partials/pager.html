@@ -1,0 +1,44 @@
+{{- /*
+  Workshop prev/next pager.
+  Builds a flat DFS list of every page within the page's FirstSection
+  (or the highest ancestor with `layout = "chapter"` if one is set),
+  finds the current position, and links to its neighbours.
+
+  Skipped on the home page.
+*/ -}}
+{{- if .IsHome -}}{{- return -}}{{- end -}}
+{{- if eq (.Params.nopager | default false) true -}}{{- return -}}{{- end -}}
+
+{{- $root := partial "workshop-root.html" . -}}
+{{- $flat := partial "flat-pages.html" $root -}}
+
+{{- /* Always include the scope root itself as index 0 of the flat list:
+       - On the chapter landing, idx=0 → no Previous, Next = first child.
+       - On the first child page, idx=1 → Previous = chapter landing.
+       - On the last child page, no Next (end of scope, no cross-chapter wrap). */ -}}
+{{- $flat = (slice $root) | append $flat -}}
+
+{{- $idx := -1 -}}
+{{- range $i, $p := $flat -}}
+  {{- if and (eq $idx -1) (eq $p.RelPermalink $.RelPermalink) -}}{{- $idx = $i -}}{{- end -}}
+{{- end -}}
+{{- $prev := false -}}{{- $next := false -}}
+{{- if gt $idx 0 -}}{{- $prev = index $flat (sub $idx 1) -}}{{- end -}}
+{{- if and (ge $idx 0) (lt $idx (sub (len $flat) 1)) -}}{{- $next = index $flat (add $idx 1) -}}{{- end -}}
+
+{{- if or $prev $next -}}
+<nav class="pager" aria-label="Workshop navigation">
+  {{ if $prev }}
+    <a class="pager__btn pager__btn--prev" href="{{ $prev.RelPermalink }}" rel="prev">
+      <span class="pager__label">{{ i18n "previous" }}</span>
+      <span class="pager__title">{{ $prev.LinkTitle }}</span>
+    </a>
+  {{ else }}<div></div>{{ end }}
+  {{ if $next }}
+    <a class="pager__btn pager__btn--next" href="{{ $next.RelPermalink }}" rel="next">
+      <span class="pager__label">{{ i18n "next" }}</span>
+      <span class="pager__title">{{ $next.LinkTitle }}</span>
+    </a>
+  {{ else }}<div></div>{{ end }}
+</nav>
+{{- end -}}

@@ -1,0 +1,34 @@
+{{- /*
+  Badge — relearn-compatible.
+  Args:
+    color   - hex / CSS color, OR a preset name (accent | info | success | warn | danger)
+    style   - alias of color
+    title   - text shown to the left of content
+    icon    - optional icon
+    content - .Inner OR positional 0
+  Backward-compatible: positional 0=text, 1=type
+*/ -}}
+{{- $text  := .Inner | string -}}
+{{- if not $text }}{{ $text = .Get "content" | default (.Get "text") | default (.Get 0) | default "" }}{{ end -}}
+{{- $color := .Get "color" | default (.Get "style") | default (.Get 1) -}}
+{{- $title := .Get "title" -}}
+{{- $icon  := .Get "icon" -}}
+{{- $known := slice "accent" "info" "success" "warn" "warning" "danger" "primary" "secondary" -}}
+{{- $cls   := "badge" -}}
+{{- $inline := "" -}}
+{{- if $color -}}
+  {{- if in $known $color -}}
+    {{- $alias := $color -}}
+    {{- if eq $alias "warning" }}{{ $alias = "warn" }}{{ end -}}
+    {{- if eq $alias "primary" }}{{ $alias = "accent" }}{{ end -}}
+    {{- if eq $alias "secondary" }}{{ $alias = "" }}{{ end -}}
+    {{- if $alias }}{{ $cls = printf "badge badge--%s" $alias }}{{ end -}}
+  {{- else -}}
+    {{- $inline = printf "color:%s;border-color:color-mix(in oklab, %s 40%%, transparent);background:color-mix(in oklab, %s 10%%, transparent)" $color $color $color -}}
+  {{- end -}}
+{{- end -}}
+<span class="{{ $cls }}"{{ with $inline }} style="{{ . | safeCSS }}"{{ end }}>
+  {{- with $icon }}<span class="badge__icon">{{ partial "icon-svg.html" . }}</span>{{ end -}}
+  {{- with $title }}<span class="badge__title">{{ . }}</span>{{ end -}}
+  {{ $text | safeHTML -}}
+</span>

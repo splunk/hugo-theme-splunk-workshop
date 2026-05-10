@@ -1,0 +1,111 @@
+# exampleSite/hugo.toml — minimal demo config.
+#
+# To run locally from the theme root:
+#     hugo server --source exampleSite --themesDir ../..
+# Or via the included Makefile:
+#     make serve
+#
+# When using the theme in your own site, copy the [params] block below into
+# your own hugo.toml and add `theme = "hugo-theme-splunk-workshop"` (or use a
+# Hugo Module — see the README).
+
+baseURL = "https://example.org/"
+locale  = "en-us"
+title   = "Splunk Workshops · Demo"
+defaultContentLanguage = "en"
+enableEmoji   = true
+enableRobotsTXT = true
+themesDir = "../.."
+theme   = "hugo-theme-splunk-workshop"
+
+[markup]
+  [markup.goldmark.renderer]
+    unsafe = true
+  [markup.goldmark.parser.attribute]
+    block = true
+    title = true
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel   = 4
+    ordered    = false
+  [markup.highlight]
+    noClasses    = false
+    lineNos      = false
+    codeFences   = true
+    guessSyntax  = true
+    tabWidth     = 2
+
+[outputs]
+  home    = ["HTML", "RSS", "JSON"]
+  section = ["HTML", "RSS"]
+  page    = ["HTML"]
+
+# ============================================================================
+# Theme parameters — every visual choice is overridable here.
+# ============================================================================
+[params]
+  # ---- Identity ----
+  brandName       = "splunk>"
+  brandTagline    = ""           # set to "" to suppress the "splunk> | workshops" tag pill
+  description     = "Hands-on technical workshops for the Splunk Observability Cloud."
+  copyright       = "&copy; {year} Splunk LLC All rights reserved."   # `{year}` expands to the current year
+  logoLight       = "images/splunk-logo-black.png"
+  logoDark        = "images/splunk-logo-white.png"
+  logoHeight      = "34"
+  favicon         = "favicon.svg"
+
+  # ---- Hero background (the "light trails" gradient bloom) ----
+  # Set both to "" to fall back to the bundled CSS radial gradient.
+  heroBackgroundLight = "images/background_Splunk-light-mode2_16x9.png"
+  heroBackgroundDark  = "images/background_Splunk-dark-mode2_16x9.png"
+
+  # ---- Mode ----
+  defaultMode     = "auto"
+  showThemeToggle = true
+
+  # ---- Splunk brand colors (official magenta → orange gradient) ----
+  colorAccent      = "#FF007F"   # Magenta 50  · Pantone 213 C
+  colorAccent2     = "#FF9000"   # Orange 50   · Pantone 151 C
+  colorAccent3     = "#FFAB0F"   # supplementary amber for warm callouts
+  colorAccentDark  = "#D4006B"   # reserved for borders/shadows; brand pink text is always #FF007F
+
+  colorInk          = "#0C1724"
+  colorInkMuted     = "#4B4D52"
+  colorPaper        = "#FFFFFF"
+  colorSurface      = "#F7F6F3"
+  colorSurfaceAlt   = "#EFEDE7"
+  colorBorder       = "#E5E2DA"
+  colorBorderStrong = "#D6D2C8"
+
+  colorInkDark          = "#F4F1EA"
+  colorInkMutedDark     = "#9CA3AF"
+  colorPaperDark        = "#0C1724"
+  colorSurfaceDark      = "#141E2F"
+  colorSurfaceAltDark   = "#1B2740"
+  colorBorderDark       = "#1F2C44"
+  colorBorderStrongDark = "#2A3A56"
+
+  # ---- Typography (matches splunk.github.io/observability-workshop) ----
+  fontUrl     = "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+  fontDisplay = "'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif"
+  fontBody    = "'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif"
+  fontMono    = "'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace"
+
+  # ---- Layout toggles ----
+  showSidebar     = true
+  showToc         = true
+  showProgress    = true
+  showLightTrails = true
+  contentMaxWidth = "720px"
+
+  # ---- Repo / edit-on-github ----
+  editURL = ""
+  repoURL = ""
+
+  [params.social]
+    github   = "https://github.com/splunk/hugo-theme-splunk-workshop"
+    twitter  = "https://x.com/splunk"
+    linkedin = "https://www.linkedin.com/company/splunk"
+    youtube  = "https://www.youtube.com/@splunk"
+    rss      = "/index.xml"
+

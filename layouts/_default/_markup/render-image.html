@@ -1,0 +1,10 @@
+{{- /*
+  Image render hook — wraps every markdown image in a zoom-able figure.
+  Title text becomes the caption; alt is used for accessibility.
+*/ -}}
+<figure class="figure">
+  <div class="figure__inner">
+    <img src="{{ .Destination | safeURL }}" alt="{{ .Text }}" loading="lazy" decoding="async">
+  </div>
+  {{ with .Title }}<figcaption class="figure__caption">{{ . }}</figcaption>{{ end }}
+</figure>

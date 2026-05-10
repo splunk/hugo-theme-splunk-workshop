@@ -1,0 +1,29 @@
+# Hugo build output
+public/
+resources/
+.hugo_build.lock
+
+# Hugo cache
+.cache/
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# Editor noise
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Claude Code — user-local settings
+.claude/settings.local.json
+
+# Go modules cache (if using Hugo Modules)
+go.sum
+
+# Local dev artifacts
+exampleSite/public/
+exampleSite/resources/
+exampleSite/.hugo_build.lock

@@ -1,0 +1,21 @@
+{{- /*
+  Search index — emitted at /index.json on the home page.
+  Used by assets/js/search.js to power the in-header search box.
+*/ -}}
+{{- $pages := where .Site.RegularPages "Params.hidden" "!=" true -}}
+{{- $idx := slice -}}
+{{- range $pages -}}
+  {{- $section := "" -}}
+  {{- with .CurrentSection }}{{ $section = .Title }}{{ end -}}
+  {{- $entry := dict
+    "title"       (.Title | default .LinkTitle)
+    "linkTitle"   .LinkTitle
+    "description" .Description
+    "section"     $section
+    "url"         .RelPermalink
+    "tags"        (.Params.tags | default slice)
+    "summary"     (.Plain | truncate 600 "")
+  -}}
+  {{- $idx = $idx | append $entry -}}
+{{- end -}}
+{{- $idx | jsonify -}}

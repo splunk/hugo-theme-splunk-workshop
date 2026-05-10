@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="{{ .Site.Language.Lang | default "en" }}" data-theme="light">
+<head>
+  {{ partial "head.html" . }}
+  {{ block "head" . }}{{ end }}
+</head>
+<body>
+  <a class="skip-link" href="#content">{{ i18n "skipToContent" | default "Skip to content" }}</a>
+  {{ partial "header.html" . }}
+  {{ block "main" . }}{{ end }}
+  {{ partial "footer.html" . }}
+</body>
+</html>

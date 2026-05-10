@@ -1,0 +1,95 @@
+- id: home
+  translation: "Home"
+- id: workshops
+  translation: "Workshops"
+- id: about
+  translation: "About"
+- id: previous
+  translation: "Previous"
+- id: next
+  translation: "Next"
+- id: allWorkshops
+  translation: "All workshops"
+- id: onThisPage
+  translation: "On this page"
+- id: skipToContent
+  translation: "Skip to content"
+- id: editOnGitHub
+  translation: "Edit this page on GitHub"
+- id: searchPlaceholder
+  translation: "Search workshops…"   # used inside the modal as the input placeholder
+- id: searchTrigger
+  translation: "Search"              # the header button label (button, not input)
+- id: searchHint
+  translation: "Press / to search"
+- id: searchEmpty
+  translation: "No matches"
+- id: pagesCount
+  translation:
+    one: "{{ .Count }} page"
+    other: "{{ .Count }} pages"
+# kept for back-compat with existing themes/sites that haven't migrated yet
+- id: lessonsCount
+  translation:
+    one: "{{ .Count }} page"
+    other: "{{ .Count }} pages"
+- id: explore
+  translation: "Explore"
+- id: connect
+  translation: "Connect"
+- id: presenter
+  translation: "Presenter"
+- id: copyCode
+  translation: "Copy"
+- id: copied
+  translation: "Copied"
+- id: chapter
+  translation: "Chapter"
+- id: foundation
+  translation: "Foundation"
+- id: notFoundTitle
+  translation: "Not found."
+- id: notFoundLead
+  translation: "The page you’re looking for slipped through the index. Try the workshops list."
+- id: notFoundEyebrow
+  translation: "404 · Lost in the data stream"
+- id: takeMeHome
+  translation: "Take me home"
+- id: browseWorkshops
+  translation: "Browse workshops"
+- id: viewOnGitHub
+  translation: "View on GitHub"
+- id: builtWithHugo
+  translation: "Built with Hugo"
+- id: theme
+  translation: "Theme"
+- id: openMenu
+  translation: "Open menu"
+- id: yourPosition
+  translation: "Reading progress"
+- id: tip
+  translation: "Tip"
+- id: note
+  translation: "Note"
+- id: info
+  translation: "Info"
+- id: warning
+  translation: "Warning"
+- id: danger
+  translation: "Danger"
+- id: success
+  translation: "Success"
+- id: exercise
+  translation: "Exercise"
+- id: solution
+  translation: "Show solution"
+- id: checkpoint
+  translation: "Checkpoint"
+- id: quickCheck
+  translation: "Quick check"
+- id: whatYouLearn
+  translation: "What you'll learn"
+- id: beforeYouStart
+  translation: "Before you start"
+- id: presenterNote
+  translation: "Presenter Note"

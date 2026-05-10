@@ -1,0 +1,53 @@
+{{- /*
+  Bridges Hugo `params` to CSS custom properties.
+  Override any param in your site's hugo.toml to rebrand the theme.
+*/ -}}
+{{- $p := .Site.Params -}}
+<style>
+  :root {
+    /* Splunk official brand gradient: Magenta 50 → Orange 50 */
+    --color-accent:       {{ $p.colorAccent      | default "#FF007F" }};
+    --color-accent-2:     {{ $p.colorAccent2     | default "#FF9000" }};
+    --color-accent-3:     {{ $p.colorAccent3     | default "#FFAB0F" }};
+    --color-accent-dark:  {{ $p.colorAccentDark  | default "#D4006B" }};
+
+    /* Light mode tokens */
+    --color-ink:           {{ $p.colorInk           | default "#0C1724" }};
+    --color-ink-muted:     {{ $p.colorInkMuted      | default "#4B4D52" }};
+    --color-paper:         {{ $p.colorPaper         | default "#FFFFFF" }};
+    --color-surface:       {{ $p.colorSurface       | default "#F7F6F3" }};
+    --color-surface-alt:   {{ $p.colorSurfaceAlt    | default "#EFEDE7" }};
+    --color-border:        {{ $p.colorBorder        | default "#E5E2DA" }};
+    --color-border-strong: {{ $p.colorBorderStrong  | default "#D6D2C8" }};
+
+    /* Typography */
+    --font-display: {{ $p.fontDisplay | default "'Bricolage Grotesque', ui-serif, Georgia, serif" | safeCSS }};
+    --font-body:    {{ $p.fontBody    | default "'Geist', ui-sans-serif, system-ui, sans-serif"   | safeCSS }};
+    --font-mono:    {{ $p.fontMono    | default "'JetBrains Mono', ui-monospace, Menlo, monospace" | safeCSS }};
+
+    /* Layout */
+    --content-max:  {{ $p.contentMaxWidth | default "720px" }};
+    --logo-h:       {{ $p.logoHeight | default "28" }}px;
+
+    /* Hero background images — empty string falls through to CSS radial gradient. */
+    --hero-bg-light: {{ with $p.heroBackgroundLight }}url("{{ . | relURL }}"){{ else }}none{{ end }};
+    --hero-bg-dark:  {{ with $p.heroBackgroundDark  }}url("{{ . | relURL }}"){{ else }}none{{ end }};
+
+    /* Splunk's signature gradient — Magenta 50 → Orange 50 with 10/90 stops
+       per the official brand spec. Used on hero italic, step circles, the
+       progress bar, pager hover, and the chapter weight number. */
+    --gradient-accent: linear-gradient(95deg,
+      var(--color-accent) 10%,
+      var(--color-accent-2) 90%);
+  }
+
+  [data-theme="dark"] {
+    --color-ink:           {{ $p.colorInkDark           | default "#F4F1EA" }};
+    --color-ink-muted:     {{ $p.colorInkMutedDark      | default "#9CA3AF" }};
+    --color-paper:         {{ $p.colorPaperDark         | default "#0C1724" }};
+    --color-surface:       {{ $p.colorSurfaceDark       | default "#141E2F" }};
+    --color-surface-alt:   {{ $p.colorSurfaceAltDark    | default "#1B2740" }};
+    --color-border:        {{ $p.colorBorderDark        | default "#1F2C44" }};
+    --color-border-strong: {{ $p.colorBorderStrongDark  | default "#2A3A56" }};
+  }
+</style>

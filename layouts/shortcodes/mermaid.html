@@ -1,0 +1,13 @@
+{{- /*
+  Mermaid diagram. Lazy-loads mermaid.js from CDN on first use.
+  Usage:
+    {{< mermaid >}}
+    graph LR
+      A --> B
+    {{< /mermaid >}}
+*/ -}}
+{{- $align := .Get "align" | default "center" -}}
+{{- .Page.Store.Set "_needs_mermaid" true -}}
+<div class="mermaid mermaid--{{ $align }}">
+{{- trim .Inner "\n\r" -}}
+</div>

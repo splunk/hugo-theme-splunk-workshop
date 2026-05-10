@@ -1,0 +1,26 @@
+{{- /*
+  Tabs container — relearn-compatible.
+  Args:
+    groupid  - sync tab selection across blocks with the same groupid (localStorage)
+    style    - default | code | primary | secondary  (visual variant)
+*/ -}}
+{{- $key     := printf "_tabs_%d" .Ordinal -}}
+{{- $tid     := printf "tabs-%d" .Ordinal -}}
+{{- $groupid := .Get "groupid" -}}
+{{- $style   := .Get "style" -}}
+{{- /* Force inner so children push */ -}}
+{{- $_ := .Inner -}}
+{{- $tabs := .Page.Scratch.Get $key | default slice -}}
+<div class="tabs{{ with $style }} tabs--{{ . }}{{ end }}" data-tabs{{ with $groupid }} data-tabs-group="{{ . }}"{{ end }}>
+  <div class="tabs__list" role="tablist">
+    {{ range $i, $t := $tabs }}
+      <button id="{{ $tid }}-tab-{{ $i }}" class="tabs__btn{{ if eq $i 0 }} is-active{{ end }}" role="tab" aria-selected="{{ if eq $i 0 }}true{{ else }}false{{ end }}" aria-controls="{{ $tid }}-panel-{{ $i }}" tabindex="{{ if eq $i 0 }}0{{ else }}-1{{ end }}" data-tab-label="{{ $t.label }}">
+        {{ if $t.icon }}<span class="tabs__icon">{{ partial "icon-svg.html" $t.icon }}</span>{{ end }}
+        {{ $t.label }}
+      </button>
+    {{ end }}
+  </div>
+  {{ range $i, $t := $tabs }}
+    <div id="{{ $tid }}-panel-{{ $i }}" class="tabs__panel{{ if eq $i 0 }} is-active{{ end }}" role="tabpanel" aria-labelledby="{{ $tid }}-tab-{{ $i }}" {{ if ne $i 0 }}hidden{{ end }} data-tab-label="{{ $t.label }}">{{ $t.content | safeHTML }}</div>
+  {{ end }}
+</div>

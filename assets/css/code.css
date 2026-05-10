@@ -1,0 +1,206 @@
+/* ==========================================================================
+   Code blocks — file-named, copy-button, dark-aware syntax theme
+   ========================================================================== */
+
+.code-block {
+  position: relative;
+  margin: 1.5rem 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--color-border-strong);
+  background: var(--code-bg);
+  font-family: var(--font-mono);
+  box-shadow: 0 1px 0 var(--color-border) inset;
+}
+
+.code-block__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.85rem 0.5rem 1rem;
+  background: var(--code-header-bg);
+  border-bottom: 1px solid var(--color-border-strong);
+  font-size: 0.75rem;
+  color: var(--color-ink-muted);
+  letter-spacing: 0.04em;
+  font-weight: 500;
+}
+
+.code-block__file {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.code-block__file::before {
+  content: "";
+  width: 8px; height: 8px;
+  background: var(--color-accent);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--color-accent);
+}
+.code-block__lang {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-ink-muted);
+  opacity: 0.7;
+}
+
+.code-block__copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.55rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--color-ink-muted);
+  background: transparent;
+  transition: all 0.15s ease;
+}
+.code-block__copy:hover {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+.code-block__copy.is-copied {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+.code-block__copy svg { width: 0.8rem; height: 0.8rem; }
+
+/* When wrapped by .code-block, pre is flush — no border, no radius, no extra bg */
+.code-block pre,
+.code-block .chroma {
+  margin: 0;
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.65;
+  background: transparent !important;
+  color: var(--code-fg);
+  border: 0;
+  border-radius: 0;
+}
+.code-block .chroma pre { padding: 0; }
+
+.code-block:not(:has(.code-block__header)) pre,
+.code-block:not(:has(.code-block__header)) .chroma { padding: 1.15rem; }
+
+/* Line-number table (Hugo's `linenos=true` output).
+   Without these rules, Chroma's <table class="lntable"> stacks the wrapping
+   .chroma padding with each <td>'s own padding and produces a giant indent
+   between the gutter and the code. We flatten the table back to a clean
+   two-column layout. */
+.code-block .lntable {
+  margin: 0;
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: auto;
+  display: block;
+  overflow-x: auto;
+}
+.code-block .lntable tbody,
+.code-block .lntable tr { display: contents; }
+.code-block .lntable td.lntd {
+  padding: 0;
+  vertical-align: top;
+}
+.code-block .lntable td.lntd:first-child {
+  width: 1%;
+  white-space: nowrap;
+  padding-right: 0.85rem;
+  border-right: 1px solid var(--color-border);
+  user-select: none;
+}
+/* Code cell — breathing space after the divider so code doesn't sit flush. */
+.code-block .lntable td.lntd + td.lntd {
+  padding-left: 0.95rem;
+}
+.code-block .lntable pre,
+.code-block .lntable .chroma {
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+}
+.code-block .lntable .lnt {
+  display: block;
+  color: var(--color-ink-muted);
+  opacity: 0.55;
+  text-align: right;
+  padding: 0 0.4rem 0 0.85rem;
+}
+/* Restore vertical breathing room around the whole table inside .code-block */
+.code-block:has(.lntable) > .chroma { padding: 1rem 0; }
+
+/* Generic <pre> fallback — only applies when NOT inside .code-block */
+pre {
+  margin: 1.5rem 0;
+  padding: 1.15rem;
+  background: var(--code-bg);
+  border: 1px solid var(--color-border-strong);
+  border-radius: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.65;
+  overflow-x: auto;
+  color: var(--code-fg);
+}
+pre code { background: transparent !important; padding: 0 !important; border: 0 !important; color: inherit !important; }
+
+/* ===== Splunk syntax theme — light ===== */
+:root {
+  --code-bg:        #FAFAF7;
+  --code-header-bg: #F2EFE8;
+  --code-fg:        #1f2733;
+  --code-comment:   #8a8b91;
+  --code-keyword:   #FF007F;   /* Splunk Magenta 50 — official brand pink */
+  --code-string:    #b75c10;   /* warm splunk orange */
+  --code-number:    #0072c3;
+  --code-function:  #5b3fb0;
+  --code-type:      #1d5d99;
+  --code-tag:       #FF007F;   /* same — brand magenta */
+  --code-attr:      #0072c3;
+  --code-op:        #4B4D52;
+}
+[data-theme="dark"] {
+  --code-bg:        #0A1322;
+  --code-header-bg: #131E33;
+  --code-fg:        #d6d9df;
+  --code-comment:   #6e7891;
+  --code-keyword:   #FF007F;   /* Splunk Magenta 50 — same in both modes */
+  --code-string:    #FFAB0F;
+  --code-number:    #69b6ff;
+  --code-function:  #c79dff;
+  --code-type:      #76d0ff;
+  --code-tag:       #FF007F;   /* Splunk Magenta 50 */
+  --code-attr:      #69b6ff;
+  --code-op:        #d6d9df;
+}
+
+/* Chroma class mapping (Hugo's default highlighter) */
+.chroma                            { background: transparent !important; color: var(--code-fg); }
+.chroma .c, .chroma .ch, .chroma .cm, .chroma .cs, .chroma .cp, .chroma .cpf, .chroma .c1 { color: var(--code-comment); font-style: italic; }
+.chroma .k, .chroma .kc, .chroma .kd, .chroma .kn, .chroma .kp, .chroma .kr, .chroma .kt { color: var(--code-keyword); font-weight: 600; }
+.chroma .s, .chroma .sa, .chroma .sb, .chroma .sc, .chroma .dl, .chroma .sd, .chroma .s2, .chroma .se, .chroma .sh, .chroma .si, .chroma .sx, .chroma .sr, .chroma .s1, .chroma .ss { color: var(--code-string); }
+.chroma .m, .chroma .mb, .chroma .mf, .chroma .mh, .chroma .mi, .chroma .il, .chroma .mo { color: var(--code-number); }
+.chroma .nf, .chroma .fm, .chroma .nb { color: var(--code-function); }
+.chroma .nc, .chroma .nn, .chroma .nl, .chroma .ne { color: var(--code-type); font-weight: 600; }
+.chroma .nt { color: var(--code-tag); }
+.chroma .na { color: var(--code-attr); }
+.chroma .o, .chroma .ow { color: var(--code-op); }
+.chroma .nv, .chroma .vc, .chroma .vg, .chroma .vi { color: var(--code-attr); }
+.chroma .err { color: var(--code-keyword); background: transparent; }
+.chroma .gh { color: var(--code-keyword); font-weight: 600; }
+.chroma .gd { color: #c44; background: rgba(196,68,68,0.07); }
+.chroma .gi { color: #2f7c47; background: rgba(47,124,71,0.07); }
+
+/* Line highlighting */
+.chroma .hl { background: color-mix(in oklab, var(--color-accent) 12%, transparent); }
+.chroma .ln, .chroma .lnt {
+  color: var(--color-ink-muted);
+  margin-right: 0.6rem;
+  user-select: none;
+  opacity: 0.5;
+}

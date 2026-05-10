@@ -1,0 +1,26 @@
+{{- /*
+  Relearn-compatible highlight — wraps Hugo's built-in highlighter.
+  Usage:
+    {{< highlight go "linenos=true,hl_lines=2 5" >}}
+    package main
+    func main() {}
+    {{< /highlight >}}
+*/ -}}
+{{- $type    := .Get 0 | default "text" -}}
+{{- $rawOpts := .Get 1 -}}
+{{- $opts    := dict -}}
+{{- if $rawOpts -}}
+  {{- range split $rawOpts "," -}}
+    {{- $kv := split (trim . " ") "=" -}}
+    {{- if eq (len $kv) 2 -}}
+      {{- $opts = merge $opts (dict (index $kv 0) (index $kv 1)) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+<div class="code-block">
+  <div class="code-block__header">
+    <span class="code-block__file"><span class="code-block__lang">{{ $type }}</span></span>
+    <button class="code-block__copy" type="button" aria-label="Copy code">Copy</button>
+  </div>
+  {{ highlight (trim .Inner "\n\r") $type $opts }}
+</div>

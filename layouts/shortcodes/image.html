@@ -1,0 +1,23 @@
+{{- /*
+  Image — flexible figure with caption, alignment, and zoom.
+  Args: src, alt, caption, align (left|right|bleed|none), width.
+  Resources are resolved via .Page.Resources first, falling back to a URL.
+  Usage:
+    {{< image src="screenshot.png" alt="Splunk dashboard" caption="The empty state." >}}
+    {{< image src="ux.png" align="right" width="50%" >}}
+*/ -}}
+{{- $src     := .Get "src"     | default (.Get 0) -}}
+{{- $alt     := .Get "alt"     | default "" -}}
+{{- $caption := .Get "caption" | default (.Get 1) -}}
+{{- $align   := .Get "align"   | default "" -}}
+{{- $width   := .Get "width"   | default "" -}}
+{{- $url := $src -}}
+{{- with .Page.Resources.GetMatch $src }}
+  {{- $url = .RelPermalink -}}
+{{- end -}}
+<figure class="figure {{ with $align }}figure--align-{{ . }}{{ end }}" {{ with $width }}style="max-width: {{ . }}"{{ end }}>
+  <div class="figure__inner">
+    <img src="{{ $url | safeURL }}" alt="{{ $alt }}" loading="lazy" decoding="async">
+  </div>
+  {{ with $caption }}<figcaption class="figure__caption">{{ . }}</figcaption>{{ end }}
+</figure>

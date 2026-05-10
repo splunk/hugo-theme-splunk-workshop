@@ -1,0 +1,26 @@
+{{- /*
+  Tab — child of tabs. When used standalone (no parent {{< tabs >}}) it renders
+  as a single labeled block, matching relearn's behaviour.
+  Args: title (or positional 0), icon
+*/ -}}
+{{- $label   := .Get "title" | default (.Get "label") | default (.Get 0) | default "Tab" -}}
+{{- $icon    := .Get "icon" -}}
+{{- $content := .Inner | .Page.RenderString -}}
+
+{{- if and .Parent (eq .Parent.Name "tabs") -}}
+  {{- /* Nested inside tabs — push into parent's bucket */ -}}
+  {{- $key := printf "_tabs_%d" .Parent.Ordinal -}}
+  {{- $entry := dict "label" $label "icon" $icon "content" $content -}}
+  {{- .Page.Scratch.Add $key (slice $entry) -}}
+{{- else -}}
+  {{- /* Standalone — render as a labeled single-pane block */ -}}
+  <div class="tabs tabs--single">
+    <div class="tabs__list" role="tablist">
+      <button class="tabs__btn is-active" role="tab" aria-selected="true" tabindex="0" disabled>
+        {{ if $icon }}<span class="tabs__icon">{{ partial "icon-svg.html" $icon }}</span>{{ end }}
+        {{ $label }}
+      </button>
+    </div>
+    <div class="tabs__panel is-active" role="tabpanel">{{ $content | safeHTML }}</div>
+  </div>
+{{- end -}}

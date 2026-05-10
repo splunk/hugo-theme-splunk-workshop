@@ -1,0 +1,6 @@
+{{- /*
+  Relearn-compatible relref — passes through to Hugo's built-in relref.
+  Use this in inline contexts where Hugo's native {{< relref >}} would also work.
+*/ -}}
+{{- $ref := .Get 0 | default (.Get "page") -}}
+{{- with .Page.GetPage $ref }}{{ .RelPermalink }}{{ else }}#{{ end -}}

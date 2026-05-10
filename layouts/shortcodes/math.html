@@ -1,0 +1,9 @@
+{{- /*
+  Math — KaTeX block. Lazy-loads KaTeX from CDN on first use.
+  Usage:
+    {{< math >}} c = \pm\sqrt{a^2 + b^2} {{< /math >}}
+    {{< math align="left" >}} ... {{< /math >}}
+*/ -}}
+{{- $align := .Get "align" | default "center" -}}
+{{- .Page.Store.Set "_needs_katex" true -}}
+<div class="math math--{{ $align }}">$${{ trim .Inner "\n\r" }}$$</div>

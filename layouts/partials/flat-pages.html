@@ -1,0 +1,36 @@
+{{- /*
+  flat-pages.html — DFS-walk a Page (section), returning every descendant
+  page in document order: weight-ascending at each level, hidden filtered.
+
+  Section index pages (_index.md) are INCLUDED as nav stops because most
+  workshop authors put substantive intro/wrap-up content in them. Order is
+  "section landing first, then its children" — the natural reading flow.
+
+  Caller passes the workshop root (typically .FirstSection):
+    {{ $list := partial "flat-pages.html" .FirstSection }}
+
+  Pages can opt out of the pager flow with `nopager: true` in front matter.
+*/ -}}
+{{- $node := . -}}
+{{- $out  := slice -}}
+
+{{- /* In modern Hugo, .Pages on a section already includes both regular pages
+       AND sub-section index pages. Do NOT also append .Sections — that would
+       duplicate every sub-section in the flat list. */ -}}
+{{- $items := $node.Pages -}}
+{{- $items = where $items "Params.hidden" "!=" true -}}
+{{- $items = where $items "Params.nopager" "!=" true -}}
+{{- $items = sort $items "Weight" -}}
+
+{{- range $items -}}
+  {{- if eq .Kind "page" -}}
+    {{- $out = $out | append . -}}
+  {{- else -}}
+    {{- /* Section landing: include the index itself, then its children. */ -}}
+    {{- $out = $out | append . -}}
+    {{- $sub := partial "flat-pages.html" . -}}
+    {{- if $sub }}{{ $out = $out | append $sub }}{{ end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $out -}}

@@ -1,0 +1,28 @@
+{{- /*
+  Presenter — block of guidance shown only when the page is in presenter mode.
+
+  Toggle the mode with:
+    1) The floating "presenter" pill in the bottom-right of every page, OR
+    2) Append ?presenter=1 to the URL, OR
+    3) Press P twice in quick succession.
+
+  Hidden from attendees by default via CSS, but the markup stays in the page
+  source — use this for delivery cues, timing notes, and "kick this off in the
+  background" prompts. Don't hide answers here.
+
+  Usage (paired shortcode):
+    presenter                         - default "Presenter Note" label
+    presenter title="Timing"          - custom label
+*/ -}}
+{{- $title := .Get "title" | default "Presenter Note" -}}
+{{- /* Flag the page so the toggle pill is rendered in the footer */ -}}
+{{- .Page.Store.Set "_has_presenter" true -}}
+<aside class="presenter-only" aria-label="{{ $title }}">
+  <div class="presenter-only__label">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h20v14H2z"/><path d="M8 21h8M12 17v4"/></svg>
+    {{ $title }}
+  </div>
+  <div class="presenter-only__body">
+{{ .Inner | .Page.RenderString }}
+  </div>
+</aside>

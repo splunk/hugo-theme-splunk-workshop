@@ -1,0 +1,32 @@
+{{- /*
+  Terminal — macOS-style window for shell sessions.
+  Two ways to use:
+
+  1) Inline syntax (preferred):
+       {{< terminal title="bash" >}}
+       $ npm install
+       added 142 packages
+       $ npm run dev
+       > server listening on :3000
+       {{< /terminal >}}
+     Lines beginning with `$ ` get a styled prompt; others render as output.
+
+  2) Just plain text body — gets a single prompt.
+*/ -}}
+{{- $title := .Get "title" | default "zsh" -}}
+{{- $body  := trim .Inner "\n\r" -}}
+<div class="terminal" data-terminal>
+  <div class="terminal__bar">
+    <span class="terminal__dots"><span class="terminal__dot"></span><span class="terminal__dot"></span><span class="terminal__dot"></span></span>
+    <span class="terminal__title">{{ $title }}</span>
+  </div>
+  <div class="terminal__body"><code>{{- range $i, $line := split $body "\n" -}}
+{{- if hasPrefix $line "$ " -}}
+<span class="terminal__line"><span class="terminal__prompt"></span>{{ strings.TrimPrefix "$ " $line }}</span>
+{{- else if hasPrefix $line "# " -}}
+<span class="terminal__line" style="color:#6e7891">{{ $line }}</span>
+{{- else -}}
+<span class="terminal__line terminal__output">{{ $line }}</span>
+{{- end }}
+{{ end -}}<span class="terminal__line terminal__line--cursor"><span class="terminal__prompt"></span><span class="terminal__cursor" aria-hidden="true"></span></span></code></div>
+</div>

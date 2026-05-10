@@ -1,0 +1,536 @@
+/* ==========================================================================
+   Layout — header, three-column grid, sidebar, TOC, footer
+   ========================================================================== */
+
+:root {
+  --header-h: 4.25rem;
+  --sidebar-w: 18rem;
+  --toc-w: 14rem;
+  --gutter: clamp(1.25rem, 3vw, 2.5rem);
+  --content-max: 720px;
+}
+
+/* ---- Page container — full-bleed: rails pin to viewport edges, prose centers in the middle ---- */
+.page {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) minmax(0, 1fr) var(--toc-w);
+  gap: var(--gutter);
+  margin: 0;
+  padding: var(--gutter);
+  padding-top: calc(var(--header-h) + 2rem);
+}
+
+/* On the home/landing page we keep one centered column with a sane max-width
+   so the hero text and card grid don't sprawl edge-to-edge. */
+.page--narrow {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.page--with-sidebar-only {
+  grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+}
+
+/* ---- Header ---- */
+.site-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--gutter);
+  background: color-mix(in oklab, var(--color-paper) 85%, transparent);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--color-border);
+  z-index: 50;
+}
+
+.site-header__inner {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--color-ink);
+}
+.brand:hover { color: var(--color-ink); }
+/* Wordmark fallback uses ink color, not the accent — coloring the brand name
+   in pink breaks Splunk's official brand guidelines. Set logoLight to use the
+   real logo asset instead. */
+.brand__mark { color: var(--color-ink); }
+.brand__tag {
+  font-size: 0.875rem;
+  font-weight: 400;
+  font-family: var(--font-mono);
+  color: var(--color-ink-muted);
+  letter-spacing: 0;
+  text-transform: lowercase;
+  padding-left: 0.5rem;
+  border-left: 1px solid var(--color-border);
+}
+.brand__logo { height: var(--logo-h, 28px); width: auto; display: block; }
+.brand__logo--dark  { display: none; }
+[data-theme="dark"] .brand__logo--light { display: none; }
+[data-theme="dark"] .brand__logo--dark  { display: block; }
+
+/* ---- Nav ---- */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-left: auto;
+}
+.nav__link {
+  font-size: var(--fs-sm);
+  color: var(--color-ink-muted);
+  font-weight: 500;
+  position: relative;
+  padding: 0.25rem 0;
+}
+.nav__link:hover { color: var(--color-ink); }
+.nav__link.is-active { color: var(--color-ink); }
+.nav__link.is-active::after {
+  content: "";
+  position: absolute;
+  bottom: -2px; left: 0; right: 0;
+  height: 2px;
+  background: var(--gradient-accent);
+}
+
+/* ---- Theme toggle ---- */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  color: var(--color-ink-muted);
+  transition: all 0.15s ease;
+}
+.theme-toggle:hover {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+.theme-toggle svg { width: 1rem; height: 1rem; }
+/* Status-based icons — the icon represents the CURRENT mode, not the
+   destination. Click toggles to the opposite (handled in JS). */
+.theme-toggle .icon-sun  { display: block; }
+.theme-toggle .icon-moon { display: none; }
+[data-theme="dark"] .theme-toggle .icon-sun  { display: none; }
+[data-theme="dark"] .theme-toggle .icon-moon { display: block; }
+
+/* Auto-mode indicator — small dot in the top-right corner when the user
+   hasn't explicitly chosen a mode (i.e. the theme is following the OS). */
+[data-theme-mode="auto"] .theme-toggle::after {
+  content: "";
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  width: 7px;
+  height: 7px;
+  background: var(--gradient-accent);
+  border: 2px solid var(--color-paper);
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+.theme-toggle { position: relative; }
+
+/* ---- Reading progress bar ---- */
+.progress {
+  position: fixed;
+  top: var(--header-h);
+  left: 0; right: 0;
+  height: 2px;
+  background: transparent;
+  z-index: 49;
+}
+.progress__bar {
+  height: 100%;
+  width: 0%;
+  background: var(--gradient-accent);
+  transition: width 0.05s linear;
+  box-shadow: 0 0 8px var(--color-accent);
+}
+
+/* ---- Sidebar (left rail — workshop navigation) ---- */
+.sidebar {
+  position: sticky;
+  top: calc(var(--header-h) + 1.5rem);
+  align-self: start;
+  max-height: calc(100vh - var(--header-h) - 3rem);
+  overflow-y: auto;
+  padding-right: 1rem;
+  font-size: var(--fs-sm);
+}
+.sidebar__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.25rem;
+}
+.sidebar__sub {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-ink-muted);
+  margin-bottom: 1.25rem;
+}
+.sidebar__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-left: 1px solid var(--color-border);
+}
+.sidebar__item { position: relative; }
+.sidebar__link {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.55rem 0 0.55rem 1rem;
+  color: var(--color-ink-muted);
+  font-weight: 450;
+  border-left: 2px solid transparent;
+  margin-left: -1px;
+  transition: all 0.15s ease;
+}
+.sidebar__link:hover {
+  color: var(--color-ink);
+  border-left-color: var(--color-border-strong);
+}
+.sidebar__link.is-active {
+  color: var(--color-ink);
+  font-weight: 600;
+  border-left: 2px solid var(--color-accent);
+  background: linear-gradient(90deg,
+    color-mix(in oklab, var(--color-accent) 8%, transparent),
+    transparent 60%);
+}
+.sidebar__num {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--color-ink-muted);
+  min-width: 1.5rem;
+}
+.sidebar__link.is-active .sidebar__num { color: var(--color-accent); }
+
+.sidebar__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-ink-muted);
+  margin-bottom: 1.5rem;
+}
+.sidebar__back:hover { color: var(--color-accent); }
+
+/* ---- Main content — fills the middle column edge-to-edge ---- */
+.content {
+  min-width: 0;
+  width: 100%;
+}
+.content > * { max-width: 100%; }
+.content--full { max-width: none; }
+
+/* ---- TOC (right rail — on this page) ---- */
+.toc {
+  position: sticky;
+  top: calc(var(--header-h) + 1.5rem);
+  align-self: start;
+  max-height: calc(100vh - var(--header-h) - 3rem);
+  overflow-y: auto;
+  padding-left: 1rem;
+  font-size: var(--fs-sm);
+}
+.toc__label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-ink-muted);
+  margin-bottom: 0.75rem;
+}
+.toc nav ul { list-style: none; padding: 0; margin: 0; }
+.toc nav ul ul { padding-left: 0.9rem; }
+.toc nav li { margin: 0; }
+.toc nav a {
+  display: block;
+  padding: 0.3rem 0;
+  color: var(--color-ink-muted);
+  font-weight: 450;
+  border-left: 2px solid transparent;
+  padding-left: 0.75rem;
+  margin-left: -1rem;
+  transition: all 0.15s ease;
+  line-height: 1.4;
+  font-size: 0.85rem;
+}
+.toc nav a:hover { color: var(--color-ink); }
+.toc nav a.is-active {
+  color: var(--color-accent);
+  border-left-color: var(--color-accent);
+  font-weight: 500;
+}
+
+/* ---- Footer ----
+   Two-tier dark footer. Always uses the brand-dark surface regardless of the
+   active theme — gives every page a consistent grounding zone, like
+   Material for MkDocs. */
+.site-footer {
+  margin-top: 6rem;
+  background: #141E2F;                 /* brand surface dark */
+  color: #F4F1EA;                      /* brand ink dark */
+  position: relative;
+  overflow: hidden;
+}
+
+/* Tier 1 — meta: brand block + social icons */
+.site-footer__meta {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2.75rem var(--gutter) 1.75rem;
+  max-width: 100%;
+}
+.site-footer__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 38rem;
+}
+.site-footer__brand .brand { color: #F4F1EA; gap: 0.6rem; }
+.site-footer__brand .brand__mark { color: #F4F1EA; }
+.site-footer__brand .brand__tag {
+  color: #9CA3AF;
+  border-left-color: rgba(244, 241, 234, 0.15);
+}
+.site-footer__brand .brand__logo { height: var(--logo-h, 28px); width: auto; }
+.site-footer__desc {
+  margin: 0;
+  color: #9CA3AF;
+  max-width: 36ch;
+  font-size: var(--fs-sm);
+  line-height: 1.55;
+}
+
+/* Social icon row */
+.site-footer__social {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.site-footer__social li { margin: 0; }
+.site-footer__social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  color: #9CA3AF;
+  transition: color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
+}
+.site-footer__social a:hover {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+.site-footer__social svg { width: 1.05rem; height: 1.05rem; }
+
+/* Tier 2 — legal: copyright + attribution. Slightly darker than tier 1. */
+.site-footer__legal {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem 1.5rem;
+  padding: 1rem var(--gutter);
+  background: #0C1724;                 /* Splunk Black — true bottom strip */
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  /*letter-spacing: 0.04em;*/
+  color: #6E7891;
+}
+.site-footer__legal a {
+  color: #9CA3AF;
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(255, 255, 255, 0.18);
+}
+.site-footer__legal a:hover {
+  color: #FFFFFF;
+  border-bottom-color: var(--color-accent);
+}
+
+@media (max-width: 720px) {
+  .site-footer__meta { flex-direction: column; align-items: flex-start; }
+  .site-footer__legal { flex-direction: column; align-items: flex-start; }
+}
+
+/* ---- Page-level prev/next ---- */
+.pager {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 4rem 0 1rem;
+}
+.pager__btn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  color: var(--color-ink);
+  background: var(--color-paper);
+  transition: all 0.15s ease;
+}
+.pager__btn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-ink);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px color-mix(in oklab, var(--color-accent) 12%, transparent);
+}
+.pager__btn--next { text-align: right; }
+.pager__label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-ink-muted);
+}
+.pager__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.pager__btn--prev .pager__label::before { content: "\2190  "; color: var(--color-accent); }
+.pager__btn--next .pager__label::after  { content: "  \2192"; color: var(--color-accent); }
+.pager__hint {
+  margin: 3rem 0 -1rem;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--color-ink-muted);
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+.pager__hint kbd { font-size: 0.95em; }
+
+/* ---- Light Trails — Splunk brand gradient bloom ---- */
+/* The hero bloom uses the official brand asset PNGs (configurable via
+   `heroBackgroundLight` / `heroBackgroundDark` params). The footer uses a
+   subtle CSS radial fallback. */
+
+.light-trails {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.light-trails--hero {
+  inset: 0;
+  background-image: var(--hero-bg-light);
+  background-repeat: no-repeat;
+  background-position: right top;
+  background-size: cover;
+}
+[data-theme="dark"] .light-trails--hero {
+  background-image: var(--hero-bg-dark);
+}
+/* Fallback for sites that set heroBackground* to "" — render a soft radial
+   gradient bloom in the same position. */
+.light-trails--hero:where([style*="--hero-bg-light:none"]),
+.light-trails--hero {
+  /* layered fallback — the CSS gradient sits behind the image; if image is
+     `none` (param empty), the gradient becomes visible. */
+  background-color: transparent;
+}
+
+/* Footer uses the dark-mode bloom asset regardless of the active page theme,
+   because the footer itself is always dark (Splunk Black surface). The
+   light-mode asset's cream background would clash. Mirrored via scaleX(-1)
+   so the bloom anchors to the visible left. `inset: -2rem` expands past the
+   footer edges to clip the source PNG's rounded corners via overflow:hidden. */
+.light-trails--footer {
+  inset: -2rem;
+  background-image: var(--hero-bg-dark);
+  background-repeat: no-repeat;
+  background-position: right top;
+  background-size: cover;
+  transform: scaleX(-1);
+  opacity: 0.85;
+}
+
+/* ---- Mobile nav toggle ---- */
+.menu-btn {
+  display: none;
+  width: 2.25rem;
+  height: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  margin-left: auto;
+}
+.menu-btn svg { width: 1.1rem; height: 1.1rem; }
+
+/* ---- Responsive ---- */
+@media (max-width: 1100px) {
+  :root { --toc-w: 0; --sidebar-w: 16rem; }
+  .page { grid-template-columns: var(--sidebar-w) minmax(0, 1fr); }
+  .toc { display: none; }
+}
+@media (max-width: 820px) {
+  .page {
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: calc(var(--header-h) + 1rem);
+  }
+  .sidebar {
+    position: fixed;
+    top: var(--header-h);
+    left: 0;
+    height: calc(100vh - var(--header-h));
+    width: 85%;
+    max-width: 22rem;
+    background: var(--color-paper);
+    border-right: 1px solid var(--color-border);
+    padding: 1.5rem;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 40;
+  }
+  .sidebar.is-open { transform: translateX(0); }
+  .menu-btn { display: inline-flex; }
+  .nav { display: none; }
+  .pager { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,48 @@
+# theme.toml — metadata for themes.gohugo.io and Hugo's theme system.
+# https://gohugo.io/hugo-modules/theme-components/
+
+name = "Splunk Workshop"
+license = "MIT"
+licenselink = "https://github.com/splunk/hugo-theme-splunk-workshop/blob/main/LICENSE"
+description = "A modern, customizable Hugo theme for technical workshops. Three-column layout, light/dark/auto mode, signature gradient motif, IBM Plex typography, and 50+ workshop-specific shortcodes (callouts, steps, exercises, tabs, terminal, mermaid, math, presenter notes, and more). Branded for Splunk by default; rebrand-able to any company via params."
+homepage = "https://github.com/splunk/hugo-theme-splunk-workshop"
+demosite = "https://splunk.github.io/hugo-theme-splunk-workshop/"
+min_version = "0.125.0"
+
+tags = [
+  "workshop",
+  "tutorial",
+  "documentation",
+  "learning",
+  "education",
+  "technical",
+  "splunk",
+  "observability",
+]
+
+features = [
+  "responsive",
+  "light-mode",
+  "dark-mode",
+  "auto-mode",
+  "search",
+  "shortcodes",
+  "table-of-contents",
+  "syntax-highlighting",
+  "mermaid",
+  "katex-math",
+  "i18n",
+  "accessible",
+  "presenter-mode",
+  "print-stylesheet",
+]
+
+[author]
+  name = "Splunk Workshop Theme contributors"
+  homepage = "https://github.com/splunk/hugo-theme-splunk-workshop"
+
+# `original` is filled in only if this theme is a fork or port of another.
+[original]
+  author = ""
+  homepage = ""
+  repo = ""

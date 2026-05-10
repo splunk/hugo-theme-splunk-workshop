@@ -1,0 +1,106 @@
+/* Modern reset — opinionated, minimal */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h, 4.25rem) + 1rem);
+}
+
+body {
+  min-height: 100vh;
+  line-height: 1.6;
+  font-family: var(--font-body);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+input, button, textarea, select { font: inherit; color: inherit; }
+
+p, h1, h2, h3, h4, h5, h6 { overflow-wrap: break-word; }
+
+button {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  color: inherit;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
+  transition: color 0.15s ease;
+}
+/* Hover keeps the brand pink #FF007F — Splunk's official magenta. The dark
+   variant token is reserved for borders/shadows where a slightly deeper shade
+   improves contrast; never used on text. */
+a:hover { color: var(--color-accent); text-decoration: underline; }
+
+::selection { background: var(--color-accent); color: #fff; }
+
+/* ------ Focus rings — keyboard-only via :focus-visible ------ */
+:focus { outline: none; }
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+.btn:focus-visible,
+.pager__btn:focus-visible,
+.card:focus-visible,
+.shortcode-card:focus-visible,
+.sidebar__link:focus-visible,
+.tabs__btn:focus-visible,
+.theme-toggle:focus-visible,
+.menu-btn:focus-visible {
+  outline-offset: 4px;
+}
+.tabs__btn:focus-visible {
+  outline-offset: -2px;
+  border-radius: 4px;
+}
+
+/* ------ Skip link — off-screen until focused ------ */
+.skip-link {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  padding: 0.6rem 1rem;
+  background: var(--color-accent);
+  color: #fff !important;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 6px;
+  text-decoration: none !important;
+  transform: translateY(-200%);
+  transition: transform 0.15s ease;
+  z-index: 100;
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

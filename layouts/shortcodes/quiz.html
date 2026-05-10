@@ -1,0 +1,31 @@
+{{- /*
+  Quiz — multiple choice with reveal-on-click feedback.
+  Usage:
+    {{< quiz question="Which command counts events?" >}}
+    {{< quiz-option correct=true >}}stats count{{< /quiz-option >}}
+    {{< quiz-option >}}timechart{{< /quiz-option >}}
+    {{< quiz-feedback >}}`stats count` aggregates events.{{< /quiz-feedback >}}
+    {{< /quiz >}}
+*/ -}}
+{{- $q       := .Get "question" | default (.Get 0) | default "Question" -}}
+{{- $optsKey := printf "_quiz_opts_%d" .Ordinal -}}
+{{- $fbKey   := printf "_quiz_fb_%d"   .Ordinal -}}
+{{- /* let children run */ -}}
+{{- $_ := .Inner -}}
+{{- $opts := .Page.Scratch.Get $optsKey | default slice -}}
+{{- $fb   := .Page.Scratch.Get $fbKey -}}
+<section class="quiz" data-quiz>
+  <p class="quiz__label">Quick check</p>
+  <p class="quiz__question">{{ $q }}</p>
+  <ul class="quiz__options">
+    {{ range $i, $o := $opts }}
+      <li>
+        <button class="quiz__option" type="button" data-correct="{{ $o.correct }}">
+          <span class="quiz__marker">{{ index (slice "A" "B" "C" "D" "E" "F") $i }}</span>
+          <span>{{ $o.text | safeHTML }}</span>
+        </button>
+      </li>
+    {{ end }}
+  </ul>
+  {{ with $fb }}<div class="quiz__feedback">{{ . | safeHTML }}</div>{{ end }}
+</section>

@@ -1,0 +1,10 @@
+{{- /*
+  Inline span with custom color, font-family, and weight.
+  Usage (paired shortcode):
+    textcolor color="#FF0F7B"          - red-pink
+    textcolor color="green" weight="bold" font="serif"
+*/ -}}
+{{- $color  := .Get "color"  | default "currentColor" -}}
+{{- $font   := .Get "font"   | default "inherit" -}}
+{{- $weight := .Get "weight" | default "normal" -}}
+<span style="color: {{ $color | safeCSS }}; font-family: {{ $font | safeCSS }}; font-weight: {{ $weight | safeCSS }}">{{ .Inner | safeHTML }}</span>

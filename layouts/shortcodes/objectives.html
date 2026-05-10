@@ -1,0 +1,16 @@
+{{- /*
+  Learning objectives — bullet list with custom marker.
+  Body is markdown, e.g.:
+    {{< objectives >}}
+    - Understand the SPL syntax
+    - Run your first search
+    - Save it as a report
+    {{< /objectives >}}
+*/ -}}
+<aside class="list-block list-block--objectives">
+  <p class="list-block__label">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+    What you'll learn
+  </p>
+  {{ .Inner | .Page.RenderString }}
+</aside>

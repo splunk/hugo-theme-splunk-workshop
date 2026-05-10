@@ -1,0 +1,6 @@
+{{- /*
+  Outputs the configured OpenTelemetry version from site params.
+  Set `stable_otel_version` in your hugo.toml [params] block.
+  Example: invoke as `otel-version` — outputs e.g. "1.32.0".
+*/ -}}
+{{- $.Site.Params.stable_otel_version | default "" -}}

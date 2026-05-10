@@ -1,0 +1,27 @@
+{{- /*
+  Tree — relearn-compatible. Two modes:
+
+  1) Body mode: paste output from `tree` (or any pre-formatted listing).
+  2) Page-attachment mode: walk .Page.Resources matching a pattern.
+
+  Body mode is preferred for most workshops — it lets you author exactly the
+  shape you want. Pass content between the tags.
+
+  Args:
+    pattern  - optional regex of resources to list (page-attachment mode)
+    icon     - icon name for files
+*/ -}}
+{{- $body    := trim .Inner "\n\r" -}}
+{{- $pattern := .Get "pattern" -}}
+{{- if $body -}}
+  <pre class="file-tree" aria-label="File tree">{{- range $line := split $body "\n" -}}
+{{- $isDir := strings.Contains $line "/" -}}
+<span class="{{ if $isDir }}file-tree__dir-line{{ end }}">{{ $line }}</span>
+{{ end -}}</pre>
+{{- else if $pattern -}}
+  <ul class="tree-list">
+  {{ range (where .Page.Resources "Name" "regexp" $pattern) }}
+    <li><a href="{{ .RelPermalink }}">{{ .Title | default .Name }}</a></li>
+  {{ end }}
+  </ul>
+{{- end -}}

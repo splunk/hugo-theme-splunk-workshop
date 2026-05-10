@@ -1,0 +1,13 @@
+{{- $title := .Get "title" | default (.Get 0) -}}
+{{- $args := dict "type" "tip" -}}
+{{- if $title }}{{ $args = merge $args (dict "title" $title) }}{{ end -}}
+{{- $inner := .Inner -}}
+<div class="callout callout--tip">
+  <span class="callout__icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg>
+  </span>
+  <div class="callout__body">
+    <p class="callout__title">{{ $title | default "Tip" }}</p>
+    {{ $inner | .Page.RenderString }}
+  </div>
+</div>

@@ -1,0 +1,27 @@
+{{- /* Workshop meta row: time, difficulty, prerequisites count, tags */ -}}
+{{- $params := .Params -}}
+{{- if or $params.duration $params.difficulty $params.tags -}}
+<div class="workshop-meta">
+  {{ with $params.duration }}
+    <span class="workshop-meta__item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <strong>{{ . }}</strong>
+    </span>
+  {{ end }}
+  {{ with $params.difficulty }}
+    <span class="workshop-meta__item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      <strong>{{ . | title }}</strong>
+    </span>
+  {{ end }}
+  {{ with $params.author }}
+    <span class="workshop-meta__item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <strong>{{ . }}</strong>
+    </span>
+  {{ end }}
+  {{ with $params.tags }}
+    {{ range . }}<span class="badge">{{ . }}</span>{{ end }}
+  {{ end }}
+</div>
+{{- end -}}

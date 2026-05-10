@@ -1,0 +1,31 @@
+{{- /*
+  Workshop sidebar — lists pages within the current section in weight order.
+  Falls back to top-level sections on the home page.
+*/ -}}
+{{- $current := . -}}
+{{- $section := .CurrentSection -}}
+{{- $pages := partial "visible-pages.html" $section.Pages -}}
+
+<aside class="sidebar" aria-label="Workshop navigation">
+  {{ if and (ne $section.RelPermalink "/") (.Parent) }}
+    <a class="sidebar__back" href="{{ $section.Parent.RelPermalink }}">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      {{ i18n "allWorkshops" }}
+    </a>
+  {{ end }}
+
+  <h3 class="sidebar__title">{{ $section.Title }}</h3>
+  {{ with $section.Params.tagline }}<p class="sidebar__sub">{{ . }}</p>{{ end }}
+
+  <ol class="sidebar__list">
+    {{ range $i, $p := $pages }}
+      {{ $active := eq $p.RelPermalink $current.RelPermalink }}
+      <li class="sidebar__item">
+        <a class="sidebar__link {{ if $active }}is-active{{ end }}" href="{{ $p.RelPermalink }}"{{ if $active }} aria-current="page"{{ end }}>
+          <span class="sidebar__num">{{ printf "%02d" (add $i 1) }}</span>
+          <span class="sidebar__label">{{ $p.LinkTitle }}</span>
+        </a>
+      </li>
+    {{ end }}
+  </ol>
+</aside>

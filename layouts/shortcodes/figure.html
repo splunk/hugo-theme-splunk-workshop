@@ -1,0 +1,14 @@
+{{- /* Alias of image — preserves Hugo's built-in {{< figure >}} syntax. */ -}}
+{{- $src     := .Get "src"     | default (.Get 0) -}}
+{{- $alt     := .Get "alt"     | default "" -}}
+{{- $caption := .Get "caption" | default (.Get 1) -}}
+{{- $title   := .Get "title"   -}}
+{{- $align   := .Get "align"   | default "" -}}
+{{- $url := $src -}}
+{{- with .Page.Resources.GetMatch $src }}{{- $url = .RelPermalink -}}{{- end -}}
+<figure class="figure {{ with $align }}figure--align-{{ . }}{{ end }}">
+  <div class="figure__inner">
+    <img src="{{ $url | safeURL }}" alt="{{ $alt }}" loading="lazy" decoding="async">
+  </div>
+  {{ if or $title $caption }}<figcaption class="figure__caption">{{ with $title }}<strong>{{ . }}</strong> {{ end }}{{ $caption }}</figcaption>{{ end }}
+</figure>

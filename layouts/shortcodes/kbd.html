@@ -1,0 +1,17 @@
+{{- /*
+  Keyboard key — accepts one or more keys joined by + or ,.
+  Usage: {{< kbd "Cmd+Shift+P" >}} or {{< kbd "Ctrl" "K" >}}
+*/ -}}
+{{- $raw := .Get 0 -}}
+{{- if not $raw -}}
+  {{- $parts := slice -}}
+  {{- range seq 0 5 -}}{{- with $.Get . }}{{- $parts = $parts | append . -}}{{- end -}}{{- end -}}
+  {{- $raw = delimit $parts "+" -}}
+{{- end -}}
+{{- $keys := split (replace $raw "," "+") "+" -}}
+<span class="kbd-combo">
+  {{- range $i, $k := $keys -}}
+    {{- if $i }}<span class="kbd-combo__plus">+</span>{{ end -}}
+    <kbd>{{ trim $k " " }}</kbd>
+  {{- end -}}
+</span>

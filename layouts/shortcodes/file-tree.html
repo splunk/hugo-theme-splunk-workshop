@@ -1,0 +1,20 @@
+{{- /*
+  File tree — paste output from `tree`, or hand-write box-drawing chars.
+  Directories highlight automatically (lines containing `/`).
+
+  Usage:
+    {{< file-tree >}}
+    project/
+    ├── src/
+    │   ├── index.ts        # entry
+    │   └── utils/
+    │       └── format.ts
+    ├── package.json
+    └── README.md
+    {{< /file-tree >}}
+*/ -}}
+{{- $body := trim .Inner "\n\r" -}}
+<pre class="file-tree" aria-label="File tree">{{- range $line := split $body "\n" -}}
+{{- $isDir := strings.Contains $line "/" -}}
+<span class="{{ if $isDir }}file-tree__dir-line{{ end }}">{{ $line }}</span>
+{{ end -}}</pre>

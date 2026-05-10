@@ -1,0 +1,6 @@
+{{- /*
+  Inline filename — styled like a code chip but with a leading dot indicator.
+  Usage: {{< file "config/settings.yaml" >}}
+*/ -}}
+{{- $name := .Get 0 -}}
+<code class="inline-file">{{ $name }}</code>

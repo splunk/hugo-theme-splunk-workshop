@@ -1,0 +1,8 @@
+{{- /* Right-rail "On this page" — Hugo's built-in TOC, with scroll-spy hook. */ -}}
+{{- $toc := .TableOfContents -}}
+{{- if $toc -}}
+<aside class="toc" data-toc aria-label="On this page">
+  <p class="toc__label">{{ i18n "onThisPage" }}</p>
+  {{ $toc | safeHTML }}
+</aside>
+{{- end -}}

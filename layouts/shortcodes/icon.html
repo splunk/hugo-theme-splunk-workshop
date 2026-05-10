@@ -1,0 +1,9 @@
+{{- /*
+  Inline icon. Uses the curated icon set in partials/icon-svg.html.
+  Usage:
+    {{% icon "github" %}}
+    {{% icon icon="check" color="#FF0F7B" %}}
+*/ -}}
+{{- $name  := .Get "icon" | default (.Get 0) | default "info" -}}
+{{- $color := .Get "color" -}}
+<span class="inline-icon"{{ with $color }} style="color: {{ . | safeCSS }}"{{ end }}>{{ partial "icon-svg.html" $name }}</span>

@@ -1,0 +1,10 @@
+{{- /*
+  Returns a Pages collection sorted by weight, with hidden pages filtered out.
+  Caller passes any Pages set:
+
+    {{ $pages := partial "visible-pages.html" .CurrentSection.Pages }}
+    {{ $sections := partial "visible-pages.html" .Site.Sections }}
+
+  Adding `draft` filtering or other site-wide rules in one place is now trivial.
+*/ -}}
+{{- return where .ByWeight "Params.hidden" "!=" true -}}

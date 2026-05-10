@@ -1,0 +1,29 @@
+{{- /*
+  Step shortcode
+  Args:
+    title (positional 0 or named "title") - step title
+    n     (positional 1 or named "n")     - step number; auto-increments per page
+    time  (positional 2 or named "time")  - optional duration label, e.g. "5 min"
+  Usage:
+    {{< step "Install dependencies" >}} ...body... {{< /step >}}
+    {{< step title="Install" time="5 min" >}} ...body... {{< /step >}}
+*/ -}}
+{{- $title := .Get "title" | default (.Get 0) -}}
+{{- $num   := .Get "n"     | default (.Get 1) -}}
+{{- $time  := .Get "time"  | default (.Get 2) -}}
+{{- if not $num -}}
+  {{- .Page.Scratch.Add "step_counter" 1 -}}
+  {{- $num = .Page.Scratch.Get "step_counter" -}}
+{{- end -}}
+<section class="step">
+  <div class="step__num">{{ $num }}</div>
+  <div>
+    <header class="step__head">
+      <h3 class="step__title">{{ $title }}</h3>
+      {{ with $time }}<span class="step__time">{{ . }}</span>{{ end }}
+    </header>
+    <div class="step__body">
+      {{ .Inner | .Page.RenderString }}
+    </div>
+  </div>
+</section>

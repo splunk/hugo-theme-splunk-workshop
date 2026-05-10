@@ -1,0 +1,76 @@
+name: Deploy demo to GitHub Pages
+
+# Builds exampleSite/ on every push to main and publishes to GitHub Pages.
+# The deployed site is the theme's own demo + docs — `splunk.github.io/<repo>/`.
+#
+# Setup (one-time):
+#   1. Repo settings → Pages → Source → "GitHub Actions"
+#   2. Push to main; the workflow runs automatically.
+#
+# This workflow runs in the repo's own GitHub Pages site. To deploy your OWN
+# Hugo site that uses this theme, copy this file into your site's repo and
+# adjust the --source flag if your project lives at the repo root.
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      HUGO_VERSION: 0.125.7
+    steps:
+      - name: Install Hugo CLI (extended)
+        run: |
+          curl -sSL "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb" \
+            -o /tmp/hugo.deb
+          sudo dpkg -i /tmp/hugo.deb
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Build with Hugo
+        env:
+          HUGO_ENVIRONMENT: production
+          HUGO_ENV: production
+        run: |
+          hugo \
+            --source exampleSite \
+            --themesDir ../.. \
+            --gc \
+            --minify \
+            --baseURL "${{ steps.pages.outputs.base_url }}/"
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./exampleSite/public
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,7 @@
+{{- if not .Parent -}}
+  {{- errorf "{{< quiz-option >}} must be used inside {{< quiz >}}" -}}
+{{- end -}}
+{{- $key     := printf "_quiz_opts_%d" .Parent.Ordinal -}}
+{{- $correct := eq (.Get "correct" | default (.Get 0) | default "false" | string) "true" -}}
+{{- $entry   := dict "text" (.Inner | .Page.RenderString | string) "correct" $correct -}}
+{{- .Page.Scratch.Add $key (slice $entry) -}}

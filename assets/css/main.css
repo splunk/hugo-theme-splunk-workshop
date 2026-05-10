@@ -1,0 +1,11 @@
+/* ==========================================================================
+   Splunk Workshop Theme — main entry
+   Order matters: tokens → reset → typography → layout → components → code → shortcodes
+   ========================================================================== */
+
+@import "reset.css";
+@import "typography.css";
+@import "layout.css";
+@import "components.css";
+@import "code.css";
+@import "shortcodes.css";

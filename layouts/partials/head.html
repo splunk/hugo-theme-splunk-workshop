@@ -1,0 +1,68 @@
+{{- $p := .Site.Params -}}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="generator" content="Hugo {{ hugo.Version }}">
+<title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} · {{ .Site.Title }}{{ end }}</title>
+<meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ $p.description }}{{ end }}">
+<meta name="theme-color" content="{{ $p.colorAccent | default "#FF0F7B" }}">
+
+{{- /* OpenGraph & Twitter */ -}}
+<meta property="og:title" content="{{ .Title | default .Site.Title }}">
+<meta property="og:description" content="{{ with .Description }}{{ . }}{{ else }}{{ $p.description }}{{ end }}">
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta name="twitter:card" content="summary_large_image">
+
+{{- /* Favicon */ -}}
+{{- with $p.favicon }}
+<link rel="icon" href="{{ . | relURL }}" type="image/svg+xml">
+{{- end }}
+
+{{- /* Fonts (loaded from URL param so users can swap) */ -}}
+{{- with $p.fontUrl }}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="{{ . | safeURL }}">
+{{- end }}
+
+{{- /* Theme tokens (Hugo params → CSS custom properties) */ -}}
+{{ partial "theme-vars.html" . }}
+
+{{- /* Bundle CSS — concat in load order, no PostCSS dependency. */ -}}
+{{ $files := slice
+  (resources.Get "css/reset.css")
+  (resources.Get "css/typography.css")
+  (resources.Get "css/layout.css")
+  (resources.Get "css/components.css")
+  (resources.Get "css/code.css")
+  (resources.Get "css/shortcodes.css")
+  (resources.Get "css/print.css")
+}}
+{{ $css := $files | resources.Concat "css/bundle.css" }}
+{{ if hugo.IsProduction }}
+  {{ $css = $css | resources.Minify | resources.Fingerprint }}
+{{ end }}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}"{{ with $css.Data.Integrity }} integrity="{{ . }}"{{ end }}>
+
+{{- /* Pre-paint mode resolution to avoid FOUC */ -}}
+<script>
+  (function() {
+    try {
+      var m = localStorage.getItem("splunk-workshop-theme") || "{{ $p.defaultMode | default `auto` }}";
+      var resolved = m === "auto"
+        ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+        : m;
+      document.documentElement.setAttribute("data-theme", resolved);
+      document.documentElement.setAttribute("data-theme-mode", m);
+    } catch (e) {}
+  })();
+</script>
+
+{{- /* JS as ES module */ -}}
+{{ $js := resources.Get "js/main.js" }}
+{{ if $js }}
+  {{ $opts := dict "minify" true "targetPath" "js/bundle.js" }}
+  {{ $bundle := $js | js.Build $opts | resources.Fingerprint }}
+  <script type="module" src="{{ $bundle.RelPermalink }}" defer></script>
+{{ end }}
+

@@ -1,0 +1,48 @@
+{{ define "main" }}
+{{- $p := .Site.Params -}}
+<main>
+  <section class="hero hero--chapter">
+    {{ if $p.showLightTrails }}<div class="light-trails light-trails--hero" aria-hidden="true"></div>{{ end }}
+    <div class="page page--narrow page--small-pad-top">
+      <div class="hero__inner chapter">
+        {{ with .Params.weight }}<div class="chapter__weight" aria-hidden="true">{{ . }}</div>{{ end }}
+        <p class="eyebrow">{{ with .Params.subtitle }}{{ . }}{{ else }}{{ i18n "chapter" }}{{ end }}</p>
+        <h1 class="chapter__title">{{ .Title }}</h1>
+        {{ with .Description }}<p class="hero__lead">{{ . }}</p>{{ end }}
+      </div>
+    </div>
+  </section>
+
+  <div class="page page--narrow page--no-pad-top">
+    <div class="content content--full" id="content">
+      {{- /* Page-authored content wins. If the chapter index has no markdown body,
+         fall back to an automatic card grid of children. */ -}}
+      {{ if .Content }}
+        {{ .Content }}
+      {{ else }}
+        {{ $items := partial "visible-pages.html" .Pages }}
+        {{ if .Sections }}{{ $items = partial "visible-pages.html" .Sections }}{{ end }}
+        {{ if $items }}
+          <div class="cards">
+            {{ range $i, $page := $items }}
+              <a class="card" href="{{ .RelPermalink }}">
+                <span class="card__num">{{ printf "%02d" (add $i 1) }}</span>
+                <h2 class="card__title">{{ .LinkTitle }}</h2>
+                {{ with .Description }}<p class="card__desc">{{ . }}</p>{{ end }}
+                <div class="card__meta">
+                  {{ with .Params.duration }}<span class="card__meta-item">{{ . }}</span>{{ end }}
+                  {{ with .Params.difficulty }}<span class="card__meta-item">{{ . }}</span>{{ end }}
+                  {{- $leaves := where .RegularPagesRecursive "Params.hidden" "!=" true -}}
+                  {{ if gt (len $leaves) 1 }}<span class="card__meta-item">{{ i18n "pagesCount" (dict "Count" (len $leaves)) }}</span>{{ end }}
+                </div>
+              </a>
+            {{ end }}
+          </div>
+        {{ end }}
+      {{ end }}
+
+      {{ partial "pager.html" . }}
+    </div>
+  </div>
+</main>
+{{ end }}

@@ -1,0 +1,18 @@
+{{- /*
+  workshop-root.html — given a page, returns the Page that defines the
+  navigation scope. Each section is treated as a self-contained nav unit:
+  prev/next never cross section boundaries, so a chapter landing always
+  starts the flow (no Previous wrapping back to the previous chapter).
+
+  Rules:
+    - If the page is a section (Kind == "section"): scope = the page itself.
+    - Otherwise (regular page): scope = the page's CurrentSection.
+*/ -}}
+{{- $page := . -}}
+{{- $root := $page.FirstSection -}}
+{{- if eq $page.Kind "section" -}}
+  {{- $root = $page -}}
+{{- else -}}
+  {{- with $page.CurrentSection -}}{{ $root = . }}{{- end -}}
+{{- end -}}
+{{- return $root -}}

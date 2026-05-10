@@ -1,0 +1,104 @@
+{{- $p := .Site.Params -}}
+{{- /* Two-tier dark footer in the Material-for-MkDocs style.
+
+       Top tier ("meta")  : brand wordmark + tagline + social icon row.
+       Bottom tier ("legal"): copyright + "Built with Hugo" attribution.
+
+       The footer is always dark regardless of the active theme — gives every
+       page a consistent grounding zone. The brand bloom (light-trails) sits
+       behind it, mirrored to anchor on the left. */ -}}
+<footer class="site-footer">
+  {{ if $p.showLightTrails }}<div class="light-trails light-trails--footer" aria-hidden="true"></div>{{ end }}
+  <div class="site-footer__meta">
+    <div class="site-footer__brand">
+      <a href="{{ "/" | relURL }}" class="brand brand--block brand--footer">
+        {{- if $p.logoLight -}}
+          {{- /* In the dark footer, prefer the dark-mode logo if available. */ -}}
+          {{- $logo := $p.logoDark | default $p.logoLight -}}
+          <img class="brand__logo" src="{{ $logo | relURL }}" alt="{{ .Site.Title }}">
+        {{- else -}}
+          <span class="brand__mark">{{ $p.brandName | default "splunk>" }}</span>
+        {{- end -}}
+        {{ with $p.brandTagline }}<span class="brand__tag">{{ . }}</span>{{ end }}
+      </a>
+      <p class="site-footer__desc">{{ $p.description }}</p>
+    </div>
+
+    {{ with $p.social }}
+    {{- $hasAny := or .github (or .twitter (or .linkedin (or .youtube (or .mastodon (or .bluesky .rss))))) -}}
+    {{- if $hasAny }}
+    <ul class="site-footer__social" aria-label="Social links">
+      {{ with .github   }}<li><a href="{{ . }}" target="_blank" rel="noopener" aria-label="GitHub">{{ partial "icon-svg.html" "github"   }}</a></li>{{ end }}
+      {{ with .twitter  }}<li><a href="{{ . }}" target="_blank" rel="noopener" aria-label="X (Twitter)">{{ partial "icon-svg.html" "x"        }}</a></li>{{ end }}
+      {{ with .linkedin }}<li><a href="{{ . }}" target="_blank" rel="noopener" aria-label="LinkedIn">{{ partial "icon-svg.html" "linkedin" }}</a></li>{{ end }}
+      {{ with .youtube  }}<li><a href="{{ . }}" target="_blank" rel="noopener" aria-label="YouTube">{{ partial "icon-svg.html" "youtube"  }}</a></li>{{ end }}
+      {{ with .mastodon }}<li><a href="{{ . }}" target="_blank" rel="noopener me" aria-label="Mastodon">{{ partial "icon-svg.html" "mastodon" }}</a></li>{{ end }}
+      {{ with .bluesky  }}<li><a href="{{ . }}" target="_blank" rel="noopener" aria-label="Bluesky">{{ partial "icon-svg.html" "bluesky"  }}</a></li>{{ end }}
+      {{ with .rss      }}<li><a href="{{ . }}" rel="alternate" type="application/rss+xml" aria-label="RSS">{{ partial "icon-svg.html" "rss"      }}</a></li>{{ end }}
+    </ul>
+    {{- end }}
+    {{ end }}
+  </div>
+
+  <div class="site-footer__legal">
+    <span class="site-footer__copyright">
+      {{- /* Override via [params] copyright in hugo.toml. Falls back to "© <year> <title>". */ -}}
+      {{- with $p.copyright -}}
+        {{ . | replaceRE "\\{year\\}" (printf "%d" now.Year) | safeHTML }}
+      {{- else -}}
+        &copy; {{ now.Year }} {{ .Site.Title }}
+      {{- end -}}
+    </span>
+    <span class="site-footer__attribution">{{ i18n "builtWithHugo" }} · <a href="https://github.com/splunk/hugo-theme-splunk-workshop" target="_blank" rel="noopener">Splunk Workshop Theme</a></span>
+  </div>
+</footer>
+
+{{- /* Lazy-load KaTeX / Mermaid only when a page needs them.
+       Placed in footer so content has rendered and Store flags are set.
+       SRI hashes pinned to versions below — bump them together. */ -}}
+{{ if .Store.Get "_needs_katex" }}
+  {{- /* SRI hashes verified against the CDN at build time. To bump KaTeX:
+         1. Update the version triple below.
+         2. Recompute hashes:
+              curl -sL <url> | openssl dgst -sha384 -binary | openssl base64 -A */ -}}
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"
+        integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+"
+        crossorigin="anonymous">
+  <script defer
+          src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
+          integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg"
+          crossorigin="anonymous"></script>
+  <script defer
+          src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+          integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk"
+          crossorigin="anonymous"
+          onload='renderMathInElement(document.body, {delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}], throwOnError:false})'></script>
+{{ end }}
+{{ if .Store.Get "_needs_mermaid" }}
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.esm.min.mjs";
+    const themeFor = () => document.documentElement.dataset.theme === "dark" ? "dark" : "default";
+    const init = () => mermaid.initialize({ startOnLoad: false, theme: themeFor(), securityLevel: "loose" });
+    init();
+    mermaid.run({ querySelector: ".mermaid" });
+    // Re-render diagrams when the user toggles light/dark.
+    new MutationObserver(async () => {
+      init();
+      // Mermaid mutates each .mermaid node and stamps `data-processed`; reset to re-run.
+      document.querySelectorAll(".mermaid[data-processed]").forEach(el => {
+        const src = el.getAttribute("data-mermaid-source") || el.textContent;
+        el.removeAttribute("data-processed");
+        el.innerHTML = src;
+        if (!el.getAttribute("data-mermaid-source")) el.setAttribute("data-mermaid-source", src);
+      });
+      await mermaid.run({ querySelector: ".mermaid" });
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    // Stash original sources for re-render.
+    document.querySelectorAll(".mermaid").forEach(el => {
+      if (!el.getAttribute("data-mermaid-source")) {
+        el.setAttribute("data-mermaid-source", el.textContent.trim());
+      }
+    });
+  </script>
+{{ end }}

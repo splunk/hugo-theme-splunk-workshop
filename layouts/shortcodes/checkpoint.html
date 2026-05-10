@@ -1,0 +1,9 @@
+{{- /*
+  Checkpoint — a "you've made it this far" milestone marker.
+  {{< checkpoint "Logged in successfully" >}}
+*/ -}}
+{{- $title := .Get "title" | default (.Get 0) | default "Checkpoint" -}}
+<aside class="checkpoint">
+  <p class="checkpoint__label">Checkpoint</p>
+  <p class="checkpoint__title">{{ $title }}</p>
+</aside>

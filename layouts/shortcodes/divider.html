@@ -1,0 +1,13 @@
+{{- /* Decorative section divider with light-trail SVG. */ -}}
+<div class="section-divider" aria-hidden="true">
+  <svg viewBox="0 0 600 40" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <defs>
+      <linearGradient id="ldiv-{{ .Ordinal }}" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%"   stop-color="var(--color-accent)"   stop-opacity="0"/>
+        <stop offset="50%"  stop-color="var(--color-accent)"   stop-opacity="0.9"/>
+        <stop offset="100%" stop-color="var(--color-accent-3)" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <path d="M0 20 Q 200 5, 300 20 T 600 20" stroke="url(#ldiv-{{ .Ordinal }})" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </svg>
+</div>
