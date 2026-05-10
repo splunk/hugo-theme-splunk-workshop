@@ -475,18 +475,17 @@
   background-color: transparent;
 }
 
-/* Footer uses the dark-mode bloom asset regardless of the active page theme,
-   because the footer itself is always dark (Splunk Black surface). The
-   light-mode asset's cream background would clash. Mirrored via scaleX(-1)
-   so the bloom anchors to the visible left. `inset: -2rem` expands past the
-   footer edges to clip the source PNG's rounded corners via overflow:hidden. */
+/* Footer bloom — CSS radial gradient anchored off the left edge so the
+   bloom's natural fade-out happens beyond the footer, not inside it.
+   Avoids the visible curve a contained bloom image would create where the
+   bright magenta transitions to dark. */
 .light-trails--footer {
-  inset: -2rem;
-  background-image: var(--hero-bg-dark);
-  background-repeat: no-repeat;
-  background-position: right top;
-  background-size: cover;
-  transform: scaleX(-1);
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 140% at -10% 50%,
+      color-mix(in oklab, var(--color-accent)   78%, transparent) 0%,
+      color-mix(in oklab, var(--color-accent-2) 50%, transparent) 35%,
+      transparent 70%);
   opacity: 0.85;
 }
 
