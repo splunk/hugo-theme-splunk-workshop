@@ -545,14 +545,19 @@
   border-radius: 12px;
   color: var(--color-ink);
   background: var(--color-paper);
+  text-decoration: none;
   transition: all 0.15s ease;
 }
+/* Defeat the global a:hover underline — the card itself is the
+   affordance; an underline on the title would just clutter the chrome. */
 .pager__btn:hover {
   border-color: var(--color-accent);
   color: var(--color-ink);
+  text-decoration: none;
   transform: translateY(-1px);
   box-shadow: 0 4px 16px color-mix(in oklab, var(--color-accent) 12%, transparent);
 }
+.pager__btn:hover .pager__title { color: var(--color-accent-text); }
 .pager__btn--next { text-align: right; }
 .pager__label {
   font-family: var(--font-mono);
@@ -566,9 +571,24 @@
   font-size: var(--fs-md);
   font-weight: 600;
   letter-spacing: -0.02em;
+  transition: color 0.15s ease;
 }
-.pager__btn--prev .pager__label::before { content: "\2190  "; color: var(--color-accent); }
-.pager__btn--next .pager__label::after  { content: "  \2192"; color: var(--color-accent); }
+.pager__btn--prev .pager__label::before {
+  content: "\2190  ";
+  color: var(--color-accent);
+  display: inline-block;
+  transition: transform 0.18s ease;
+}
+.pager__btn--next .pager__label::after {
+  content: "  \2192";
+  color: var(--color-accent);
+  display: inline-block;
+  transition: transform 0.18s ease;
+}
+/* Nudge the arrow on hover — small directional flourish that signals
+   forward/back motion without an underline. */
+.pager__btn--prev:hover .pager__label::before { transform: translateX(-3px); }
+.pager__btn--next:hover .pager__label::after  { transform: translateX(3px); }
 .pager__hint {
   margin: 3rem 0 -1rem;
   font-family: var(--font-mono);
