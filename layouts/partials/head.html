@@ -38,6 +38,10 @@
   (resources.Get "css/shortcodes.css")
   (resources.Get "css/print.css")
 }}
+{{- /* view-transitions.css intentionally NOT bundled — cross-document
+       transitions flash light-mode defaults on dark-mode pages before
+       the pre-paint theme script runs. Revisit when browsers handle
+       dark mode + view transitions more gracefully. */ -}}
 {{ $css := $files | resources.Concat "css/bundle.css" }}
 {{ if hugo.IsProduction }}
   {{ $css = $css | resources.Minify | resources.Fingerprint }}
