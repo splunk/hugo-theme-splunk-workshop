@@ -1,48 +1,62 @@
 {{ define "main" }}
 {{- $p := .Site.Params -}}
-<main>
-  <section class="hero hero--chapter">
-    {{ if $p.showLightTrails }}<div class="light-trails light-trails--hero" aria-hidden="true"></div>{{ end }}
-    <div class="page page--narrow page--small-pad-top">
-      <div class="hero__inner chapter">
-        {{ with .Params.weight }}<div class="chapter__weight" aria-hidden="true">{{ . }}</div>{{ end }}
-        <p class="eyebrow">{{ with .Params.subtitle }}{{ . }}{{ else }}{{ i18n "chapter" }}{{ end }}</p>
-        <h1 class="chapter__title">{{ .Title }}</h1>
-        {{ with .Description }}<p class="hero__lead">{{ . }}</p>{{ end }}
-      </div>
-    </div>
-  </section>
+{{- $workshop := partial "workshop-root.html" . -}}
+{{- $hasSidebar := and $p.showSidebar $workshop -}}
+{{- $hasToc := and $p.showToc .TableOfContents -}}
 
-  <div class="page page--narrow page--no-pad-top">
-    <div class="content content--full" id="content">
-      {{- /* Page-authored content wins. If the chapter index has no markdown body,
-         fall back to an automatic card grid of children. */ -}}
-      {{ if .Content }}
-        {{ .Content }}
-      {{ else }}
-        {{ $items := partial "visible-pages.html" .Pages }}
-        {{ if .Sections }}{{ $items = partial "visible-pages.html" .Sections }}{{ end }}
-        {{ if $items }}
-          <div class="cards">
-            {{ range $i, $page := $items }}
-              <a class="card" href="{{ .RelPermalink }}">
-                <span class="card__num">{{ printf "%02d" (add $i 1) }}</span>
-                <h2 class="card__title">{{ .LinkTitle }}</h2>
-                {{ with .Description }}<p class="card__desc">{{ . }}</p>{{ end }}
-                <div class="card__meta">
-                  {{ with .Params.duration }}<span class="card__meta-item">{{ . }}</span>{{ end }}
-                  {{ with .Params.difficulty }}<span class="card__meta-item">{{ . }}</span>{{ end }}
-                  {{- $leaves := where .RegularPagesRecursive "Params.hidden" "!=" true -}}
-                  {{ if gt (len $leaves) 1 }}<span class="card__meta-item">{{ i18n "pagesCount" (dict "Count" (len $leaves)) }}</span>{{ end }}
-                </div>
-              </a>
-            {{ end }}
-          </div>
-        {{ end }}
+<main class="page {{ if not $hasSidebar }}page--narrow{{ else if not $hasToc }}page--with-sidebar-only{{ end }}">
+
+  {{ if $hasSidebar }}{{ partial "sidebar.html" . }}{{ end }}
+
+  <article class="content" id="content">
+    {{- /* Chapter-style hero with the gradient weight number. Lives INSIDE
+       the content column so it doesn't break the three-column grid. */ -}}
+    <header class="chapter-hero">
+      {{ with .Params.weight }}<div class="chapter__weight" aria-hidden="true">{{ . }}</div>{{ end }}
+      <p class="eyebrow">{{ with .Params.subtitle }}{{ . }}{{ else }}{{ i18n "chapter" }}{{ end }}</p>
+      <h1 class="chapter__title">{{ .Title }}</h1>
+      {{ with .Description }}<p class="hero__lead">{{ . }}</p>{{ end }}
+    </header>
+
+    {{ partial "workshop-meta.html" . }}
+
+    {{- /* Page-authored content wins. If the chapter index has no body,
+       fall back to a card grid of its children. */ -}}
+    {{ if .Content }}
+      {{ .Content }}
+    {{ else }}
+      {{ $items := partial "visible-pages.html" .Pages }}
+      {{ if .Sections }}{{ $items = partial "visible-pages.html" .Sections }}{{ end }}
+      {{ if $items }}
+        <div class="cards">
+          {{ range $i, $page := $items }}
+            <a class="card" href="{{ .RelPermalink }}">
+              <span class="card__num">{{ printf "%02d" (add $i 1) }}</span>
+              <h2 class="card__title">{{ .LinkTitle }}</h2>
+              {{ with .Description }}<p class="card__desc">{{ . }}</p>{{ end }}
+              <div class="card__meta">
+                {{ with .Params.duration }}<span class="card__meta-item">{{ . }}</span>{{ end }}
+                {{ with .Params.difficulty }}<span class="card__meta-item">{{ . }}</span>{{ end }}
+                {{- $leaves := where .RegularPagesRecursive "Params.hidden" "!=" true -}}
+                {{ if gt (len $leaves) 1 }}<span class="card__meta-item">{{ i18n "pagesCount" (dict "Count" (len $leaves)) }}</span>{{ end }}
+              </div>
+            </a>
+          {{ end }}
+        </div>
       {{ end }}
+    {{ end }}
 
-      {{ partial "pager.html" . }}
-    </div>
-  </div>
+    {{ partial "pager.html" . }}
+
+    {{ with .Site.Params.editURL }}{{ if $.File }}
+      <p class="edit-link">
+        <a href="{{ . }}{{ $.File.Path }}" target="_blank" rel="noopener">
+          <span class="edit-link__arrow">&rarr;</span> {{ i18n "editOnGitHub" }}
+        </a>
+      </p>
+    {{ end }}{{ end }}
+  </article>
+
+  {{ if $hasToc }}{{ partial "toc.html" . }}{{ end }}
 </main>
 {{ end }}

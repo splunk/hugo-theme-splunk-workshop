@@ -5,6 +5,23 @@
 /* ---- Chapter hero ---- */
 .hero--chapter .hero__inner { max-width: none; }
 .chapter { position: relative; }
+/* In-column chapter hero used by the new chapter.html (the chapter
+   inhabits the content column alongside the workshop sidebar instead of
+   a full-bleed top hero). */
+.chapter-hero {
+  position: relative;
+  margin: 0 0 1.75rem;
+  padding: 0 0 1.25rem;
+  border-bottom: 1px solid var(--color-border);
+}
+.chapter-hero .eyebrow { margin-bottom: 0.4rem; }
+.chapter-hero .chapter__weight {
+  position: absolute;
+  top: -1rem;
+  right: 0;
+  font-size: clamp(4rem, 9vw, 7rem);
+  opacity: 0.14;
+}
 .chapter__weight {
   position: absolute;
   top: -1rem;

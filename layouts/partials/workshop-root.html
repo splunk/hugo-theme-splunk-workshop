@@ -1,27 +1,84 @@
 {{- /*
-  workshop-root.html — given a page, returns the Page that defines the
-  navigation scope. Each section is treated as a self-contained nav unit:
-  prev/next never cross section boundaries, so a chapter landing always
-  starts the flow (no Previous wrapping back to the previous chapter).
+  workshop-root.html — given a page, return the section that scopes the
+  workshop sidebar and the prev/next pager. The pager then DFS-walks this
+  root's descendants, so prev/next flow across chapters within the workshop
+  rather than dead-ending at chapter boundaries.
 
-  Rules:
-    - Section page with child pages (chapter landing, workshop hub):
-        scope = the page itself.
-    - Section page with NO child pages (relearn-style "leaf section":
-      a lesson directory that is just _index.md + an images/ bundle):
-        scope = the parent section, so the leaf becomes one entry in
-        a sibling-list pager rather than a stranded single page.
-    - Regular page: scope = the page's CurrentSection.
+  Definitions (depth = path segments below the language home):
+    - Language home (depth 0): /en/
+    - Depth-1 section: /en/<top>/
+        - Pure hub: only sub-section children. No workshop root applies
+          when this is the page being viewed; workshop root for descendants
+          is the depth-2 ancestor.
+        - Flat workshop: has direct .md page children. Workshop root = self.
+    - Depth-2 section: /en/<top>/<workshop>/ — typical workshop root.
+    - Depth ≥ 2: walk up to find the depth-2 ancestor (or depth-1 flat
+      workshop) and return it.
+
+  Returns the workshop root section, or `false` when the current page is a
+  pure hub / the language home / the site home — the caller treats that as
+  "render a hero layout, no sidebar".
 */ -}}
 {{- $page := . -}}
-{{- $root := $page.FirstSection -}}
-{{- if eq $page.Kind "section" -}}
-  {{- if gt (len $page.Pages) 0 -}}
-    {{- $root = $page -}}
-  {{- else -}}
-    {{- with $page.Parent -}}{{ $root = . }}{{- end -}}
+{{- $root := false -}}
+
+{{- if and (not $page.IsHome) (ne $page.Kind "404") (ne $page.Kind "taxonomy") -}}
+
+  {{- /* Depth of $page from the language home. Count the path segments
+         of .RelPermalink, dropping the leading language-code segment. */ -}}
+  {{- $lang := $page.Language.Lang -}}
+  {{- $relPath := strings.TrimPrefix (printf "/%s/" $lang) $page.RelPermalink -}}
+  {{- $relPath = strings.Trim $relPath "/" -}}
+  {{- $depth := 0 -}}
+  {{- if $relPath -}}{{ $depth = len (split $relPath "/") }}{{- end -}}
+
+  {{- /* Walk up to depth 1 — the ancestor right below the language home. */ -}}
+  {{- $depthOne := $page -}}
+  {{- $iter := sub $depth 1 -}}
+  {{- if gt $iter 0 -}}
+    {{- range seq $iter -}}
+      {{- with $depthOne.Parent -}}{{ $depthOne = . }}{{- end -}}
+    {{- end -}}
   {{- end -}}
-{{- else -}}
-  {{- with $page.CurrentSection -}}{{ $root = . }}{{- end -}}
+
+  {{- /* Does $depthOne have direct .md page children?
+         Filter the recursive .Pages down to pages whose path is exactly one
+         segment deeper than $depthOne. */ -}}
+  {{- $depthOnePath := strings.Trim (strings.TrimPrefix (printf "/%s/" $lang) $depthOne.RelPermalink) "/" -}}
+  {{- $depthOneSegCount := 0 -}}
+  {{- if $depthOnePath -}}{{ $depthOneSegCount = len (split $depthOnePath "/") }}{{- end -}}
+  {{- $depthOneHasDirectPages := false -}}
+  {{- range where $depthOne.Pages "Kind" "page" -}}
+    {{- $childRel := strings.Trim (strings.TrimPrefix (printf "/%s/" $lang) .RelPermalink) "/" -}}
+    {{- $childSegCount := len (split $childRel "/") -}}
+    {{- if eq $childSegCount (add $depthOneSegCount 1) -}}
+      {{- $depthOneHasDirectPages = true -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- if le $depth 1 -}}
+    {{- /* The page itself is depth 0 (lang home, handled above) or depth 1. */ -}}
+    {{- if and (eq $depth 1) $depthOneHasDirectPages -}}
+      {{- $root = $page -}}
+    {{- end -}}
+  {{- else -}}
+    {{- /* Depth ≥ 2. */ -}}
+    {{- if $depthOneHasDirectPages -}}
+      {{- /* Flat workshop at depth 1 — use it. */ -}}
+      {{- $root = $depthOne -}}
+    {{- else -}}
+      {{- /* Hub at depth 1 — workshop root is the depth-2 ancestor. */ -}}
+      {{- $depthTwo := $page -}}
+      {{- $stepsUp := sub $depth 2 -}}
+      {{- if gt $stepsUp 0 -}}
+        {{- range seq $stepsUp -}}
+          {{- with $depthTwo.Parent -}}{{ $depthTwo = . }}{{- end -}}
+        {{- end -}}
+      {{- end -}}
+      {{- $root = $depthTwo -}}
+    {{- end -}}
+  {{- end -}}
+
 {{- end -}}
+
 {{- return $root -}}

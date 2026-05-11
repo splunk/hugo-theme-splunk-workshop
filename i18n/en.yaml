@@ -65,6 +65,8 @@
   translation: "Theme"
 - id: languageSwitcher
   translation: "Language"
+- id: overview
+  translation: "Overview"
 - id: openMenu
   translation: "Open menu"
 - id: yourPosition

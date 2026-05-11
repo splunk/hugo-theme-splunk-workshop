@@ -1,31 +1,36 @@
 {{- /*
-  Workshop sidebar — lists pages within the current section in weight order.
-  Falls back to top-level sections on the home page.
+  Workshop sidebar — renders the WHOLE workshop tree (chapters + lessons),
+  not just the current section's siblings. The active branch auto-expands;
+  inactive chapters collapse to just their title (the user can click any
+  chapter to expand it).
+
+  The scope is the "workshop root" returned by workshop-root.html — for the
+  user's content tree, that's the section at /<lang>/<category>/<workshop>/
+  (or /<lang>/<workshop>/ for flat workshops like /en/resources/).
+
+  If there's no workshop root (the page is a hub or the language home),
+  the caller shouldn't be including this partial — but we degrade gracefully
+  by emitting nothing.
 */ -}}
-{{- $current := . -}}
-{{- $section := .CurrentSection -}}
-{{- $pages := partial "visible-pages.html" $section.Pages -}}
-
+{{- $workshop := partial "workshop-root.html" . -}}
+{{- if $workshop -}}
 <aside id="workshop-sidebar" class="sidebar" aria-label="Workshop navigation">
-  {{ if and (ne $section.RelPermalink "/") (.Parent) }}
-    <a class="sidebar__back" href="{{ $section.Parent.RelPermalink }}">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-      {{ i18n "allWorkshops" }}
+  {{- /* "Back to <category>" link — points at the workshop root's parent
+         (the category hub, e.g. /en/splunk4rookies/). Skipped when the
+         workshop root's parent is the language home. */ -}}
+  {{- with $workshop.Parent -}}
+    {{- if not .IsHome -}}
+    <a class="sidebar__back" href="{{ .RelPermalink }}">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      {{ .LinkTitle }}
     </a>
-  {{ end }}
+    {{- end -}}
+  {{- end -}}
 
-  <h3 class="sidebar__title">{{ $section.Title }}</h3>
-  {{ with $section.Params.tagline }}<p class="sidebar__sub">{{ . }}</p>{{ end }}
+  {{- /* Workshop title — links to the workshop landing. */ -}}
+  <a class="sidebar__title{{ if eq .RelPermalink $workshop.RelPermalink }} is-active{{ end }}" href="{{ $workshop.RelPermalink }}">{{ $workshop.LinkTitle }}</a>
+  {{- with $workshop.Params.tagline }}<p class="sidebar__sub">{{ . }}</p>{{ end }}
 
-  <ol class="sidebar__list">
-    {{ range $i, $p := $pages }}
-      {{ $active := eq $p.RelPermalink $current.RelPermalink }}
-      <li class="sidebar__item">
-        <a class="sidebar__link {{ if $active }}is-active{{ end }}" href="{{ $p.RelPermalink }}"{{ if $active }} aria-current="page"{{ end }}>
-          <span class="sidebar__num">{{ printf "%02d" (add $i 1) }}</span>
-          <span class="sidebar__label">{{ $p.LinkTitle }}</span>
-        </a>
-      </li>
-    {{ end }}
-  </ol>
+  {{ partial "sidebar-tree.html" (dict "section" $workshop "current" . "depth" 0) }}
 </aside>
+{{- end -}}

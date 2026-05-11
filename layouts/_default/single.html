@@ -1,6 +1,7 @@
 {{ define "main" }}
 {{- $p := .Site.Params -}}
-{{- $hasSidebar := and $p.showSidebar (gt (len .CurrentSection.Pages) 0) -}}
+{{- $workshop  := partial "workshop-root.html" . -}}
+{{- $hasSidebar := and $p.showSidebar $workshop -}}
 {{- $hasToc := and $p.showToc .TableOfContents -}}
 
 <main class="page {{ if not $hasSidebar }}page--narrow{{ else if not $hasToc }}page--with-sidebar-only{{ end }}">
