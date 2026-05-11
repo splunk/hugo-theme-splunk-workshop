@@ -1,0 +1,33 @@
+Splunk Workshop Quick Reference
+================================
+
+URLs
+----
+Splunk Web         http://localhost:8000
+Splunk REST API    http://localhost:8089
+Health endpoint    http://localhost:8000/en-US/account/login
+
+Default credentials
+-------------------
+Username  admin
+Password  (set during install)
+
+Useful SPL
+----------
+search index=main earliest=-15m
+| stats count by host
+| sort -count
+| head 10
+
+Restart the server
+------------------
+splunk restart
+
+Where logs live
+---------------
+$SPLUNK_HOME/var/log/splunk/
+
+Get help
+--------
+docs.splunk.com
+community.splunk.com

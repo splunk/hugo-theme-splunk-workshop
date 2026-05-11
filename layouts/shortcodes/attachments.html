@@ -13,7 +13,12 @@
 {{- $icon    := .Get "icon" | default "file" -}}
 {{- $items   := .Page.Resources -}}
 {{- if $pattern -}}
-  {{- $items = where $items "Name" "regexp" $pattern -}}
+  {{- /* Hugo's `where` has no regexp operator — filter manually. */ -}}
+  {{- $filtered := slice -}}
+  {{- range $items -}}
+    {{- if findRE $pattern .Name -}}{{- $filtered = $filtered | append . -}}{{- end -}}
+  {{- end -}}
+  {{- $items = $filtered -}}
 {{- end -}}
 {{- $items = where $items "ResourceType" "ne" "image" -}}
 {{- $items = sort $items "Title" -}}

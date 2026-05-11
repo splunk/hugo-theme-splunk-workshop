@@ -1,0 +1,25 @@
+# Sample OpenTelemetry Collector pipeline used in the workshop wrap-up.
+# Take it home and adapt it for your own environment.
+
+receivers:
+  hostmetrics:
+    collection_interval: 60s
+    scrapers:
+      cpu:
+      memory:
+      disk:
+
+processors:
+  batch:
+    timeout: 5s
+
+exporters:
+  otlphttp:
+    endpoint: https://ingest.us1.signalfx.com/v2
+
+service:
+  pipelines:
+    metrics:
+      receivers: [hostmetrics]
+      processors: [batch]
+      exporters: [otlphttp]
