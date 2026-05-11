@@ -32,6 +32,10 @@ The third positional arg is an optional time hint that renders next to the step 
 
 ## Exercise + Solution
 
+The `exercise` shortcode is the canonical way to mark a hands-on task. It renders a scoped frame with an **EXERCISE** label, a title, and an accent left-border — visually distinct from a `notice` (which is informational only). Use it when the section *is something the reader does*.
+
+### 1. The basic shape
+
 {{< exercise "Find the slowest endpoint" >}}
 Modify the SPL below to return the **single slowest** request grouped by URI, by p95 response time.
 
@@ -63,6 +67,141 @@ index=web sourcetype=access_combined
 ```
 
 The `solution` is a `<details>` element — collapsed by default, accessible by keyboard, no JS required.
+
+### 2. Exercise + nested warning
+
+When an exercise needs a heads-up — *"reset your terminals first"*, *"this is destructive"* — nest a `notice` inside it. The EXERCISE label and the WARNING label belong to different visual languages (action vs. heads-up), so they read as **complementary** rather than competing boxes:
+
+{{< exercise "Configure file storage" >}}
+{{< notice warning >}}
+Change ALL terminal windows to the `2-building-resilience` directory and run `clear` before continuing.
+{{< /notice >}}
+
+Open `agent.yaml` and add a `file_storage/checkpoint` extension under the existing `extensions:` block. Set `directory: "./checkpoint-dir"` and `create_directory: true`.
+
+When you restart the collector, you should see a `file_storage` line in the startup logs.
+{{< /exercise >}}
+
+````markdown
+{{</* exercise "Configure file storage" */>}}
+{{</* notice warning */>}}
+Change ALL terminal windows to the `2-building-resilience` directory and run `clear` before continuing.
+{{</* /notice */>}}
+
+Open `agent.yaml` and add a `file_storage/checkpoint` extension ...
+{{</* /exercise */>}}
+````
+
+### 3. Multi-step exercise
+
+When an exercise is a sequence of actions, nest `step` blocks inside `exercise` — one exercise scope, three numbered actions inside it:
+
+{{< exercise "Add the file_storage extension" >}}
+You'll add a `file_storage` extension to `agent.yaml`, then verify the collector loaded it.
+
+{{< step "Open agent.yaml" >}}
+In the Agent terminal, run `vim agent.yaml` (or your editor of choice).
+{{< /step >}}
+
+{{< step "Paste the extension block" >}}
+Under the `extensions:` key, add:
+
+```yaml
+file_storage/checkpoint:
+  directory: "./checkpoint-dir"
+  create_directory: true
+```
+{{< /step >}}
+
+{{< step "Restart and verify" >}}
+Run `./restart.sh` and watch the logs. You should see `Extension started · file_storage/checkpoint`.
+{{< /step >}}
+{{< /exercise >}}
+
+````markdown
+{{</* exercise "Add the file_storage extension" */>}}
+{{</* step "Open agent.yaml" */>}} ... {{</* /step */>}}
+{{</* step "Paste the extension block" */>}} ... {{</* /step */>}}
+{{</* step "Restart and verify" */>}} ... {{</* /step */>}}
+{{</* /exercise */>}}
+````
+
+### 4. Tabbed exercise variants
+
+When the same task has different paths (macOS vs Linux, Python vs Go, kubectl vs helm), wrap a `tabs` block inside `exercise`:
+
+{{< exercise "Install the collector" >}}
+Pick your platform and run the install command:
+
+{{< tabs groupid="install-platform" >}}
+{{< tab "macOS" >}}
+```bash
+brew install otel-collector
+```
+{{< /tab >}}
+{{< tab "Linux" >}}
+```bash
+sudo apt install otel-collector
+```
+{{< /tab >}}
+{{< tab "Windows" >}}
+```powershell
+choco install otel-collector
+```
+{{< /tab >}}
+{{< /tabs >}}
+
+{{< notice tip >}}
+The `groupid` on `tabs` keeps the reader's platform choice synced across every exercise that uses the same id — they pick once, and every later exercise opens the same tab.
+{{< /notice >}}
+{{< /exercise >}}
+
+### 5. When to skip the container
+
+Not every "do this" needs an exercise frame. For a one-action task — under five lines of prose plus maybe one code block — a plain `### H3 heading` reads cleaner than wrapping it. The H3 already gets a top-border accent stripe from the theme's typography, which is plenty of scope marker:
+
+### Try it: Adjust the percentile threshold
+
+Edit `agent.yaml` and change `percentile: 95` to `percentile: 99`. Restart the agent.
+
+{{< notice warning >}}
+Save the file **before** restarting — otherwise the running collector picks up the old config.
+{{< /notice >}}
+
+```markdown
+### Try it: Adjust the percentile threshold
+
+Edit `agent.yaml` and change `percentile: 95` to `percentile: 99`.
+Restart the agent.
+
+{{</* notice warning */>}}
+Save the file **before** restarting ...
+{{</* /notice */>}}
+```
+
+Rule of thumb: use `{{</* exercise */>}}` when the section needs scope (multi-step, has a solution reveal, multiple code blocks). Use a plain H3 when it's a single action you can describe in two sentences.
+
+### Migrating from `notice style="green"`
+
+Some workshops mark exercises by wrapping them in a green-styled notice — a leftover convention from relearn-themed sites that didn't ship a dedicated exercise primitive. This theme does, so the convention is now: an `exercise` shortcode marks the task, a nested `notice` (any style) marks an aside.
+
+Before:
+
+```markdown
+{{%/* notice title="Exercise" style="green" icon="running" */%}}
+... exercise body, possibly with a nested warning notice ...
+{{%/* /notice */%}}
+```
+
+After:
+
+```markdown
+{{</* exercise "Exercise" */>}}
+... same body, unchanged ...
+{{</* /exercise */>}}
+```
+
+Nested notices, terminals, code blocks, trees, and solutions all carry over verbatim. Two label badges (EXERCISE + WARNING) read as **complementary** — different visual languages. Two notice frames (green + orange) read as **stacked** — same visual language competing for attention.
 
 ## Checkpoint
 

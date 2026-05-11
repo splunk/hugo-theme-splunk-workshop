@@ -7,6 +7,12 @@
   Usage:
     {{< step "Install dependencies" >}} ...body... {{< /step >}}
     {{< step title="Install" time="5 min" >}} ...body... {{< /step >}}
+
+  Output is intentionally flat (no leading whitespace per line) so the
+  emitted HTML survives being re-rendered through .Page.RenderString when
+  this shortcode is nested inside another shortcode (e.g. {{< exercise >}}).
+  Goldmark would otherwise treat 4-space-indented lines as a markdown code
+  block and render the HTML as literal text.
 */ -}}
 {{- $title := .Get "title" | default (.Get 0) -}}
 {{- $num   := .Get "n"     | default (.Get 1) -}}
@@ -15,15 +21,14 @@
   {{- .Page.Scratch.Add "step_counter" 1 -}}
   {{- $num = .Page.Scratch.Get "step_counter" -}}
 {{- end -}}
+{{- $body := .Inner | .Page.RenderString -}}
 <section class="step">
-  <div class="step__num">{{ $num }}</div>
-  <div>
-    <header class="step__head">
-      <h3 class="step__title">{{ $title }}</h3>
-      {{ with $time }}<span class="step__time">{{ . }}</span>{{ end }}
-    </header>
-    <div class="step__body">
-      {{ .Inner | .Page.RenderString }}
-    </div>
-  </div>
+<div class="step__num">{{ $num }}</div>
+<div>
+<header class="step__head">
+<h3 class="step__title">{{ $title }}</h3>
+{{- with $time }}<span class="step__time">{{ . }}</span>{{ end }}
+</header>
+<div class="step__body">{{ $body }}</div>
+</div>
 </section>

@@ -1,8 +1,13 @@
 {{- /*
   Exercise — boxed problem statement, optionally collapsible solution.
   Use a nested `{{< solution >}}` shortcode for the answer.
+
+  Resets the page-wide step counter so that {{< step >}} blocks nested
+  inside this exercise restart from 1, independent of any step blocks
+  earlier on the same page.
 */ -}}
 {{- $title := .Get "title" | default (.Get 0) | default (i18n "exerciseDefault") -}}
+{{- .Page.Scratch.Set "step_counter" 0 -}}
 <section class="exercise">
   <p class="exercise__label">{{ i18n "exercise" }}</p>
   <h3 class="exercise__title">{{ $title }}</h3>
