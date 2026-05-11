@@ -14,11 +14,29 @@ The theme's defining motif is the official Splunk brand gradient — **Magenta 5
 
 ```toml
 [params]
-  colorAccent     = "#FF007F"   # Magenta 50 · Pantone 213 C · primary
+  colorAccent     = "#FF007F"   # Magenta 50 · Pantone 213 C · decorative (gradients, large display, borders, icons)
   colorAccent2    = "#FF9000"   # Orange 50  · Pantone 151 C · gradient end
   colorAccent3    = "#FFAB0F"   # supplementary amber (warm callouts only)
   colorAccentDark = "#D4006B"   # darker magenta for hover/active
+
+  # Body-text accent — WCAG AA contrast. Use these for inline link colour,
+  # active sidebar/breadcrumb states, and any place magenta meets prose.
+  colorAccentText     = "#BD0D5F"   # Magenta 60 — ~5.4:1 on white
+  colorAccentTextDark = "#FF7DBA"   # Magenta 30 — ~8:1 on Splunk navy
 ```
+
+### Why two accents
+
+Magenta 50 (`#FF007F`) is the brand colour but only hits ~3.6:1 on white — fine for *large* text, icons, gradients, and borders, but fails AA for body text. The theme splits accent usage:
+
+| Use | Token |
+| --- | --- |
+| Hero gradient, step circles, chapter weight number, progress bar | `--color-accent` |
+| Icons, decorative borders, focus rings, shadows | `--color-accent` |
+| Inline link text, active sidebar/TOC entry, inline-code colour | `--color-accent-text` |
+| Body badges (`accent` variant) | `--color-accent-text` |
+
+If you rebrand to a single accent that already hits AA, set `colorAccentText` to the same value as `colorAccent`.
 
 The gradient is computed from the two brand stops:
 
@@ -35,7 +53,7 @@ To rebrand to a single accent (no gradient), set both `colorAccent` and `colorAc
 | Token | Default | Used for |
 | --- | --- | --- |
 | `colorInk` | `#0C1724` | Body text |
-| `colorInkMuted` | `#4B4D52` | Muted text, captions |
+| `colorInkMuted` | `#585B61` | Muted text, captions (AA-safe; the theme's bare default is `#4B4D52` but the demo overrides to `#585B61` for ~4.6:1 on white — recommended) |
 | `colorPaper` | `#FFFFFF` | Page background |
 | `colorSurface` | `#F7F6F3` | Callout fills, card surfaces |
 | `colorSurfaceAlt` | `#EFEDE7` | Inline code chip background |

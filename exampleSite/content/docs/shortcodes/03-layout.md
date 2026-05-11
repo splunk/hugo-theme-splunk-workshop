@@ -132,6 +132,16 @@ Paste output from the `tree` command directly. Lines containing `/` are highligh
 
 `image` resolves the `src` against the page's resources first, then falls back to a relative URL. Add `align="left"` / `"right"` / `"bleed"` for floated or full-bleed variants.
 
+### `figure` alias
+
+Hugo's built-in shortcode name is `figure`, and content from other Hugo themes often uses it. This theme aliases `figure` to the same renderer as `image` so migrated content works without rewrites:
+
+```markdown
+{{</* figure src="dashboard.png" alt="Dashboard" caption="Same render as `image`." */>}}
+```
+
+Prefer `image` for new content (it's the documented name); `figure` is the compatibility surface.
+
 ## Badges
 
 Small inline pills for status, version markers, environment labels, and the like. Use them in workshop-meta rows, alongside titles, or as terse "this only applies to X" annotations.

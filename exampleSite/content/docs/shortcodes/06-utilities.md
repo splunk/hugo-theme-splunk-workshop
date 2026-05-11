@@ -103,6 +103,32 @@ Args:
 - `name` (positional) — the param to read
 - `default` — fallback if the param is unset
 
+### `tree`
+
+A file-tree renderer with two modes:
+
+**Body mode** (preferred for workshops) — paste the ASCII art you'd get from `tree` or hand-author it, and the shortcode just typesets it as a styled block with directory lines highlighted:
+
+```markdown
+{{</* tree */>}}
+my-project/
+├── README.md
+├── data/
+│   ├── access.log
+│   └── tutorial.csv
+└── src/
+    └── main.go
+{{</* /tree */>}}
+```
+
+**Resource mode** — pass a `pattern` regex and the shortcode walks the page bundle's resources:
+
+```markdown
+{{</* tree pattern=".*\.csv$" */>}}
+```
+
+The `{{</* file-tree */>}}` shortcode covered above is the body-mode-only variant. Reach for `tree` when you want either mode in one call, or when migrating from relearn (which only ships the resource mode under this name).
+
 ## Splunk-specific
 
 ### `otel-version`
