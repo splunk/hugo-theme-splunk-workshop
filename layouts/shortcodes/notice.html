@@ -46,6 +46,14 @@
     "grey"      "note"
 -}}
 {{- $type := index $map $styleKey | default "note" -}}
+{{- /* Strip HTML comments from the body before piping through Goldmark.
+       Comments containing fenced code blocks (or other markdown constructs)
+       inside a percent-form shortcode confuse Goldmark — the closing `-->`
+       gets rendered as text and breaks the surrounding paragraph nesting.
+       Migrating workshop content frequently has commented-out alternates
+       inside notices; strip them so the rest of the page still lays out. */ -}}
+{{- $inner := string .Inner -}}
+{{- $inner = replaceRE "(?s)<!--.*?-->" "" $inner -}}
 {{- partial "callout-render.html" (dict
     "page"     .Page
     "type"     $type
@@ -54,4 +62,4 @@
     "color"    (.Get "color")
     "expanded" (.Get "expanded")
     "groupid"  (.Get "groupid")
-    "inner"    (.Inner | .Page.RenderString)) -}}
+    "inner"    ($inner | .Page.RenderString)) -}}
