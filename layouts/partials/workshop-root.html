@@ -5,13 +5,22 @@
   starts the flow (no Previous wrapping back to the previous chapter).
 
   Rules:
-    - If the page is a section (Kind == "section"): scope = the page itself.
-    - Otherwise (regular page): scope = the page's CurrentSection.
+    - Section page with child pages (chapter landing, workshop hub):
+        scope = the page itself.
+    - Section page with NO child pages (relearn-style "leaf section":
+      a lesson directory that is just _index.md + an images/ bundle):
+        scope = the parent section, so the leaf becomes one entry in
+        a sibling-list pager rather than a stranded single page.
+    - Regular page: scope = the page's CurrentSection.
 */ -}}
 {{- $page := . -}}
 {{- $root := $page.FirstSection -}}
 {{- if eq $page.Kind "section" -}}
-  {{- $root = $page -}}
+  {{- if gt (len $page.Pages) 0 -}}
+    {{- $root = $page -}}
+  {{- else -}}
+    {{- with $page.Parent -}}{{ $root = . }}{{- end -}}
+  {{- end -}}
 {{- else -}}
   {{- with $page.CurrentSection -}}{{ $root = . }}{{- end -}}
 {{- end -}}

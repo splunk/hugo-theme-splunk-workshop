@@ -1,9 +1,12 @@
 {{- /*
   Tab — child of tabs. When used standalone (no parent {{< tabs >}}) it renders
   as a single labeled block, matching relearn's behaviour.
-  Args: title (or positional 0), icon
+
+  Args: title | name | label  (any of the three is accepted as the tab label;
+        positional 0 also works). `name` is the relearn idiom and is kept here
+        for migrated content. `icon` is optional.
 */ -}}
-{{- $label   := .Get "title" | default (.Get "label") | default (.Get 0) | default "Tab" -}}
+{{- $label   := .Get "title" | default (.Get "name") | default (.Get "label") | default (.Get 0) | default "Tab" -}}
 {{- $icon    := .Get "icon" -}}
 {{- $content := .Inner | .Page.RenderString -}}
 

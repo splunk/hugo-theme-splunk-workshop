@@ -3,19 +3,36 @@
   Usage:
     {{% button href="/install/" icon="download" %}}Install now{{% /button %}}
     {{% button href="https://example.com" target="_blank" style="primary" %}}Open{{% /button %}}
+    {{% button style="blue"  %}}Blue button{{% /button %}}    (relearn idiom)
+    {{% button color="#00bce4" %}}Custom{{% /button %}}
+
+  $style accepts:
+    - Known class variants: primary, secondary, ghost, accent, transparent
+    - Any other value (blue, green, red, gray, #hex, etc.) is treated as a
+      colour and applied via --btn-color (relearn migration compat).
 */ -}}
 {{- $hrefRaw := .Get "href" -}}
 {{- $href    := partial "site-href.html" $hrefRaw -}}
 {{- $style    := .Get "style" | default "primary" -}}
+{{- $styleKey := lower (string $style) -}}
 {{- $color    := .Get "color" -}}
 {{- $icon     := .Get "icon" -}}
 {{- $iconpos  := .Get "iconposition" | default "left" -}}
 {{- $target   := .Get "target" -}}
 {{- $title    := .Get "title" -}}
+{{- $known    := slice "primary" "secondary" "transparent" "ghost" "accent" -}}
 {{- $cls      := "btn" -}}
-{{- if eq $style "primary" }}{{ $cls = "btn btn--primary" }}{{ end -}}
-{{- if eq $style "secondary" }}{{ $cls = "btn btn--ghost" }}{{ end -}}
-{{- if eq $style "transparent" }}{{ $cls = "btn btn--ghost" }}{{ end -}}
+{{- if eq $styleKey "primary" }}{{ $cls = "btn btn--primary" }}{{ end -}}
+{{- if eq $styleKey "accent"  }}{{ $cls = "btn btn--primary" }}{{ end -}}
+{{- if eq $styleKey "secondary" }}{{ $cls = "btn btn--ghost" }}{{ end -}}
+{{- if eq $styleKey "ghost"     }}{{ $cls = "btn btn--ghost" }}{{ end -}}
+{{- if eq $styleKey "transparent" }}{{ $cls = "btn btn--ghost" }}{{ end -}}
+{{- /* Unknown $style is treated as a colour name (relearn idiom).
+       Only override $color if the caller didn't already set one. */ -}}
+{{- if and (not (in $known $styleKey)) (not $color) -}}
+  {{- $color = $style -}}
+  {{- $cls = "btn btn--colored" -}}
+{{- end -}}
 {{- $body := .Inner | .Page.RenderString -}}
 {{- if not (trim ($body | string) " \n\r\t") }}{{ $body = $title }}{{ end -}}
 {{- $tag := "a" -}}

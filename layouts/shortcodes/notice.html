@@ -7,13 +7,16 @@
 */ -}}
 {{- $style := .Get "style" | default (.Get 0) | default "note" -}}
 {{- $title := .Get "title" | default (.Get 1) -}}
-{{- /* Map relearn aliases to our callout types */ -}}
+{{- /* Map relearn semantic AND colour-name aliases to our callout types.
+       Lowercased so style="Info" / "Primary" / "Blue" all resolve. */ -}}
+{{- $styleKey := lower (string $style) -}}
 {{- $map := dict
   "note"      "note"
   "info"      "info"
   "tip"       "tip"
   "warning"   "warning"
   "caution"   "warning"
+  "important" "warning"
   "danger"    "danger"
   "error"     "danger"
   "success"   "success"
@@ -21,8 +24,15 @@
   "primary"   "info"
   "secondary" "note"
   "code"      "note"
+  "blue"      "info"
+  "green"     "success"
+  "orange"    "warning"
+  "yellow"    "warning"
+  "red"       "danger"
+  "gray"      "note"
+  "grey"      "note"
 -}}
-{{- $type := index $map $style | default "note" -}}
+{{- $type := index $map $styleKey | default "note" -}}
 {{- /* Default labels per type */ -}}
 {{- $defaults := dict
   "tip"     "Tip"

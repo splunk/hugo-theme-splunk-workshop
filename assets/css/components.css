@@ -253,6 +253,21 @@
   border-color: var(--color-accent);
   color: var(--color-accent-text);
 }
+/* Colour-driven button — used by the relearn-compat path in button.html
+   when `style="blue|red|…"` or `color="#xyz"` is passed. The colour comes
+   from the inline `--btn-color` variable. */
+.btn--colored {
+  background: var(--btn-color, var(--color-accent));
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 16px color-mix(in oklab, var(--btn-color, var(--color-accent)) 28%, transparent);
+}
+.btn--colored:hover {
+  color: #fff;
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+  box-shadow: 0 8px 24px color-mix(in oklab, var(--btn-color, var(--color-accent)) 38%, transparent);
+}
 .btn__arrow { transition: transform 0.15s ease; }
 .btn:hover .btn__arrow { transform: translateX(2px); }
 

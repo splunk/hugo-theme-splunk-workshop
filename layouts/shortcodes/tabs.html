@@ -1,12 +1,14 @@
 {{- /*
   Tabs container — relearn-compatible.
   Args:
-    groupid  - sync tab selection across blocks with the same groupid (localStorage)
-    style    - default | code | primary | secondary  (visual variant)
+    groupid / groupId  - sync tab selection across blocks with the same id
+                         (stored in localStorage). Both casings accepted
+                         (relearn migrated content often uses groupId).
+    style              - default | code | primary | secondary
 */ -}}
 {{- $key     := printf "_tabs_%d" .Ordinal -}}
 {{- $tid     := printf "tabs-%d" .Ordinal -}}
-{{- $groupid := .Get "groupid" -}}
+{{- $groupid := .Get "groupid" | default (.Get "groupId") -}}
 {{- $style   := .Get "style" -}}
 {{- /* Force inner so children push */ -}}
 {{- $_ := .Inner -}}
