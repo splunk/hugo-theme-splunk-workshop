@@ -254,20 +254,29 @@
   color: var(--color-accent-text);
 }
 /* Colour-driven button — used by the relearn-compat path in button.html
-   when `style="blue|red|…"` or `color="#xyz"` is passed. The colour comes
-   from the inline `--btn-color` variable. */
+   when `style="blue|red|…"` or `color="#xyz"` is passed. Compact
+   rectangular chip styling to match relearn's inline button look, not
+   the big magenta-pill CTA the rest of .btn defaults to. */
 .btn--colored {
   background: var(--btn-color, var(--color-accent));
   color: #fff;
   border-color: transparent;
-  box-shadow: 0 4px 16px color-mix(in oklab, var(--btn-color, var(--color-accent)) 28%, transparent);
+  padding: 0.3rem 0.85rem;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
 }
 .btn--colored:hover {
   color: #fff;
   transform: translateY(-1px);
   filter: brightness(1.08);
-  box-shadow: 0 8px 24px color-mix(in oklab, var(--btn-color, var(--color-accent)) 38%, transparent);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.24);
 }
+/* Hide the auto-appended arrow on coloured chip buttons — relearn's
+   inline buttons don't have one and it makes the chip look like a CTA. */
+.btn--colored .btn__arrow { display: none; }
 .btn__arrow { transition: transform 0.15s ease; }
 .btn:hover .btn__arrow { transform: translateX(2px); }
 
