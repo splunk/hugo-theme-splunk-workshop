@@ -10,7 +10,12 @@
   border: 1px solid var(--color-border-strong);
   background: var(--code-bg);
   font-family: var(--font-mono);
-  box-shadow: 0 1px 0 var(--color-border) inset;
+  /* Inset highlight at top — paints a soft 1px brand-accent line that
+     gives every code block a permanent visual anchor in both modes.
+     The hover gradient ::before below intensifies into a full ring. */
+  box-shadow:
+    0 1px 0 var(--color-border) inset,
+    0 1px 0 color-mix(in oklab, var(--color-accent) 35%, transparent) inset;
   transition: border-color var(--t-base) var(--ease);
 }
 
@@ -180,8 +185,13 @@ pre code { background: transparent !important; padding: 0 !important; border: 0 
 
 /* ===== Splunk syntax theme — light ===== */
 :root {
-  --code-bg:        #FAFAF7;
-  --code-header-bg: #F2EFE8;
+  /* Cool neutral grays — break the code surface out of the warm beige
+     family the rest of the light palette uses (paper, surface, border),
+     so the code block reads as a distinct first-class element against
+     the page paper rather than blending into it. Mirrors how dark mode's
+     code-bg sits a step deeper than its surrounding navy. */
+  --code-bg:        #EDF0F4;
+  --code-header-bg: #DEE4EC;
   --code-fg:        #1f2733;
   --code-comment:   #8a8b91;
   --code-keyword:   #FF007F;   /* Splunk Magenta 50 — official brand pink */
