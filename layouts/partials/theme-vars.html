@@ -42,6 +42,19 @@
     --content-max:  {{ $p.contentMaxWidth | default "720px" }};
     --logo-h:       {{ $p.logoHeight | default "28" }}px;
 
+    /* Shape tokens — single source of truth so every card-like surface and
+       every button shares the same corner radius family. */
+    --radius-sm: 6px;     /* chips, badges, kbd, inline buttons */
+    --radius-md: 8px;     /* form controls, small components */
+    --radius-lg: 12px;    /* cards, callouts, code blocks, pager buttons */
+
+    /* Motion tokens — three durations + one shared easing. Avoids the
+       0.15s / 0.18s / 0.2s / 0.25s drift the CSS had grown. */
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --t-fast:  150ms;     /* colour / border shifts on hover */
+    --t-base:  200ms;     /* card lifts, sidebar chevron rotation */
+    --t-slow:  300ms;     /* modal open, theme toggle, image zoom */
+
     /* Hero background images — empty string falls through to CSS radial gradient. */
     --hero-bg-light: {{ with $p.heroBackgroundLight }}url("{{ . | relURL }}"){{ else }}none{{ end }};
     --hero-bg-dark:  {{ with $p.heroBackgroundDark  }}url("{{ . | relURL }}"){{ else }}none{{ end }};

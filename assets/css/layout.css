@@ -127,7 +127,7 @@
   letter-spacing: 0.06em;
   color: var(--color-ink-muted);
   cursor: pointer;
-  transition: color 0.15s ease, border-color 0.15s ease;
+  transition: color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
 }
 .lang-switch__btn:hover {
   color: var(--color-accent-text);
@@ -145,7 +145,7 @@
   list-style: none;
   background: var(--color-paper);
   border: 1px solid var(--color-border);
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   box-shadow: 0 8px 28px color-mix(in oklab, var(--color-ink) 12%, transparent);
   z-index: 50;
 }
@@ -153,7 +153,7 @@
 .lang-switch__option {
   display: block;
   padding: 0.45rem 0.75rem;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-size: var(--fs-sm);
   color: var(--color-ink);
   text-decoration: none;
@@ -179,7 +179,7 @@
   border: 1px solid var(--color-border);
   border-radius: 999px;
   color: var(--color-ink-muted);
-  transition: all 0.15s ease;
+  transition: all var(--t-fast) var(--ease);
 }
 .theme-toggle:hover {
   color: var(--color-accent-text);
@@ -296,7 +296,7 @@
   font-weight: 450;
   line-height: 1.35;
   text-decoration: none;
-  transition: color 0.15s ease, border-left-color 0.15s ease, background 0.15s ease;
+  transition: color var(--t-fast) var(--ease), border-left-color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
 }
 .sidebar-tree__link:hover,
 .sidebar-tree__self:hover {
@@ -334,7 +334,7 @@
   color: var(--color-ink);
   cursor: pointer;
   list-style: none;
-  transition: color 0.15s ease, border-left-color 0.15s ease;
+  transition: color var(--t-fast) var(--ease), border-left-color var(--t-fast) var(--ease);
 }
 .sidebar-tree__summary:hover {
   border-left-color: var(--color-border-strong);
@@ -349,7 +349,7 @@
   border-right: 1.5px solid currentColor;
   border-bottom: 1.5px solid currentColor;
   transform: rotate(-45deg) translate(0.05rem, -0.05rem);
-  transition: transform 0.18s ease;
+  transition: transform var(--t-base) var(--ease);
   flex-shrink: 0;
   opacity: 0.6;
 }
@@ -413,7 +413,7 @@
   border-left: 2px solid transparent;
   padding-left: 0.75rem;
   margin-left: -1rem;
-  transition: all 0.15s ease;
+  transition: all var(--t-fast) var(--ease);
   line-height: 1.4;
   font-size: 0.85rem;
 }
@@ -488,7 +488,7 @@
   height: 2.25rem;
   border-radius: 999px;
   color: var(--color-ink-muted-dark);
-  transition: color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
+  transition: color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
 }
 .site-footer__social a:hover {
   color: #FFFFFF;
@@ -542,11 +542,11 @@
   gap: 0.25rem;
   padding: 1rem 1.25rem;
   border: 1px solid var(--color-border);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   color: var(--color-ink);
   background: var(--color-paper);
   text-decoration: none;
-  transition: all 0.15s ease;
+  transition: all var(--t-fast) var(--ease);
 }
 /* Defeat the global a:hover underline — the card itself is the
    affordance; an underline on the title would just clutter the chrome. */
@@ -571,19 +571,19 @@
   font-size: var(--fs-md);
   font-weight: 600;
   letter-spacing: -0.02em;
-  transition: color 0.15s ease;
+  transition: color var(--t-fast) var(--ease);
 }
 .pager__btn--prev .pager__label::before {
   content: "\2190  ";
   color: var(--color-accent);
   display: inline-block;
-  transition: transform 0.18s ease;
+  transition: transform var(--t-base) var(--ease);
 }
 .pager__btn--next .pager__label::after {
   content: "  \2192";
   color: var(--color-accent);
   display: inline-block;
-  transition: transform 0.18s ease;
+  transition: transform var(--t-base) var(--ease);
 }
 /* Nudge the arrow on hover — small directional flourish that signals
    forward/back motion without an underline. */
@@ -651,7 +651,7 @@
   align-items: center;
   justify-content: center;
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   margin-left: auto;
 }
 .menu-btn svg { width: 1.1rem; height: 1.1rem; }
@@ -678,7 +678,7 @@
     border-right: 1px solid var(--color-border);
     padding: 1.5rem;
     transform: translateX(-100%);
-    transition: transform 0.25s ease;
+    transition: transform var(--t-slow) var(--ease);
     z-index: 40;
   }
   .sidebar.is-open { transform: translateX(0); }

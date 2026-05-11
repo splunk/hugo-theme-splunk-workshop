@@ -5,7 +5,7 @@
 .code-block {
   position: relative;
   margin: 1.5rem 0;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
   border: 1px solid var(--color-border-strong);
   background: var(--code-bg);
@@ -53,12 +53,12 @@
   gap: 0.3rem;
   padding: 0.25rem 0.55rem;
   border: 1px solid var(--color-border);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-family: var(--font-mono);
   font-size: 0.7rem;
   color: var(--color-ink-muted);
   background: transparent;
-  transition: all 0.15s ease;
+  transition: all var(--t-fast) var(--ease);
 }
 .code-block__copy:hover {
   color: var(--color-accent);
@@ -140,7 +140,7 @@ pre {
   padding: 1.15rem;
   background: var(--code-bg);
   border: 1px solid var(--color-border-strong);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   font-family: var(--font-mono);
   font-size: 0.85rem;
   line-height: 1.65;
