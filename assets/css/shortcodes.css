@@ -830,8 +830,8 @@ a.shortcode-card:hover {
   aspect-ratio: 16 / 9;
   background: var(--color-surface-alt);
   /* Match the card's outer border-radius so the image fills the rounded
-     top corners. The card uses border-radius: var(--radius-lg) and has a 1px border;
-     11px inside the border keeps the inner edge flush. */
+     top corners. Card uses --radius-lg with a 1px border; - 1px keeps the
+     inner edge flush. */
   border-top-left-radius: calc(var(--radius-lg) - 1px);
   border-top-right-radius: calc(var(--radius-lg) - 1px);
 }
@@ -840,6 +840,11 @@ a.shortcode-card:hover {
   height: 100%;
   object-fit: cover;
   display: block;
+}
+/* On narrow viewports, flatten the banner so it doesn't dominate compressed
+   cards. 21:9 leaves room for the title + meta without scrolling. */
+@media (max-width: 720px) {
+  .shortcode-card__media { aspect-ratio: 21 / 9; }
 }
 
 .cards--shortcode {

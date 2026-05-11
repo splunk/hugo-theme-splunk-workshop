@@ -35,7 +35,9 @@
   -webkit-background-clip: text;
           background-clip: text;
   -webkit-text-fill-color: transparent;
-  opacity: 0.18;
+  /* Smooth opacity scale from ~0.12 on narrow viewports to ~0.18 on wide —
+     avoids the abrupt step the previous media-query-driven value produced. */
+  opacity: clamp(0.12, 0.06 + 0.6vw, 0.18);
   pointer-events: none;
   user-select: none;
   z-index: 0;
@@ -50,7 +52,7 @@
   margin: 0.5rem 0 1.25rem;
 }
 @media (max-width: 720px) {
-  .chapter__weight { top: -2rem; opacity: 0.12; }
+  .chapter__weight { top: -2rem; }
 }
 
 /* ---- Eyebrow alignment helpers ---- */

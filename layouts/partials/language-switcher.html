@@ -10,8 +10,9 @@
 {{- $page := . -}}
 <div class="lang-switch" data-lang-switch>
   <button class="lang-switch__btn" type="button" data-lang-switch-toggle aria-haspopup="listbox" aria-expanded="false" aria-label="{{ i18n "languageSwitcher" | default "Language" }}">
-    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+    <svg class="lang-switch__globe" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
     <span class="lang-switch__current">{{ site.Language.Lang | upper }}</span>
+    <span class="lang-switch__chev" aria-hidden="true"></span>
   </button>
   <ul class="lang-switch__menu" role="listbox" hidden>
     {{- range site.Languages -}}
