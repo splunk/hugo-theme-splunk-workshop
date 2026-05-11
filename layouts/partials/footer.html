@@ -49,6 +49,13 @@
         &copy; {{ now.Year }} {{ .Site.Title }}
       {{- end -}}
     </span>
+    {{- with $p.versionBadgeRepo }}
+    <span class="site-footer__version">
+      <img src="https://img.shields.io/github/v/release/{{ . }}?label={{ i18n "workshopVersion" | default "Workshop Version" | urlquery }}&color={{ $p.versionBadgeColor | default "FF007F" }}"
+           alt="{{ i18n "workshopVersion" | default "Workshop Version" }}"
+           loading="lazy">
+    </span>
+    {{- end }}
     <span class="site-footer__attribution">{{ i18n "builtWithHugo" }} · <a href="https://github.com/splunk/hugo-theme-splunk-workshop" target="_blank" rel="noopener">Splunk Workshop Theme</a></span>
   </div>
 </footer>

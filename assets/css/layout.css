@@ -543,6 +543,15 @@
   color: #FFFFFF;
   border-bottom-color: var(--color-accent);
 }
+.site-footer__version {
+  display: inline-flex;
+  align-items: center;
+}
+.site-footer__version img {
+  height: 1.4em;
+  vertical-align: middle;
+  opacity: 0.9;
+}
 
 @media (max-width: 720px) {
   .site-footer__meta { flex-direction: column; align-items: flex-start; }

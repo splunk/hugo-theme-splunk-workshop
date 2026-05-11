@@ -29,20 +29,35 @@ layout      = "chapter"                    # use a non-default layout
 
 ```yaml
 +++
-duration    = "20 min"           # shown in workshop-meta + cards
-difficulty  = "beginner"         # shown in workshop-meta + cards
-time        = "20 min"           # alias of duration
-author      = "Your Name"        # shown in workshop-meta
-hidden      = false              # exclude from sidebar, TOC, search, prev/next
-nopager     = false              # render the page but suppress prev/next
-subtitle    = "Chapter · Foo"    # eyebrow text on chapter pages
-tagline     = "01 · Foundation"  # extra text in the chapter sidebar
+time        = "20 min"               # shown in workshop-meta + cards
+duration    = "20 min"               # alias of time (legacy)
+difficulty  = "beginner"             # shown in workshop-meta + cards
+authors     = ["Pieter Hagen",
+               "Robert Castley"]     # shown in workshop-meta (plural array, preferred)
+author      = "Pieter Hagen"         # alias of authors[0] (legacy singular)
+lastmod     = "2026-04-28"           # optional override; otherwise from git
+hidden      = false                  # exclude from sidebar, TOC, search, prev/next
+nopager     = false                  # render the page but suppress prev/next
+subtitle    = "Chapter · Foo"        # eyebrow text on chapter pages
+tagline     = "01 · Foundation"      # extra text in the chapter sidebar
 +++
 ```
 
-### `duration` / `time`
+### `time` / `duration`
 
-Free-form text shown in the workshop meta row at the top of the page and in workshop cards. Conventionally something like `"20 min"` or `"1 hour"`.
+Free-form text shown in the workshop meta row at the top of the page and in workshop cards. Conventionally something like `"20 min"` or `"1 hour"`. `time` is the preferred (relearn-compatible) key; `duration` works as a fallback so legacy front matter keeps rendering.
+
+### `authors` / `author`
+
+`authors` is a list, rendered as `Name1 & Name2 & …` next to a user icon in the workshop meta row. `author` (singular string) is honoured when only one name is set or when migrating legacy content. Use `authors` for new content.
+
+```yaml
+authors: ["Robert Castley", "Pieter Hagen"]
+```
+
+### `lastmod`
+
+Optional explicit override for the page's last-modified date, shown in the small chip above the pager. When omitted, the theme reads the date from the most recent git commit that touched the page (requires `enableGitInfo = true` in `hugo.toml`, which is the default).
 
 ### `difficulty`
 
@@ -98,24 +113,24 @@ style = "ghost"
 
 ## Workshop meta row
 
-The block at the top of a workshop page showing duration, difficulty, author, and tags is composed from these front-matter keys. If you don't set any, the row is suppressed.
+The block at the top of a workshop page showing time, difficulty, authors, and tags is composed from these front-matter keys. If you don't set any, the row is suppressed.
 
 ```yaml
 +++
 title       = "Your First Search"
 description = "Ingest sample data..."
-duration    = "20 min"
+time        = "20 min"
 difficulty  = "beginner"
-author      = "Pieter Hagen"
+authors     = ["Pieter Hagen", "Robert Castley"]
 tags        = ["spl", "search"]
 +++
 ```
 
-Renders the meta row with a clock icon (duration), a chart icon (difficulty), a user icon (author), and a series of tag pills.
+Renders the meta row with a clock icon (time), a chart icon (difficulty), a user icon (authors), and a series of tag pills.
 
 ## Defaults set via cascade
 
-Hugo's [cascade](https://gohugo.io/content-management/front-matter/#cascade) lets a section set front-matter defaults for all its descendants. Useful for inheriting `author` or `difficulty`:
+Hugo's [cascade](https://gohugo.io/content-management/front-matter/#cascade) lets a section set front-matter defaults for all its descendants. Useful for inheriting `authors` or `difficulty`:
 
 ```yaml
 # content/workshops/getting-started/_index.md
@@ -123,13 +138,13 @@ Hugo's [cascade](https://gohugo.io/content-management/front-matter/#cascade) let
 title  = "Getting Started"
 weight = 1
 [cascade]
-  author     = "Splunk Workshop Team"
+  authors    = ["Splunk Workshop Team"]
   difficulty = "beginner"
 +++
 ```
 
-Now every page under `getting-started/` inherits `author` and `difficulty` unless it overrides them.
+Now every page under `getting-started/` inherits `authors` and `difficulty` unless it overrides them.
 
 {{< notice tip "Cascade is fantastic for big workshops" >}}
-Set the workshop's `author` and `difficulty` once in the chapter `_index.md` via cascade. New lessons inherit it automatically — fewer keys to manage per file.
+Set the workshop's `authors` and `difficulty` once in the chapter `_index.md` via cascade. New lessons inherit it automatically — fewer keys to manage per file.
 {{< /notice >}}

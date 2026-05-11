@@ -105,3 +105,11 @@
   translation: "Before you start"
 - id: presenterNote
   translation: "Presenter Note"
+- id: lastModified
+  translation: "Last Modified"
+- id: author
+  translation: "Author"
+- id: authors
+  translation: "Authors"
+- id: workshopVersion
+  translation: "Workshop Version"

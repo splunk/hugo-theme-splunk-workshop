@@ -1,8 +1,35 @@
-{{- /* Workshop meta row: time, difficulty, prerequisites count, tags */ -}}
-{{- $params := .Params -}}
-{{- if or $params.duration $params.difficulty $params.tags -}}
+{{- /* Workshop meta row: time / authors / difficulty / tags.
+       Accepts both the relearn keys (time, authors plural array) and the
+       theme's own keys (duration, author singular) so existing workshop
+       content migrates without rewriting. Authors formatted with the
+       same grammar as the live splunk.github.io/observability-workshop:
+         1 author  → "Author"  · Name
+         2 authors → "Authors" · A & B
+         3+        → "Authors" · A, B, & C
+    */ -}}
+{{- $params  := .Params -}}
+{{- $time    := $params.time | default $params.duration -}}
+{{- $rawAuth := $params.authors | default $params.author -}}
+
+{{- /* Normalise authors into a clean string slice. Trims surrounding
+       punctuation, drops empties, and accepts a single string (legacy
+       singular `author` key) as a list of one. */ -}}
+{{- $authors := slice -}}
+{{- if $rawAuth -}}
+  {{- $list := $rawAuth -}}
+  {{- if not (reflect.IsSlice $rawAuth) }}{{ $list = slice $rawAuth }}{{ end -}}
+  {{- range $list -}}
+    {{- $clean := trim (string .) ", " -}}
+    {{- if and $clean (ne $clean "&") -}}
+      {{- $authors = $authors | append $clean -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- $nAuthors := len $authors -}}
+
+{{- if or $time $params.difficulty (gt $nAuthors 0) $params.tags -}}
 <div class="workshop-meta">
-  {{ with $params.duration }}
+  {{ with $time }}
     <span class="workshop-meta__item">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
       <strong>{{ . }}</strong>
@@ -14,10 +41,17 @@
       <strong>{{ . | title }}</strong>
     </span>
   {{ end }}
-  {{ with $params.author }}
-    <span class="workshop-meta__item">
+  {{ if gt $nAuthors 0 }}
+    {{- $label := cond (eq $nAuthors 1) (i18n "author" | default "Author") (i18n "authors" | default "Authors") -}}
+    {{- $body  := "" -}}
+    {{- if eq $nAuthors 1 -}}{{ $body = index $authors 0 -}}
+    {{- else if eq $nAuthors 2 -}}{{ $body = delimit $authors " & " -}}
+    {{- else -}}{{ $body = delimit $authors ", " ", & " -}}
+    {{- end -}}
+    <span class="workshop-meta__item workshop-meta__item--authors">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      <strong>{{ . }}</strong>
+      <span class="workshop-meta__label">{{ $label }}</span>
+      <strong>{{ $body }}</strong>
     </span>
   {{ end }}
   {{ with $params.tags }}

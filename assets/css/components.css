@@ -429,6 +429,31 @@
 .workshop-meta__item { display: inline-flex; align-items: center; gap: 0.4rem; }
 .workshop-meta__item svg { width: 0.95rem; height: 0.95rem; opacity: 0.7; }
 .workshop-meta__item strong { color: var(--color-ink); font-weight: 600; }
+.workshop-meta__label {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.7rem;
+  color: var(--color-ink-muted);
+  margin-right: 0.05rem;
+}
+
+/* ---- Page-meta footer (Last Modified, shown above the pager) ---- */
+.page-meta-footer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 2.5rem 0 0.5rem;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-ink-muted);
+  letter-spacing: 0.02em;
+}
+.page-meta-footer__label { font-weight: 500; }
+.page-meta-footer__sep   { opacity: 0.5; }
+.page-meta-footer__date  { color: var(--color-ink); font-weight: 500; }
 
 /* ---- Breadcrumb ---- */
 .breadcrumb {

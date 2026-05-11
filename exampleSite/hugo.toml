@@ -15,6 +15,7 @@ title   = "Splunk Workshops · Demo"
 defaultContentLanguage = "en"
 enableEmoji   = true
 enableRobotsTXT = true
+enableGitInfo = true
 themesDir = "../.."
 theme   = "hugo-theme-splunk-workshop"
 
@@ -106,6 +107,13 @@ theme   = "hugo-theme-splunk-workshop"
   # ---- Repo / edit-on-github ----
   editURL = ""
   repoURL = ""
+
+  # ---- Workshop version badge (rendered in the site footer) ----
+  # Set versionBadgeRepo to a "owner/repo" path on GitHub to render a
+  # shields.io badge fetched from that repo's latest release tag. Leave
+  # blank to omit the badge entirely.
+  versionBadgeRepo  = "splunk/hugo-theme-splunk-workshop"
+  versionBadgeColor = "FF007F"   # hex without the leading #
 
   [params.social]
     github   = "https://github.com/splunk/hugo-theme-splunk-workshop"

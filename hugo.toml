@@ -4,7 +4,7 @@ title = "Splunk Workshops"
 defaultContentLanguage = "en"
 enableEmoji = true
 enableRobotsTXT = true
-enableGitInfo = false
+enableGitInfo = true
 
 # ---------------------------------------------------------------------------
 # Multilingual (opt-in)
@@ -127,6 +127,13 @@ enableGitInfo = false
   # ---- Repo / edit-on-github --------------------------------------------
   editURL = ""
   repoURL = ""
+
+  # ---- Workshop version badge (rendered in the site footer) -------------
+  # Set versionBadgeRepo to "owner/repo" on GitHub to render a shields.io
+  # badge with the latest release tag in the site footer. Leave empty to
+  # omit the badge entirely.
+  versionBadgeRepo  = ""
+  versionBadgeColor = "FF007F"   # hex without the leading #
 
   [params.social]
     github   = ""
