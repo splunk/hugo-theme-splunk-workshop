@@ -110,6 +110,56 @@ Collapsed by default; reader can expand to see the body.
 
 Use `groupid` to sync multiple `<details>` notices so opening one closes the others (native `<details name>` attribute, no JS).
 
+## GitHub Alerts — markdown syntax
+
+If you're authoring in plain markdown (or migrating content from a GitHub README), the theme also recognises [GitHub Alerts](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/basic-writing-and-formatting-syntax#alerts). They route through the same renderer as `notice`, so the output is identical to a shortcode invocation.
+
+```markdown
+> [!NOTE]
+> Useful information that users should know.
+
+> [!TIP]
+> Helpful advice for doing things better.
+
+> [!IMPORTANT]
+> Key information users need to know to achieve their goal.
+
+> [!WARNING]
+> Urgent info that needs immediate user attention to avoid problems.
+
+> [!CAUTION]
+> Advises about risks or negative outcomes of certain actions.
+```
+
+Renders as:
+
+> [!NOTE]
+> Useful information that users should know.
+
+> [!TIP]
+> Helpful advice for doing things better.
+
+> [!IMPORTANT]
+> Key information users need to know to achieve their goal.
+
+> [!WARNING]
+> Urgent info that needs immediate user attention to avoid problems.
+
+> [!CAUTION]
+> Advises about risks or negative outcomes of certain actions.
+
+GitHub's five types map onto the theme's six like this:
+
+| GitHub Alert | → | Theme callout |
+| --- | --- | --- |
+| `[!NOTE]` | → | `note` |
+| `[!TIP]` | → | `tip` |
+| `[!IMPORTANT]` | → | `warning` (yellow) |
+| `[!WARNING]` | → | `warning` |
+| `[!CAUTION]` | → | `danger` (red) |
+
+GitHub doesn't have a `success` equivalent — use `{{</* notice success */>}}` for that.
+
 ## When to use which
 
 | Situation | Use |

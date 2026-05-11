@@ -1,0 +1,43 @@
+{{- /*
+  Blockquote render hook.
+
+  Goldmark (Hugo 0.132+) parses GitHub Alerts as blockquotes with
+  .Type == "alert" and .AlertType set to one of:
+    note | tip | important | warning | caution
+
+  Authors can write:
+      > [!NOTE]
+      > Useful information.
+
+      > [!TIP] Custom title
+      > Helpful advice.
+
+  and we route them through the same `callout-render.html` partial that
+  the `{{< notice >}}` shortcode uses — so a workshop authored in either
+  syntax (GitHub-style markdown OR relearn-style shortcodes) renders to
+  the same visual output.
+
+  Regular blockquotes (no [!TYPE] marker) pass through to the default
+  <blockquote> element.
+*/ -}}
+{{- if eq .Type "alert" -}}
+  {{- /* Map GitHub Alert types to the theme's internal callout types.
+         Same mapping `notice.html` uses for relearn aliases. */ -}}
+  {{- $map := dict
+      "note"      "note"
+      "tip"       "tip"
+      "important" "warning"
+      "warning"   "warning"
+      "caution"   "danger"
+  -}}
+  {{- $type := index $map (lower .AlertType) | default "note" -}}
+  {{- partial "callout-render.html" (dict
+      "page"  .Page
+      "type"  $type
+      "title" .AlertTitle
+      "inner" .Text) -}}
+{{- else -}}
+<blockquote>
+  {{- .Text | safeHTML -}}
+</blockquote>
+{{- end -}}
