@@ -14,7 +14,7 @@
 */ -}}
 {{- $workshop := partial "workshop-root.html" . -}}
 {{- if $workshop -}}
-<aside id="workshop-sidebar" class="sidebar" aria-label="Workshop navigation">
+<aside id="workshop-sidebar" class="sidebar" aria-label="Workshop navigation" data-workshop-root="{{ $workshop.RelPermalink }}">
   {{- /* "Back to <category>" link — points at the workshop root's parent
          (the category hub, e.g. /en/splunk4rookies/). Skipped when the
          workshop root's parent is the language home. */ -}}

@@ -328,6 +328,33 @@
     transparent 60%);
 }
 
+/* Visited indicator — filled accent dot in the left gutter for every page
+   the attendee has dwelled on for 2s. Painted client-side by
+   workshop-progress.js from localStorage. Subtle when isolated; intensifies
+   when paired with the active border. */
+.sidebar-tree__link,
+.sidebar-tree__self { position: relative; }
+.sidebar-tree__link.is-visited::before,
+.sidebar-tree__self.is-visited::before {
+  content: "";
+  position: absolute;
+  left: 0.25rem;
+  top: 50%;
+  width: 0.35rem;
+  height: 0.35rem;
+  margin-top: -0.18rem;
+  border-radius: 50%;
+  background: var(--color-accent);
+  opacity: 0.55;
+  transition: opacity var(--t-base) var(--ease),
+              transform var(--t-base) var(--ease);
+}
+.sidebar-tree__link.is-visited.is-active::before,
+.sidebar-tree__self.is-visited.is-active::before {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
 /* Chapter group (a section with its own children) */
 .sidebar-tree__group { margin: 0; position: relative; }
 .sidebar-tree__group details {
