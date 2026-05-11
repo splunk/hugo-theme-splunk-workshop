@@ -27,3 +27,7 @@ go.sum
 exampleSite/public/
 exampleSite/resources/
 exampleSite/.hugo_build.lock
+
+# Local testing of workshop content
+content/en
+content/ja

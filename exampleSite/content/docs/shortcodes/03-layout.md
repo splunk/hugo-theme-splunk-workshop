@@ -233,47 +233,84 @@ All three modifiers compose:
 
 ## Buttons
 
-A linkable call-to-action pill with optional icon, color override, and target. Use it sparingly — typically one primary button per page section.
+The theme ships **two** button shortcodes for two distinct jobs. Pick the right one:
 
-{{< button href="#" icon="rocket" style="primary" >}}Get started{{< /button >}}
-{{< button href="https://github.com" icon="github" style="secondary" target="_blank" >}}View on GitHub{{< /button >}}
-{{< button href="#" icon="download" >}}Download{{< /button >}}
+| Shortcode | Visual | Use for |
+| --- | --- | --- |
+| `{{</* button */>}}` | Small inline pill, configurable colour | Inline page content, prose, multi-button rows. [Relearn-compatible](https://mcshelby.github.io/hugo-theme-relearn/shortcodes/button/index.html). |
+| `{{</* cta */>}}` | Big gradient Splunk-branded pill with shadow | Hero / landing / end-of-workshop primary actions. One per section. |
+
+### `button` — inline (relearn-compatible)
+
+Small linkable pill. Drop-in replacement for the [relearn `button`](https://mcshelby.github.io/hugo-theme-relearn/shortcodes/button/index.html) — same param names, same semantic style presets, same colour aliases. The default is a neutral white/clear pill; opt into a coloured fill via `style="primary"` (Splunk magenta) or any semantic preset.
+
+{{< button href="#" icon="book-open" >}}Read the docs{{< /button >}} {{< button href="#" icon="rocket" style="primary" >}}Get started{{< /button >}} {{< button href="#" icon="github" style="secondary" target="_blank" >}}View on GitHub{{< /button >}} {{< button href="#" icon="download" style="transparent" >}}Download{{< /button >}}
 
 ```markdown
+{{</* button href="#" icon="book-open" */>}}Read the docs{{</* /button */>}}
 {{</* button href="#" icon="rocket" style="primary" */>}}Get started{{</* /button */>}}
-{{</* button href="https://github.com" icon="github" style="secondary" target="_blank" */>}}View on GitHub{{</* /button */>}}
-{{</* button href="#" icon="download" */>}}Download{{</* /button */>}}
+{{</* button href="#" icon="github" style="secondary" target="_blank" */>}}View on GitHub{{</* /button */>}}
+{{</* button href="#" icon="download" style="transparent" */>}}Download{{</* /button */>}}
 ```
 
-### Button parameters
+#### Button parameters
 
 | Param | Default | Notes |
 | --- | --- | --- |
 | `href` | — | Target URL. If omitted, renders as a `<button type="button">` (no link). |
-| `style` | `primary` | `primary` (gradient fill) or `secondary` (outline). `transparent` aliases to `secondary`. |
-| `icon` | — | Name from the bundled icon set (see below). Renders to the left of the label by default. |
-| `iconposition` | `left` | `left` or `right` — which side the icon sits on. |
+| `style` | `default` | Semantic preset OR any CSS colour. See table below. |
+| `color` | — | Explicit CSS colour. Wins over `style` colour. Any CSS colour (`#hex`, `rgb()`, named). |
+| `icon` | — | Icon name from the bundled set. Renders to the left of the label by default. |
+| `iconposition` | `left` | `left` or `right`. |
 | `target` | — | `_blank` to open in a new tab; auto-adds `rel="noopener"`. |
-| `color` | — | Override the accent for this one button. Any CSS color (`#hex`, `rgb()`, named). |
-| `title` | — | Optional fallback label if the inner text is empty. |
+| `title` | — | Fallback label if the inner text is empty. |
 
-### Variations
+#### Style presets
 
-A secondary (outline) button without an icon:
+| `style=` | Result |
+| --- | --- |
+| `default` (default) | Neutral white/clear surface with a subtle border. |
+| `primary` | Filled accent fill (Splunk magenta). |
+| `secondary` | Outlined — accent border + label, transparent fill. |
+| `transparent` | Text-only — no border or background. |
+| `success` `warning` `error` `info` `note` `tip` | Semantic colour fills. |
+| `blue` `green` `orange` `yellow` `red` `gray` | [Relearn colour aliases](https://mcshelby.github.io/hugo-theme-relearn/shortcodes/button/index.html). |
+| Any CSS colour | Used as the fill (`style="purple"`, `style="#7f00ff"`). |
 
-{{< button href="#" style="secondary" >}}Read the docs{{< /button >}}
+#### Variations
 
-Icon on the right (good for "next" / "continue" affordances):
+Outline + icon-right (good for "continue" affordances):
 
-{{< button href="#" icon="arrow-right" iconposition="right" >}}Continue{{< /button >}}
+{{< button href="#" icon="arrow-right" iconposition="right" style="secondary" >}}Continue{{< /button >}}
 
-Open in a new tab (auto-adds `rel="noopener"`):
+Coloured presets:
 
-{{< button href="https://github.com/splunk" target="_blank" icon="external" iconposition="right" style="secondary" >}}Splunk on GitHub{{< /button >}}
+{{< button href="#" style="success" icon="check" >}}Success{{< /button >}} {{< button href="#" style="warning" icon="alert-triangle" >}}Warning{{< /button >}} {{< button href="#" style="error" icon="x" >}}Error{{< /button >}}
+
+Custom colour:
+
+{{< button href="#" color="#7f00ff" icon="sparkles" >}}Custom{{< /button >}}
+
+### `cta` — the big Splunk pill
+
+A bold gradient call-to-action pill (extra padding, shadow, arrow). Use sparingly — one primary `cta` per page section, on landing or end-of-workshop pages. For inline page content, reach for `button` instead.
+
+{{< cta href="#" icon="rocket" >}}Start the workshop{{< /cta >}}
 
 ```markdown
-{{</* button href="https://github.com/splunk" target="_blank" icon="external" iconposition="right" style="secondary" */>}}Splunk on GitHub{{</* /button */>}}
+{{</* cta href="#" icon="rocket" */>}}Start the workshop{{</* /cta */>}}
 ```
+
+#### CTA parameters
+
+| Param | Default | Notes |
+| --- | --- | --- |
+| `href` | — | Target URL. If omitted, renders as a `<button type="button">`. |
+| `style` | `primary` | `primary` (gradient fill) or `secondary` / `ghost` / `transparent` (outline). |
+| `icon` | — | Icon name. If omitted, the pill emits a `→` arrow at the end. |
+| `iconposition` | `left` | `left` or `right`. |
+| `target` | — | `_blank` to open in a new tab; auto-adds `rel="noopener"`. |
+| `title` | — | Fallback label if the inner text is empty. |
 
 ## Icons
 

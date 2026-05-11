@@ -1,51 +1,99 @@
 {{- /*
-  Relearn-compatible button. CTA pill with optional icon, color, and target.
-  Usage:
-    {{% button href="/install/" icon="download" %}}Install now{{% /button %}}
-    {{% button href="https://example.com" target="_blank" style="primary" %}}Open{{% /button %}}
-    {{% button style="blue"  %}}Blue button{{% /button %}}    (relearn idiom)
-    {{% button color="#00bce4" %}}Custom{{% /button %}}
+  Inline button — relearn-compatible. Small, configurable, designed for
+  page content. Drops in as a replacement for `{{% button %}}` from
+  hugo-theme-relearn (https://mcshelby.github.io/hugo-theme-relearn/shortcodes/button/).
 
-  $style accepts:
-    - Known class variants: primary, secondary, ghost, accent, transparent
-    - Any other value (blue, green, red, gray, #hex, etc.) is treated as a
-      colour and applied via --btn-color (relearn migration compat).
+  For big Splunk-branded hero / landing-page actions use {{< cta >}} instead.
+
+  Args:
+    href              link target (auto-prefixed for project-pages baseURLs)
+    style             one of:
+                        primary   - default; filled accent
+                        secondary - outlined
+                        transparent - text-only
+                        success | warning | error | info | note | tip
+                                  - semantic colour presets
+                        <any CSS colour or relearn colour-name>
+                                  - custom fill (e.g. style="blue")
+    color             explicit CSS colour, wins over $style colour
+    icon              icon name (rendered via icon-svg.html)
+    iconposition      left (default) | right
+    target            link target attribute; _blank also adds rel=noopener
+    title             fallback label when Inner is empty
+
+  Style values are case-insensitive — style="Primary" works the same as
+  style="primary".
 */ -}}
 {{- $hrefRaw := .Get "href" -}}
 {{- $href    := partial "site-href.html" $hrefRaw -}}
-{{- $style    := .Get "style" | default "primary" -}}
+{{- $style   := .Get "style" | default "default" -}}
 {{- $styleKey := lower (string $style) -}}
-{{- $color    := .Get "color" -}}
-{{- $icon     := .Get "icon" -}}
-{{- $iconpos  := .Get "iconposition" | default "left" -}}
-{{- $target   := .Get "target" -}}
-{{- $title    := .Get "title" -}}
-{{- $known    := slice "primary" "secondary" "transparent" "ghost" "accent" -}}
-{{- $cls      := "btn" -}}
-{{- if eq $styleKey "primary" }}{{ $cls = "btn btn--primary" }}{{ end -}}
-{{- if eq $styleKey "accent"  }}{{ $cls = "btn btn--primary" }}{{ end -}}
-{{- if eq $styleKey "secondary" }}{{ $cls = "btn btn--ghost" }}{{ end -}}
-{{- if eq $styleKey "ghost"     }}{{ $cls = "btn btn--ghost" }}{{ end -}}
-{{- if eq $styleKey "transparent" }}{{ $cls = "btn btn--ghost" }}{{ end -}}
-{{- /* Unknown $style is treated as a colour name (relearn idiom).
-       Only override $color if the caller didn't already set one. */ -}}
-{{- if and (not (in $known $styleKey)) (not $color) -}}
-  {{- $color = $style -}}
-  {{- $cls = "btn btn--colored" -}}
+{{- $color   := .Get "color" -}}
+{{- $icon    := .Get "icon" -}}
+{{- $iconpos := .Get "iconposition" | default "left" -}}
+{{- $target  := .Get "target" -}}
+{{- $title   := .Get "title" -}}
+
+{{- /* Semantic colour map for relearn-style names. */ -}}
+{{- $semantic := dict
+    "primary"     "var(--color-accent)"
+    "accent"      "var(--color-accent)"
+    "secondary"   ""
+    "transparent" ""
+    "default"     ""
+    "success"     "#2f7c47"
+    "warning"     "#FF9000"
+    "error"       "#d4341f"
+    "danger"      "#d4341f"
+    "info"        "#1d5d99"
+    "note"        "var(--color-ink-muted)"
+    "tip"         "#FFAB0F"
+    "blue"        "#1d5d99"
+    "green"       "#2f7c47"
+    "orange"      "#FF9000"
+    "yellow"      "#FFAB0F"
+    "red"         "#d4341f"
+    "gray"        "var(--color-ink-muted)"
+    "grey"        "var(--color-ink-muted)"
+-}}
+
+{{- /* Resolve $color: explicit `color=` wins, then a semantic preset,
+       then treat the raw $style value as a CSS colour (relearn idiom).
+       The default style leaves $color unset → neutral surface. */ -}}
+{{- $cls := "btn-inline" -}}
+{{- if eq $styleKey "secondary" -}}
+  {{- $cls = "btn-inline btn-inline--outline" -}}
+  {{- if not $color }}{{ $color = "var(--color-accent)" }}{{ end -}}
+{{- else if eq $styleKey "transparent" -}}
+  {{- $cls = "btn-inline btn-inline--text" -}}
+  {{- if not $color }}{{ $color = "var(--color-accent-text)" }}{{ end -}}
+{{- else if eq $styleKey "default" -}}
+  {{- /* neutral — only colourise if user supplied an explicit `color=` */ -}}
+{{- else if not $color -}}
+  {{- with index $semantic $styleKey -}}
+    {{- $color = . -}}
+  {{- else -}}
+    {{- $color = $style -}}
+  {{- end -}}
 {{- end -}}
+{{- /* Add the filled modifier whenever we end up with a colour and we're
+       not in the outline or text-only variant. */ -}}
+{{- if and $color (ne $styleKey "secondary") (ne $styleKey "transparent") -}}
+  {{- $cls = "btn-inline btn-inline--filled" -}}
+{{- end -}}
+
 {{- $body := .Inner | .Page.RenderString -}}
 {{- if not (trim ($body | string) " \n\r\t") }}{{ $body = $title }}{{ end -}}
 {{- $tag := "a" -}}
 {{- if not $href }}{{ $tag = "button" }}{{ end -}}
 {{- $iconHTML := "" -}}
 {{- if $icon -}}
-  {{- $iconHTML = printf `<span class="btn__icon">%s</span>` (partial "icon-svg.html" $icon) -}}
+  {{- $iconHTML = printf `<span class="btn-inline__icon">%s</span>` (partial "icon-svg.html" $icon) -}}
 {{- end -}}
-{{- /* Emit on a single line. Multi-line output breaks the surrounding
-       paragraph when the shortcode is used inline (markdown splits at the
-       internal line-breaks, producing nested <p> stragglers). */ -}}
+{{- /* Single-line output so the button can sit inline inside a paragraph
+       without markdown splitting at internal line-breaks. */ -}}
 {{- if eq $tag "a" -}}
-<a class="{{ $cls }}" href="{{ $href }}"{{ with $target }} target="{{ . }}"{{ if eq . "_blank" }} rel="noopener"{{ end }}{{ end }}{{ with $color }} style="--btn-color: {{ . }}"{{ end }}>{{ if and $icon (eq $iconpos "left") }}{{ $iconHTML | safeHTML }}{{ end }}<span>{{ $body | safeHTML }}</span>{{ if and $icon (eq $iconpos "right") }}{{ $iconHTML | safeHTML }}{{ end }}{{ if not $icon }}<span class="btn__arrow">&rarr;</span>{{ end }}</a>
+<a class="{{ $cls }}" href="{{ $href }}"{{ with $target }} target="{{ . }}"{{ if eq . "_blank" }} rel="noopener"{{ end }}{{ end }}{{ with $color }} style="--btn-color: {{ . | safeCSS }}"{{ end }}>{{ if and $icon (eq $iconpos "left") }}{{ $iconHTML | safeHTML }}{{ end }}<span>{{ $body | safeHTML }}</span>{{ if and $icon (eq $iconpos "right") }}{{ $iconHTML | safeHTML }}{{ end }}</a>
 {{- else -}}
-<button class="{{ $cls }}" type="button"{{ with $color }} style="--btn-color: {{ . }}"{{ end }}>{{ if and $icon (eq $iconpos "left") }}{{ $iconHTML | safeHTML }}{{ end }}<span>{{ $body | safeHTML }}</span>{{ if and $icon (eq $iconpos "right") }}{{ $iconHTML | safeHTML }}{{ end }}</button>
+<button class="{{ $cls }}" type="button"{{ with $color }} style="--btn-color: {{ . | safeCSS }}"{{ end }}>{{ if and $icon (eq $iconpos "left") }}{{ $iconHTML | safeHTML }}{{ end }}<span>{{ $body | safeHTML }}</span>{{ if and $icon (eq $iconpos "right") }}{{ $iconHTML | safeHTML }}{{ end }}</button>
 {{- end -}}
