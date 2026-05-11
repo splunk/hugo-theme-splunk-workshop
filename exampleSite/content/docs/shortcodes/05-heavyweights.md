@@ -87,6 +87,6 @@ Allow 10 minutes for attendees to finish this section.
 
 The state persists in `localStorage`, so once you toggle presenter mode it stays on as you navigate between pages — useful for live workshops where you want notes available throughout.
 
-{{< tip "Don't put answers in presenter notes" >}}
+{{< notice tip "Don't put answers in presenter notes" >}}
 The markup is in the page source. Attendees who view-source can see them. Use presenter notes for delivery cues and timing only — not for hidden answers to exercises.
-{{< /tip >}}
+{{< /notice >}}

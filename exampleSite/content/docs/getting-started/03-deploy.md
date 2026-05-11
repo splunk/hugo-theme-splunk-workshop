@@ -61,8 +61,8 @@ rsync -avz --delete public/ user@server:/var/www/site/
 
 That's it — `public/` is the entire deployable bundle.
 
-{{< warning "Set baseURL correctly" >}}
+{{< notice warning "Set baseURL correctly" >}}
 The `baseURL` in your `hugo.toml` must match the deployed URL. For GitHub Pages this is usually `https://<org>.github.io/<repo>/` — the trailing slash matters. Wrong baseURL produces broken asset paths and search index.
-{{< /warning >}}
+{{< /notice >}}
 
 {{< checkpoint "Site deployed and accessible at the public URL" >}}

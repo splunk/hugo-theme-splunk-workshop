@@ -75,9 +75,9 @@ If you want to ship the font files yourself (privacy, performance, no external n
 
 Hugo serves anything under `static/` at the corresponding URL, so `/css/fonts.css` resolves correctly.
 
-{{< tip "Font loading" >}}
+{{< notice tip "Font loading" >}}
 The default `display=swap` in the Google Fonts URL means text renders in the fallback font first, then swaps when the web font loads. That's the right tradeoff for workshop content — you'd rather show something readable than block on the network.
-{{< /tip >}}
+{{< /notice >}}
 
 ## Heading sizes
 

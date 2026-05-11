@@ -95,6 +95,10 @@ make screenshot    # refresh images/screenshot.png and images/tn.png
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for code conventions, the test loop, and release process.
 
+## Credits
+
+The `notice` shortcode is a relearn-compatible drop-in. Credit to [hugo-theme-relearn](https://github.com/McShelby/hugo-theme-relearn) by [Sören Weber](https://github.com/McShelby).
+
 ## License
 
 MIT — see [LICENSE](LICENSE).

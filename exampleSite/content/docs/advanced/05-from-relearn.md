@@ -14,7 +14,7 @@ These shortcodes exist with relearn-compatible names so your existing markdown k
 
 | Relearn shortcode | This theme | Notes |
 |---|---|---|
-| `notice` | `notice` (alias of `callout`) | Identical API: `{{</* notice tip "Title" */>}}` |
+| `notice` | `notice` | Identical API: `{{</* notice tip "Title" */>}}`. Full param surface — `style`, `title`, `icon`, `color`, `expanded`, `groupid`. |
 | `expand` | `expand` | `{{%/* expand "Click me" */%}}` — title is positional or `title=` |
 | `details` | `details` | Same as `expand` but uses `summary=` argument name |
 | `cards` + `card` | `cards` + `card` | Same API. `href` preferred over `url` (both accepted) |

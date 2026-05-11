@@ -149,6 +149,6 @@ hugo new --kind lab content/labs/01-pcap-analysis.md
 
 Hugo looks for archetypes in **your site first**, then falls back to the theme. So you can override the bundled ones if you want — drop a file at `archetypes/workshop.md` in your site to replace the theme's version.
 
-{{< tip "Templating in archetypes" >}}
+{{< notice tip "Templating in archetypes" >}}
 Archetypes are Go templates. You can use `{{ now.Format }}`, `{{ .Site.Params.X }}`, or any Hugo function. See the [Hugo docs on archetypes](https://gohugo.io/content-management/archetypes/).
-{{< /tip >}}
+{{< /notice >}}

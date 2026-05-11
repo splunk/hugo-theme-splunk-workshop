@@ -71,9 +71,9 @@ Same goes for `assets/`, `static/`, `i18n/`, `data/`, and `archetypes/`. Your fi
 
 This is the cleanest way to customize the theme — no fork, no patch, just create a same-named file in your site.
 
-{{< warning "Don't override what you don't have to" >}}
+{{< notice warning "Don't override what you don't have to" >}}
 Every file you override is a file you'll have to maintain when the theme updates. Override the smallest unit possible — usually a partial, not a full layout. And document why in a comment at the top of the file.
-{{< /warning >}}
+{{< /notice >}}
 
 ## Submodule alternative
 

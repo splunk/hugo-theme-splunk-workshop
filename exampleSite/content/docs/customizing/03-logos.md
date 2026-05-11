@@ -23,9 +23,9 @@ Both `logoLight` and `logoDark` are paths relative to `static/`. The CSS auto-sw
 
 If you only set `logoLight`, it's used in both modes. Make sure it has acceptable contrast on both backgrounds.
 
-{{< tip "SVG > PNG" >}}
+{{< notice tip "SVG > PNG" >}}
 SVG logos render crisply at any zoom level and inherit `currentColor` if you want them to follow the theme accent. If your asset is a raster, use a 2× PNG so it stays sharp on retina displays.
-{{< /tip >}}
+{{< /notice >}}
 
 ## Text wordmark fallback
 
@@ -62,9 +62,9 @@ The bundled defaults are the official Splunk brand assets and ship in the theme'
 
 The image is sized with `background-size: cover` and anchored `right top`, so the bloom always pokes out of the top-right regardless of viewport width. If your asset has a different focal point, override `.light-trails--hero` in your own CSS to tweak the positioning.
 
-{{< tip "Image format" >}}
+{{< notice tip "Image format" >}}
 Use 16:9 WebP — gradient blooms compress beautifully at quality 85–95 and stay around 100 KB each. The bundled Splunk assets ship as WebP at ~100 KB. PNG, JPG, and SVG also work, but the image loads on every page that has a hero, so keep it tight: 1 MB+ assets noticeably hurt first paint.
-{{< /tip >}}
+{{< /notice >}}
 
 ## OG / Twitter card image
 

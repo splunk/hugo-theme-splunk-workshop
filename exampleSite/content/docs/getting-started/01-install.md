@@ -83,9 +83,9 @@ theme = "hugo-theme-splunk-workshop"
 {{< /tab >}}
 {{< /tabs >}}
 
-{{< tip "Which one?" >}}
+{{< notice tip "Which one?" >}}
 Use **Hugo Modules** unless you have a strong reason not to — the version pin makes upgrades and CI deterministic. Submodule is fine for personal sites; direct download is fine for quick prototypes.
-{{< /tip >}}
+{{< /notice >}}
 
 ## Minimal `hugo.toml`
 

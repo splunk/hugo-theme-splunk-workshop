@@ -63,18 +63,18 @@ splunkd is running (PID: 12345).
 
 If you see `200`, you’re good. If not, the next callout has the most common fixes.
 
-{{< warning "Port 8000 already in use?" >}}
+{{< notice warning "Port 8000 already in use?" >}}
 If you’re running another web server on `:8000`, Splunk will fail to start silently. Either stop the other service or restart Splunk on a different port:
 
 ```bash
 splunk set web-port 8001
 splunk restart
 ```
-{{< /warning >}}
+{{< /notice >}}
 
-{{< danger "Don’t skip the license prompt" >}}
+{{< notice danger "Don’t skip the license prompt" >}}
 The `--accept-license` flag is required for unattended starts. Without it, the server boots into an interactive setup loop that will eat your afternoon.
-{{< /danger >}}
+{{< /notice >}}
 
 ## Sign in
 

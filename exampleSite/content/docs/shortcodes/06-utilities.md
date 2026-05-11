@@ -148,16 +148,32 @@ otelVersion = "0.110.0"
 
 ### `linkedin`
 
-A styled LinkedIn profile link with the LinkedIn brand color and a person icon. Use it when crediting workshop authors or referencing speakers in presenter notes.
+Emits a deep link to LinkedIn's "Add a certification" form, pre-filled with the workshop name, the issuing organisation (Splunk by default), and the current issue date. Workshop attendees click it on the completion page to add the cert to their profile in two taps.
 
 ```markdown
-Hosted by {{</* linkedin "robertcastley" "Rob Castley" */>}}.
+{{</* linkedin */>}}
+{{</* linkedin name="Splunk OpenTelemetry Fundamentals" certUrl="https://example.com/certs/otel-fundamentals.png" */>}}
+{{</* linkedin text="Add to LinkedIn" color="#0a66c2" */>}}
 ```
 
-Args:
+| Param | Default | Notes |
+| --- | --- | --- |
+| `name` | `Site.Params.linkedinCertName` → `"Splunk Workshop"` | Certification name shown on the user's profile. |
+| `organizationId` | `Site.Params.linkedinOrgId` → `"20226"` | LinkedIn company ID. `20226` is Splunk; change it for non-Splunk workshops. |
+| `certUrl` | `Site.Params.linkedinCertUrl` → `""` | Public URL of the certificate image (PNG/JPG). Optional but recommended. |
+| `text` | `"LinkedIn"` | Visible link label. |
+| `color` | `"#ffffff"` | CSS colour for the link text — default white so it sits cleanly inside a dark CTA. Pass `"#0a66c2"` for stand-alone LinkedIn-brand links. |
 
-- positional 0 — LinkedIn handle (the slug after `/in/`)
-- positional 1 — display name (defaults to the handle)
+Issue date is auto-set to the current month/year, so the cert always reflects when the attendee actually completed the workshop. Set the defaults once in `hugo.toml`:
+
+```toml
+[params]
+  linkedinCertName = "Splunk OpenTelemetry Fundamentals"
+  linkedinOrgId    = "20226"
+  linkedinCertUrl  = "https://your-cdn.example.com/certs/otel-fundamentals.png"
+```
+
+Most pages can then call `{{</* linkedin */>}}` with no arguments and pick up the workshop-wide defaults.
 
 ## Inline styling
 

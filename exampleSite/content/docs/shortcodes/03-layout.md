@@ -364,9 +364,9 @@ To register a new icon, edit [`layouts/partials/icon-svg.html`](https://github.c
 
 The wrapper auto-applies `viewBox="0 0 24 24"`, `stroke="currentColor"`, and 2px stroke. So your SVG path data should be designed for a 24×24 grid with no inline color.
 
-{{< tip "Source for new icons" >}}
+{{< notice tip "Source for new icons" >}}
 [Lucide](https://lucide.dev/) and [Phosphor](https://phosphoricons.com/) both ship 24×24 SVGs with consistent stroke widths that drop straight in. Copy the path data, paste into the dict, restart `hugo server`.
-{{< /tip >}}
+{{< /notice >}}
 
 ## Cards
 

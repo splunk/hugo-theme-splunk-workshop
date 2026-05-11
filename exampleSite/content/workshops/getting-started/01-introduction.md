@@ -43,13 +43,13 @@ Every workshop in this series follows the same shape:
 3. **Exercises** to reinforce — with collapsible solutions
 4. A **checkpoint** at the end so you know everything’s wired up
 
-{{< tip "Read first, run second" >}}
+{{< notice tip "Read first, run second" >}}
 We strongly recommend skimming each step before typing anything. The narrative tells you *why*; the commands only tell you *what*.
-{{< /tip >}}
+{{< /notice >}}
 
-{{< note >}}
+{{< notice note >}}
 This theme was designed to feel like a beautifully typeset technical book — slow down, settle in, and enjoy the prose.
-{{< /note >}}
+{{< /notice >}}
 
 ## A note on shortcuts
 

@@ -101,12 +101,12 @@ hugo server --port 1313
 
 This time Hugo reads `hugo.toml` at the repo root and `content/` for your authored material. Your workshop appears at <http://localhost:1313/workshops/my-workshop/01-intro/>.
 
-{{< note title="Two distinct dev loops" >}}
+{{< notice style="note" title="Two distinct dev loops" >}}
 - `make serve` (or `hugo server --source exampleSite --themesDir ../..`) builds the **demo**.
 - `hugo server` from the repo root builds **your content** in `content/`.
 
 Use the first when you're learning the theme; use the second when you're authoring a real workshop you intend to ship.
-{{< /note >}}
+{{< /notice >}}
 
 For a comprehensive guide to authoring conventions, front matter, and the navigation model see the [Authoring](../../authoring/) chapter.
 

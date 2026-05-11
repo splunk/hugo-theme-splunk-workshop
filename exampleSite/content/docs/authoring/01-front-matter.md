@@ -130,6 +130,6 @@ weight = 1
 
 Now every page under `getting-started/` inherits `author` and `difficulty` unless it overrides them.
 
-{{< tip "Cascade is fantastic for big workshops" >}}
+{{< notice tip "Cascade is fantastic for big workshops" >}}
 Set the workshop's `author` and `difficulty` once in the chapter `_index.md` via cascade. New lessons inherit it automatically — fewer keys to manage per file.
-{{< /tip >}}
+{{< /notice >}}

@@ -59,6 +59,44 @@
 [data-theme="dark"] .callout--success { --callout-color: #74d49a; }
 [data-theme="dark"] .callout--danger  { --callout-color: #ff6c5a; }
 
+/* ---------- Collapsible callout (relearn-compatible expanded notices) ----- */
+details.callout {
+  display: block;
+  padding: 0;
+}
+details.callout > .callout__summary {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  padding: 0.85rem 1.1rem;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  border-radius: var(--radius-lg);
+}
+details.callout > .callout__summary::-webkit-details-marker { display: none; }
+details.callout[open] > .callout__summary { border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+details.callout > .callout__summary .callout__title {
+  margin-bottom: 0;
+  align-self: center;
+}
+.callout__chev {
+  display: inline-flex;
+  width: 1.1rem;
+  height: 1.1rem;
+  color: var(--callout-color);
+  transition: transform var(--t-base) var(--ease);
+}
+.callout__chev svg { width: 100%; height: 100%; }
+details.callout[open] > .callout__summary .callout__chev { transform: rotate(180deg); }
+details.callout > .callout__body {
+  padding: 0 1.25rem 1rem 1.1rem;
+  border-top: 1px solid var(--callout-border);
+  padding-top: 0.85rem;
+}
+details.callout:not([open]) > .callout__body { display: none; }
+
 /* ---------- Step --------------------------------------------------------- */
 .step {
   display: grid;

@@ -1,44 +1,57 @@
 {{- /*
-  Relearn-compatible notice. Maps relearn `style` values onto the theme's
-  internal callout types and delegates to layouts/partials/callout-render.html
-  so the icon + title resolution stays in one place.
+  Notice — drop-in for hugo-theme-relearn's notice shortcode
+  (https://mcshelby.github.io/hugo-theme-relearn/shortcodes/notice/index.html).
+  The canonical callout shortcode for this theme.
 
-  Style values accepted (case-insensitive):
-    - Semantic: note, info, tip, warning, caution, important, danger, error,
-      success, primary, secondary, default, code
-    - Relearn colour-names: blue, green, orange, yellow, red, gray, grey
+  Parameters (all optional; positional 0/1/2 map to style/title/icon):
+    style    Semantic preset (note|info|tip|warning|caution|important|
+             danger|error|success|primary|secondary|default|code) OR
+             a relearn colour alias (blue|green|orange|yellow|red|gray|grey).
+    title    Header label. Falls back to the i18n-resolved type name.
+    icon     Icon override (Lucide name; see layouts/partials/icon-svg.html).
+             Falls back to the type's default icon.
+    color    Custom accent colour for the border + icon. Any CSS colour.
+    expanded "true" | "false" | "" — render as a collapsible <details>:
+               "true"  open by default, can be collapsed
+               "false" collapsed by default
+               unset   plain styled block (default)
+    groupid  Shared id for synced collapse across notices (uses <details name>).
 
   Usage:
-    {{% notice style="tip" title="Pro move" %}} ...body... {{% /notice %}}
-    {{% notice "tip" "My title" %}} body {{% /notice %}}    (positional)
+    {{% notice tip "Pro move" %}} ...body... {{% /notice %}}
+    {{% notice style="warning" expanded="false" %}} body {{% /notice %}}
 */ -}}
 {{- $style    := .Get "style" | default (.Get 0) | default "note" -}}
 {{- $styleKey := lower (string $style) -}}
-{{- $title    := .Get "title" | default (.Get 1) -}}
 {{- $map := dict
-  "note"      "note"
-  "info"      "info"
-  "tip"       "tip"
-  "warning"   "warning"
-  "caution"   "warning"
-  "important" "warning"
-  "danger"    "danger"
-  "error"     "danger"
-  "success"   "success"
-  "default"   "note"
-  "primary"   "info"
-  "secondary" "note"
-  "code"      "note"
-  "blue"      "info"
-  "green"     "success"
-  "orange"    "warning"
-  "yellow"    "warning"
-  "red"       "danger"
-  "gray"      "note"
-  "grey"      "note"
+    "note"      "note"
+    "info"      "info"
+    "tip"       "tip"
+    "warning"   "warning"
+    "caution"   "warning"
+    "important" "warning"
+    "danger"    "danger"
+    "error"     "danger"
+    "success"   "success"
+    "default"   "note"
+    "primary"   "info"
+    "secondary" "note"
+    "code"      "note"
+    "blue"      "info"
+    "green"     "success"
+    "orange"    "warning"
+    "yellow"    "warning"
+    "red"       "danger"
+    "gray"      "note"
+    "grey"      "note"
 -}}
 {{- $type := index $map $styleKey | default "note" -}}
 {{- partial "callout-render.html" (dict
-    "type"  $type
-    "title" $title
-    "inner" (.Inner | .Page.RenderString)) -}}
+    "page"     .Page
+    "type"     $type
+    "title"    (.Get "title" | default (.Get 1))
+    "icon"     (.Get "icon"  | default (.Get 2))
+    "color"    (.Get "color")
+    "expanded" (.Get "expanded")
+    "groupid"  (.Get "groupid")
+    "inner"    (.Inner | .Page.RenderString)) -}}

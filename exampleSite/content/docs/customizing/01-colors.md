@@ -96,9 +96,9 @@ Every light token has a `…Dark` counterpart that takes effect when `data-theme
 
 That's the full rebrand — no SCSS recompile, no theme fork. The CSS custom properties update at page load.
 
-{{< tip "Use a color tool" >}}
+{{< notice tip "Use a color tool" >}}
 Run your accent through [oklch.com](https://oklch.com) or Tailwind's color palette to pick stops with even perceptual lightness. The gradient looks much better when stops are tonally balanced.
-{{< /tip >}}
+{{< /notice >}}
 
 ## Where these are wired
 
