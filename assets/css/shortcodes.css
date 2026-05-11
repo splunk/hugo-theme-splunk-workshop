@@ -821,20 +821,24 @@ a.shortcode-card:hover {
 .shortcode-card__meta:empty { display: none; }
 
 /* Featured image at the top of a children-card (image="true" arg). Bleeds
-   to the card edges and uses contain so logo-style PNGs aren't cropped. */
+   to the inner card edges and follows the card's rounded top corners.
+   `cover` so banner-style featured images fill the slot edge-to-edge
+   instead of being letterboxed against a surface background. */
 .shortcode-card__media {
   margin: -1.4rem -1.5rem 1rem;
   overflow: hidden;
   aspect-ratio: 16 / 9;
   background: var(--color-surface-alt);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  /* Match the card's outer border-radius so the image fills the rounded
+     top corners. The card uses border-radius: 12px and has a 1px border;
+     11px inside the border keeps the inner edge flush. */
+  border-top-left-radius: 11px;
+  border-top-right-radius: 11px;
 }
 .shortcode-card__media img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   display: block;
 }
 
