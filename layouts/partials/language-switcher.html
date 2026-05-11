@@ -1,0 +1,36 @@
+{{- /*
+  Language switcher — renders ONLY when the site has more than one language
+  configured under [languages] in hugo.toml.
+
+  Each item links to the equivalent translation of the current page when one
+  exists (.Translations); otherwise it falls back to the language's home page.
+  The current language is rendered as a non-link button with aria-current.
+*/ -}}
+{{- if gt (len site.Languages) 1 -}}
+{{- $page := . -}}
+<div class="lang-switch" data-lang-switch>
+  <button class="lang-switch__btn" type="button" data-lang-switch-toggle aria-haspopup="listbox" aria-expanded="false" aria-label="{{ i18n "languageSwitcher" | default "Language" }}">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+    <span class="lang-switch__current">{{ site.Language.Lang | upper }}</span>
+  </button>
+  <ul class="lang-switch__menu" role="listbox" hidden>
+    {{- range site.Languages -}}
+    {{- $code := .Lang -}}
+    {{- $name := .Label | default .Lang -}}
+    {{- $isActive := eq $code $page.Site.Language.Lang -}}
+    {{- /* Pick the matching translation if it exists, else fall back to the
+           language's home page so the user lands somewhere sensible. */ -}}
+    {{- $href := "" -}}
+    {{- range $page.AllTranslations -}}
+      {{- if eq .Lang $code }}{{ $href = .RelPermalink }}{{ end -}}
+    {{- end -}}
+    {{- if not $href -}}
+      {{- $href = printf "/%s/" $code | relURL -}}
+    {{- end -}}
+    <li role="option" aria-selected="{{ if $isActive }}true{{ else }}false{{ end }}">
+      <a class="lang-switch__option{{ if $isActive }} is-active{{ end }}" href="{{ $href }}" lang="{{ $code }}"{{ if $isActive }} aria-current="true"{{ end }}>{{ $name }}</a>
+    </li>
+    {{- end -}}
+  </ul>
+</div>
+{{- end -}}

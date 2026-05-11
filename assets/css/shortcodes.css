@@ -820,11 +820,34 @@ a.shortcode-card:hover {
 }
 .shortcode-card__meta:empty { display: none; }
 
+/* Featured image at the top of a children-card (image="true" arg). Bleeds
+   to the card edges and uses contain so logo-style PNGs aren't cropped. */
+.shortcode-card__media {
+  margin: -1.4rem -1.5rem 1rem;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: var(--color-surface-alt);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.shortcode-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
 .cards--shortcode {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
   gap: 1.25rem;
   margin: 2rem 0;
+}
+/* When cards carry featured images, prefer a 3-up grid at typical viewport
+   widths so the banner images get visual weight. */
+.cards--shortcode.cards--with-images {
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
 }
 
 /* Attachments / resources list */

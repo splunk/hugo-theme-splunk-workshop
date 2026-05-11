@@ -6,6 +6,8 @@
     style        - alias of type
     depth        - how deep to recurse (default 1) — currently shallow only
     description  - "true" to include description (default true)
+    image        - "true" to render each child's featured image (params.images[0])
+                   as a banner on top of card-style children (relearn compat).
     showhidden   - "true" to include hidden pages (default false)
     sort         - weight | title  (default weight)
 
@@ -17,6 +19,7 @@
 {{- $type  := .Get "type"  | default (.Get "style") | default "list" -}}
 {{- $depth := int (.Get "depth" | default 1) -}}
 {{- $desc  := ne (.Get "description" | default "true") "false" -}}
+{{- $img   := eq (.Get "image" | default "false") "true" -}}
 {{- $sort  := .Get "sort" | default "weight" -}}
 {{- $hide  := ne (.Get "showhidden" | default "false") "true" -}}
 
@@ -31,9 +34,38 @@
 {{- if eq $sort "title" }}{{ $items = $items.ByTitle }}{{ else }}{{ $items = $items.ByWeight }}{{ end -}}
 
 {{- if eq $type "card" -}}
-<div class="cards cards--shortcode">
+<div class="cards cards--shortcode{{ if $img }} cards--with-images{{ end }}">
 {{- range $items -}}
-<a class="shortcode-card shortcode-card--children" href="{{ .RelPermalink }}"><p class="shortcode-card__title">{{ .LinkTitle }}</p>{{ if and $desc .Description }}<div class="shortcode-card__body"><p>{{ .Description }}</p></div>{{ end }}<div class="shortcode-card__meta">{{ with .Params.duration }}<span>{{ . }}</span>{{ end }}{{ with .Params.time }}<span>{{ . }}</span>{{ end }}{{ with .Params.difficulty }}<span>{{ . }}</span>{{ end }}{{ $leaves := where .RegularPagesRecursive "Params.hidden" "!=" true }}{{ if gt (len $leaves) 1 }}<span>{{ i18n "pagesCount" (dict "Count" (len $leaves)) }}</span>{{ end }}</div></a>
+{{- $child := . -}}
+{{- $imgURL := "" -}}
+{{- if $img -}}
+  {{- with $child.Params.images -}}
+    {{- $raw := index . 0 -}}
+    {{- /* Resolution order:
+           1. Page-bundle resource at the raw path
+           2. Page-bundle resource at the basename only (relearn-migrated
+              content often points at "../images/foo.png" while the file
+              actually lives inside the page bundle at "images/foo.png")
+           3. Fall back to a path-join URL relative to the child's permalink. */ -}}
+    {{- with $child.Resources.GetMatch $raw -}}
+      {{- $imgURL = .RelPermalink -}}
+    {{- else -}}
+      {{- /* Try the basename inside the bundle. */ -}}
+      {{- $base := path.Base $raw -}}
+      {{- with $child.Resources.GetMatch (printf "images/%s" $base) -}}
+        {{- $imgURL = .RelPermalink -}}
+      {{- else -}}
+        {{- with $child.Resources.GetMatch $base -}}
+          {{- $imgURL = .RelPermalink -}}
+        {{- else -}}
+          {{- $clean := strings.TrimPrefix "./" $raw -}}
+          {{- $imgURL = path.Join $child.RelPermalink $clean -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+<a class="shortcode-card shortcode-card--children{{ if $imgURL }} shortcode-card--with-image{{ end }}" href="{{ .RelPermalink }}">{{ if $imgURL }}<div class="shortcode-card__media"><img src="{{ $imgURL }}" alt="" loading="lazy"></div>{{ end }}<p class="shortcode-card__title">{{ .LinkTitle }}</p>{{ if and $desc .Description }}<div class="shortcode-card__body"><p>{{ .Description }}</p></div>{{ end }}<div class="shortcode-card__meta">{{ with .Params.duration }}<span>{{ . }}</span>{{ end }}{{ with .Params.time }}<span>{{ . }}</span>{{ end }}{{ with .Params.difficulty }}<span>{{ . }}</span>{{ end }}{{ $leaves := where .RegularPagesRecursive "Params.hidden" "!=" true }}{{ if gt (len $leaves) 1 }}<span>{{ i18n "pagesCount" (dict "Count" (len $leaves)) }}</span>{{ end }}</div></a>
 {{- end -}}
 </div>
 {{- else if or (eq $type "h2") (eq $type "h3") (eq $type "h4") -}}

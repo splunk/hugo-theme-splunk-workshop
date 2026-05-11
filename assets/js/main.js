@@ -12,6 +12,7 @@ import { initQuiz }        from "./quiz.js";
 import { initPresenter }    from "./presenter.js";
 import { initKeyboardNav }  from "./keyboard-nav.js";
 import { initSearch }       from "./search.js";
+import { initLangSwitch }   from "./lang-switch.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   initThemeToggle();
@@ -25,4 +26,5 @@ document.addEventListener("DOMContentLoaded", () => {
   initPresenter();
   initKeyboardNav();
   initSearch();
+  initLangSwitch();
 });

@@ -108,6 +108,67 @@
   background: var(--gradient-accent);
 }
 
+/* ---- Language switcher ---- */
+.lang-switch {
+  position: relative;
+}
+.lang-switch__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  height: 2.25rem;
+  padding: 0 0.7rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--color-ink-muted);
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.lang-switch__btn:hover {
+  color: var(--color-accent-text);
+  border-color: var(--color-accent);
+}
+.lang-switch__btn svg { color: inherit; }
+.lang-switch__current { line-height: 1; }
+.lang-switch__menu {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  min-width: 9rem;
+  margin: 0;
+  padding: 0.35rem;
+  list-style: none;
+  background: var(--color-paper);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  box-shadow: 0 8px 28px color-mix(in oklab, var(--color-ink) 12%, transparent);
+  z-index: 50;
+}
+.lang-switch__menu li { margin: 0; }
+.lang-switch__option {
+  display: block;
+  padding: 0.45rem 0.75rem;
+  border-radius: 6px;
+  font-size: var(--fs-sm);
+  color: var(--color-ink);
+  text-decoration: none;
+}
+.lang-switch__option:hover {
+  background: var(--color-surface);
+  color: var(--color-accent-text);
+}
+.lang-switch__option.is-active {
+  color: var(--color-accent-text);
+  font-weight: 600;
+  cursor: default;
+  pointer-events: none;
+}
+
 /* ---- Theme toggle ---- */
 .theme-toggle {
   display: inline-flex;

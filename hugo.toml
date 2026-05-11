@@ -2,9 +2,27 @@ baseURL = "https://example.org/"
 locale = "en-us"
 title = "Splunk Workshops"
 defaultContentLanguage = "en"
+defaultContentLanguageInSubdir = true
 enableEmoji = true
 enableRobotsTXT = true
 enableGitInfo = false
+
+# Multilingual setup — content lives under content/<lang>/. To add a new
+# language, copy the content tree into content/<lang>/ and append a
+# [languages.<lang>] block below. The language switcher in the header
+# auto-renders when len .Site.Languages > 1.
+[languages]
+  [languages.en]
+    label = "English"
+    locale = "en"
+    weight = 1
+    contentDir = "content/en"
+  [languages.ja]
+    label = "日本語"
+    locale = "ja"
+    weight = 2
+    hasCJKLanguage = true
+    contentDir = "content/ja"
 
 # Markup configuration — Goldmark with attributes & raw HTML enabled for rich content
 [markup]
