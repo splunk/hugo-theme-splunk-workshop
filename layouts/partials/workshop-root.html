@@ -24,58 +24,45 @@
 
 {{- if and (not $page.IsHome) (ne $page.Kind "404") (ne $page.Kind "taxonomy") -}}
 
-  {{- /* Depth of $page from the language home. Count the path segments
-         of .RelPermalink, dropping the leading language-code segment. */ -}}
-  {{- $lang := $page.Language.Lang -}}
-  {{- $relPath := strings.TrimPrefix (printf "/%s/" $lang) $page.RelPermalink -}}
-  {{- $relPath = strings.Trim $relPath "/" -}}
-  {{- $depth := 0 -}}
-  {{- if $relPath -}}{{ $depth = len (split $relPath "/") }}{{- end -}}
+  {{- /* Candidate list = the page itself plus every ancestor up to (but not
+         including) the language home. Hugo's .Ancestors gives us the parent
+         chain ending at the language home; prepending $page lets us treat
+         "the page IS the depth-1 section" as a candidate too. */ -}}
+  {{- $candidates := slice $page | append $page.Ancestors -}}
 
-  {{- /* Walk up to depth 1 — the ancestor right below the language home. */ -}}
-  {{- $depthOne := $page -}}
-  {{- $iter := sub $depth 1 -}}
-  {{- if gt $iter 0 -}}
-    {{- range seq $iter -}}
-      {{- with $depthOne.Parent -}}{{ $depthOne = . }}{{- end -}}
-    {{- end -}}
+  {{- /* Find the depth-1 candidate: the one whose parent IS the language
+         home. There's only one match in the chain. */ -}}
+  {{- $depthOne := false -}}
+  {{- range $candidates -}}
+    {{- if and .Parent .Parent.IsHome -}}{{- $depthOne = . -}}{{- end -}}
   {{- end -}}
 
-  {{- /* Does $depthOne have direct .md page children?
-         Filter the recursive .Pages down to pages whose path is exactly one
-         segment deeper than $depthOne. */ -}}
-  {{- $depthOnePath := strings.Trim (strings.TrimPrefix (printf "/%s/" $lang) $depthOne.RelPermalink) "/" -}}
-  {{- $depthOneSegCount := 0 -}}
-  {{- if $depthOnePath -}}{{ $depthOneSegCount = len (split $depthOnePath "/") }}{{- end -}}
-  {{- $depthOneHasDirectPages := false -}}
-  {{- range where $depthOne.Pages "Kind" "page" -}}
-    {{- $childRel := strings.Trim (strings.TrimPrefix (printf "/%s/" $lang) .RelPermalink) "/" -}}
-    {{- $childSegCount := len (split $childRel "/") -}}
-    {{- if eq $childSegCount (add $depthOneSegCount 1) -}}
-      {{- $depthOneHasDirectPages = true -}}
+  {{- if $depthOne -}}
+    {{- /* Does $depthOne contain direct .md page children?
+           Hugo 0.155+ made .Pages recursive, so we filter the returned
+           regular pages to those whose .Parent is $depthOne itself. */ -}}
+    {{- $depthOneHasDirectPages := false -}}
+    {{- range where $depthOne.Pages "Kind" "page" -}}
+      {{- if eq .Parent.RelPermalink $depthOne.RelPermalink -}}
+        {{- $depthOneHasDirectPages = true -}}
+      {{- end -}}
     {{- end -}}
-  {{- end -}}
 
-  {{- if le $depth 1 -}}
-    {{- /* The page itself is depth 0 (lang home, handled above) or depth 1. */ -}}
-    {{- if and (eq $depth 1) $depthOneHasDirectPages -}}
-      {{- $root = $page -}}
-    {{- end -}}
-  {{- else -}}
-    {{- /* Depth ≥ 2. */ -}}
-    {{- if $depthOneHasDirectPages -}}
-      {{- /* Flat workshop at depth 1 — use it. */ -}}
+    {{- if eq $depthOne $page -}}
+      {{- /* Page is at depth 1 itself. Flat workshop iff it has direct
+             page children; otherwise it's a hub (no sidebar). */ -}}
+      {{- if $depthOneHasDirectPages -}}{{- $root = $page -}}{{- end -}}
+    {{- else if $depthOneHasDirectPages -}}
+      {{- /* Page is deeper, and $depthOne is a flat workshop — use it. */ -}}
       {{- $root = $depthOne -}}
     {{- else -}}
-      {{- /* Hub at depth 1 — workshop root is the depth-2 ancestor. */ -}}
-      {{- $depthTwo := $page -}}
-      {{- $stepsUp := sub $depth 2 -}}
-      {{- if gt $stepsUp 0 -}}
-        {{- range seq $stepsUp -}}
-          {{- with $depthTwo.Parent -}}{{ $depthTwo = . }}{{- end -}}
+      {{- /* Page is deeper, $depthOne is a hub — workshop root is the
+             depth-2 ancestor: the candidate whose parent is $depthOne. */ -}}
+      {{- range $candidates -}}
+        {{- if and .Parent (eq .Parent.RelPermalink $depthOne.RelPermalink) -}}
+          {{- $root = . -}}
         {{- end -}}
       {{- end -}}
-      {{- $root = $depthTwo -}}
     {{- end -}}
   {{- end -}}
 

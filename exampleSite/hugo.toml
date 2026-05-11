@@ -18,15 +18,6 @@ enableRobotsTXT = true
 themesDir = "../.."
 theme   = "hugo-theme-splunk-workshop"
 
-# Override the theme's multilingual block — the demo is English-only.
-# (The language switcher in the header only renders when >1 language is
-# configured, so this single-language block hides it on the demo.)
-[languages]
-  [languages.en]
-    label = "English"
-    locale = "en"
-    weight = 1
-
 [markup]
   [markup.goldmark.renderer]
     unsafe = true
