@@ -89,9 +89,11 @@ theme   = "hugo-theme-splunk-workshop"
   colorBorderStrongDark = "#2A3A56"
 
   # ---- Typography (matches splunk.github.io/observability-workshop) ----
-  fontUrl     = "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
-  fontDisplay = "'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif"
-  fontBody    = "'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif"
+  # Splunk Data Sans Pro is loaded via @font-face in theme-vars.html
+  # (Splunk's own CDN). fontUrl pulls only the mono companion.
+  fontUrl     = "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+  fontDisplay = "'Splunk Data Sans Pro', ui-sans-serif, system-ui, sans-serif"
+  fontBody    = "'Splunk Data Sans Pro', ui-sans-serif, system-ui, sans-serif"
   fontMono    = "'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace"
 
   # ---- Layout toggles ----

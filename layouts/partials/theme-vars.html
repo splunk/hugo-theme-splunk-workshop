@@ -4,6 +4,43 @@
 */ -}}
 {{- $p := .Site.Params -}}
 <style>
+  /* Splunk Data Sans Pro — the official Splunk brand typeface, loaded from
+     Splunk's own CDN (same files help.splunk.com serves). Six weights map
+     to the variable axes the theme uses for body/display copy. Override
+     by setting `fontDisplay` / `fontBody` to a different stack and the
+     theme will skip these files entirely. */
+  @font-face {
+    font-family: 'Splunk Data Sans Pro';
+    src: url('https://assets.portal.heretto.com/splunk/26.02.26/SplunkDataSansPro_Lt.ttf') format('truetype');
+    font-weight: 300; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Splunk Data Sans Pro';
+    src: url('https://assets.portal.heretto.com/splunk/26.02.26/SplunkDataSansPro_Rg.ttf') format('truetype');
+    font-weight: 400; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Splunk Data Sans Pro';
+    src: url('https://assets.portal.heretto.com/splunk/26.02.26/SplunkDataSansPro_Md.ttf') format('truetype');
+    font-weight: 500; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Splunk Data Sans Pro';
+    src: url('https://assets.portal.heretto.com/splunk/26.02.26/SplunkDataSansPro_Bd.ttf') format('truetype');
+    font-weight: 700; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Splunk Data Sans Pro';
+    src: url('https://assets.portal.heretto.com/splunk/26.02.26/SplunkDataSansPro_XBd.ttf') format('truetype');
+    font-weight: 800; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Splunk Data Sans Pro';
+    src: url('https://assets.portal.heretto.com/splunk/26.02.26/SplunkDataSansPro_Blk.ttf') format('truetype');
+    font-weight: 900; font-style: normal; font-display: swap;
+  }
+</style>
+<style>
   :root {
     /* Splunk official brand gradient: Magenta 50 → Orange 50.
        --color-accent     = decorative (gradients, large display text, icons, borders, shadows)

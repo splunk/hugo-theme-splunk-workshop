@@ -5,18 +5,27 @@ weight      = 20
 +++
 
 {{< lead >}}
-The theme defaults to **IBM Plex Sans** + **IBM Plex Mono** — the same stack as `splunk.github.io/observability-workshop`. Three params let you change every font on the site.
+The theme defaults to **Splunk Data Sans Pro** (the official Splunk typeface, also used on `help.splunk.com`) for display and body, paired with **IBM Plex Mono** for code. Three params change every font on the site; one is loaded from Splunk's CDN, the others from Google Fonts.
 {{< /lead >}}
 
 ## The three font slots
 
 ```toml
 [params]
-  fontUrl     = "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
-  fontDisplay = "'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif"
-  fontBody    = "'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif"
+  # Splunk Data Sans Pro is loaded via @font-face rules emitted by
+  # theme-vars.html (six weights from Splunk's own CDN). fontUrl below
+  # only pulls the mono companion.
+  fontUrl     = "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+  fontDisplay = "'Splunk Data Sans Pro', ui-sans-serif, system-ui, sans-serif"
+  fontBody    = "'Splunk Data Sans Pro', ui-sans-serif, system-ui, sans-serif"
   fontMono    = "'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace"
 ```
+
+### Where Splunk Data Sans Pro comes from
+
+The theme embeds six `@font-face` declarations pointing at the same TTF files `help.splunk.com` loads (`https://assets.portal.heretto.com/splunk/26.02.26/SplunkDataSansPro_{Lt,Rg,Md,Bd,XBd,Blk}.ttf`). The declarations live in [`layouts/partials/theme-vars.html`](https://github.com/splunk/hugo-theme-splunk-workshop/blob/main/layouts/partials/theme-vars.html) so they're emitted inline with the other CSS-variable bindings — no separate stylesheet, no extra request beyond the font files themselves.
+
+If you switch `fontDisplay` and `fontBody` to a different family, the `@font-face` rules are still emitted but become dead weight. Override the partial in your own site (`layouts/partials/theme-vars.html`) to remove them, or live with the harmless extra bytes.
 
 | Slot | Used for |
 | --- | --- |
