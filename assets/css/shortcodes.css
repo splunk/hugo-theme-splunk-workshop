@@ -781,23 +781,38 @@ pre.file-tree .file-tree__dir-line {
 /* ---------- Cards (in content) ---------------------------------------- */
 .shortcode-card {
   --card-accent: var(--color-accent);
+  --card-sweep: 0%;
+  position: relative;
   display: block;
   padding: 1.4rem 1.5rem;
   margin: 1.5rem 0;
-  background: var(--color-surface);
+  /* Same signature: a top-edge accent stripe that grows in on hover. */
+  background:
+    linear-gradient(90deg, var(--card-accent), var(--color-accent2, var(--card-accent))) 0 0 / var(--card-sweep) 2px no-repeat,
+    var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  transition: all var(--t-fast) var(--ease);
+  transition:
+    --card-sweep 380ms var(--ease),
+    transform 280ms var(--ease),
+    border-color var(--t-base) var(--ease),
+    box-shadow 280ms var(--ease);
   text-decoration: none;
   color: inherit;
+  overflow: hidden;
 }
 a.shortcode-card:hover {
-  border-color: var(--card-accent);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 18px color-mix(in oklab, var(--card-accent) 12%, transparent);
+  --card-sweep: 100%;
+  border-color: transparent;
+  transform: translateY(-3px);
+  box-shadow:
+    0 10px 26px color-mix(in oklab, var(--card-accent) 18%, transparent),
+    0 2px 8px color-mix(in oklab, var(--card-accent) 10%, transparent);
   text-decoration: none;
   color: inherit;
 }
+a.shortcode-card:hover .shortcode-card__title { color: var(--color-accent-text); }
+.shortcode-card__title { transition: color var(--t-base) var(--ease); }
 .shortcode-card__title {
   font-family: var(--font-display);
   font-size: var(--fs-md);

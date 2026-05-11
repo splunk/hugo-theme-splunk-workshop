@@ -2,6 +2,34 @@
    Components — hero, cards, badges, buttons, meta-row
    ========================================================================== */
 
+/* ---- Page-load reveal --------------------------------------------------
+   Staggered entrance for the hero / chapter-landing first impression. The
+   sequence cascades title → lead → CTA over ~600ms. `animation-fill-mode:
+   both` keeps elements invisible during the delay (so they don't flash in
+   their final position before the keyframe begins).
+
+   prefers-reduced-motion: reduce nukes all animation timing globally via
+   the block in assets/css/reset.css, so nothing here needs a guard. */
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* @property registration lets the chapter-weight bloom interpolate via a
+   custom number, so the end-state opacity can stay at the declared clamp
+   instead of snapping to 1. Browsers without @property support skip the
+   bloom (graceful no-op) — the element renders at its declared clamp
+   opacity from page load. */
+@property --weight-progress {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 1;
+}
+@keyframes weight-bloom {
+  from { --weight-progress: 0; transform: scale(0.94); }
+  to   { --weight-progress: 1; transform: none; }
+}
+
 /* ---- Chapter hero ---- */
 .hero--chapter .hero__inner { max-width: none; }
 .chapter { position: relative; }
@@ -14,7 +42,19 @@
   padding: 0 0 1.25rem;
   border-bottom: 1px solid var(--color-border);
 }
-.chapter-hero .eyebrow { margin-bottom: 0.4rem; }
+/* When the chapter has a workshop-meta row immediately after the hero,
+   the meta row provides its own border-bottom — suppress the hero's so
+   the two don't stack as parallel lines. Bare chapters (no time / authors
+   / difficulty / tags) keep the hero border as the single divider. */
+.chapter-hero:has(+ .workshop-meta) {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0.75rem;
+}
+.chapter-hero .eyebrow {
+  margin-bottom: 0.4rem;
+  animation: reveal-up 580ms var(--ease) 80ms both;
+}
 .chapter-hero .chapter__weight {
   position: absolute;
   top: -1rem;
@@ -36,8 +76,12 @@
           background-clip: text;
   -webkit-text-fill-color: transparent;
   /* Smooth opacity scale from ~0.12 on narrow viewports to ~0.18 on wide —
-     avoids the abrupt step the previous media-query-driven value produced. */
-  opacity: clamp(0.12, 0.06 + 0.6vw, 0.18);
+     avoids the abrupt step the previous media-query-driven value produced.
+     `--weight-progress` is 1 at rest; the weight-bloom keyframe animates it
+     from 0 → 1 so the entrance fades + scales without snapping to opacity:1. */
+  --weight-progress: 1;
+  opacity: calc(clamp(0.12, 0.06 + 0.6vw, 0.18) * var(--weight-progress));
+  animation: weight-bloom 700ms var(--ease) both;
   pointer-events: none;
   user-select: none;
   z-index: 0;
@@ -50,6 +94,10 @@
   letter-spacing: -0.03em;
   line-height: 1.05;
   margin: 0.5rem 0 1.25rem;
+  animation: reveal-up 620ms var(--ease) 160ms both;
+}
+.chapter-hero .hero__lead {
+  animation: reveal-up 640ms var(--ease) 280ms both;
 }
 @media (max-width: 720px) {
   .chapter__weight { top: -2rem; }
@@ -114,12 +162,14 @@
   z-index: 1;
   max-width: 50rem;
 }
+.hero .eyebrow { animation: reveal-up 520ms var(--ease) 0ms both; }
 .hero__title {
   font-size: var(--fs-4xl);
   line-height: 1.05;
   letter-spacing: -0.03em;
   font-weight: 700;
   margin: 0.75rem 0 1.5rem;
+  animation: reveal-up 580ms var(--ease) 80ms both;
 }
 .hero__title em {
   font-style: italic;
@@ -138,6 +188,8 @@
   font-weight: 400;
   line-height: 1.5;
 }
+.hero .hero__lead { animation: reveal-up 620ms var(--ease) 220ms both; }
+.hero .hero-cta-row { animation: reveal-up 600ms var(--ease) 340ms both; }
 
 /* ---- Workshop card grid ---- */
 .cards {
@@ -146,15 +198,32 @@
   gap: 1.25rem;
   margin: 3rem 0;
 }
+/* @property registration lets background-size interpolate via a typed
+   custom property — the top-edge gradient sweep on .card:hover. Browsers
+   without @property support skip the sweep; everything else stays. */
+@property --card-sweep {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
 .card {
   position: relative;
   display: flex;
   flex-direction: column;
   padding: 1.75rem 1.75rem 1.5rem;
-  background: var(--color-paper);
+  /* Layered background: top-edge accent stripe (animated by --card-sweep) +
+     the paper fill. Together they give the card its signature hover stripe. */
+  background:
+    linear-gradient(90deg, var(--color-accent), var(--color-accent2)) 0 0 / var(--card-sweep) 2px no-repeat,
+    var(--color-paper);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  transition: all var(--t-base) var(--ease);
+  transition:
+    --card-sweep 380ms var(--ease),
+    transform 280ms var(--ease),
+    border-color var(--t-base) var(--ease),
+    box-shadow 280ms var(--ease);
   overflow: hidden;
   isolation: isolate;
   text-decoration: none;
@@ -178,11 +247,18 @@
   z-index: -1;
 }
 .card:hover {
-  transform: translateY(-2px);
+  --card-sweep: 100%;
+  transform: translateY(-3px);
   border-color: transparent;
   text-decoration: none;
+  /* Dual-layer magenta-tinted shadow — the lift feels intentional rather
+     than generic translateY+grey-shadow that ships with every Hugo theme. */
+  box-shadow:
+    0 10px 30px color-mix(in oklab, var(--color-accent) 16%, transparent),
+    0 2px 8px color-mix(in oklab, var(--color-accent) 10%, transparent);
 }
 .card:hover::before { opacity: 1; }
+.card:hover .card__title { color: var(--color-accent-text); }
 
 .card__num {
   font-family: var(--font-mono);
@@ -200,6 +276,7 @@
   margin: 0 0 0.5rem;
   color: var(--color-ink);
   line-height: 1.15;
+  transition: color var(--t-base) var(--ease);
 }
 .card__desc {
   color: var(--color-ink-muted);
@@ -425,6 +502,15 @@
   font-family: var(--font-mono);
   font-size: 0.78rem;
   color: var(--color-ink-muted);
+}
+/* When the very next element in the article is an h2, it brings its own
+   top-border + gradient stripe (see typography.css h2 / h2::before).
+   Suppress this row's border-bottom + margin so the two dividers don't
+   stack as parallel lines. */
+.workshop-meta:has(+ h2) {
+  border-bottom: none;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0;
 }
 .workshop-meta__item { display: inline-flex; align-items: center; gap: 0.4rem; }
 .workshop-meta__item svg { width: 0.95rem; height: 0.95rem; opacity: 0.7; }

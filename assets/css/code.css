@@ -11,7 +11,36 @@
   background: var(--code-bg);
   font-family: var(--font-mono);
   box-shadow: 0 1px 0 var(--color-border) inset;
+  transition: border-color var(--t-base) var(--ease);
 }
+
+/* Animated gradient border that fades in on hover / focus-within. The
+   mask-composite trick paints only the 1px rim of the pseudo (not the
+   interior), so it sits exactly where the static border was — visually
+   replacing it. */
+.code-block::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent2));
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  opacity: 0;
+  transition: opacity var(--t-base) var(--ease);
+  pointer-events: none;
+  z-index: 2;
+}
+.code-block:hover,
+.code-block:focus-within {
+  border-color: transparent;
+}
+.code-block:hover::before,
+.code-block:focus-within::before { opacity: 1; }
 
 .code-block__header {
   display: flex;
@@ -211,4 +240,92 @@ pre code { background: transparent !important; padding: 0 !important; border: 0 
   margin-right: 0.6rem;
   user-select: none;
   opacity: 0.5;
+}
+
+/* Per-line copy pill — injected by assets/js/copy-code.js on hover so
+   attendees can grab a single command from a multi-line script without
+   selecting text. Lives in the right edge of each chroma line.
+
+   Each chroma <span class="line"> is inline by default, so the pill's
+   `right: 0.4rem` would anchor to the line-text's inline box (just past
+   the last character) — visually appearing to the LEFT on short lines.
+   `display: block` on the line makes it span the full code-block width
+   so the pill always lands at the right edge. */
+.chroma .line {
+  display: block;
+  position: relative;
+}
+.chroma .line .line-copy {
+  position: absolute;
+  right: 0.4rem;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity var(--t-fast) var(--ease),
+              color var(--t-fast) var(--ease),
+              background var(--t-fast) var(--ease),
+              border-color var(--t-fast) var(--ease);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--color-ink-muted);
+  background: var(--code-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.1rem 0.45rem;
+  cursor: pointer;
+  user-select: none;
+  z-index: 3;
+}
+.chroma .line:hover .line-copy,
+.chroma .line:focus-within .line-copy { opacity: 1; }
+.chroma .line .line-copy:hover {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+.chroma .line .line-copy.is-copied {
+  background: var(--color-accent);
+  color: #fff;
+  border-color: transparent;
+}
+
+/* Long-block "Show more" clip + toggle pill (assets/js/code-expand.js
+   adds .is-clipped on blocks taller than ~380px). */
+.code-block.is-clipped .chroma {
+  max-height: 22em;
+  overflow: hidden;
+}
+.code-block__fade {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 5.5em;
+  background: linear-gradient(to bottom, transparent 0%, var(--code-bg) 80%);
+  pointer-events: none;
+  z-index: 1;
+}
+.code-block__expand-btn {
+  position: absolute;
+  bottom: 0.55rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  padding: 0.35rem 1rem;
+  background: var(--code-bg);
+  border: 1px solid var(--color-border-strong);
+  border-radius: 999px;
+  color: var(--color-ink);
+  cursor: pointer;
+  z-index: 4;
+  transition: border-color var(--t-fast) var(--ease),
+              color var(--t-fast) var(--ease),
+              transform var(--t-fast) var(--ease);
+}
+.code-block__expand-btn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  transform: translateX(-50%) translateY(-1px);
 }

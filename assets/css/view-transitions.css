@@ -1,0 +1,41 @@
+/* ==========================================================================
+   View transitions — fade+slide between pages on every internal nav.
+   Cross-document View Transitions handle the choreography; browsers without
+   support (Chrome <126, Safari <18.2, Firefox <134) gracefully fall back to
+   the existing instant cut. prefers-reduced-motion: reduce nullifies the
+   animation-duration globally via assets/css/reset.css.
+   ========================================================================== */
+
+@view-transition { navigation: auto; }
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 240ms;
+  animation-timing-function: var(--ease);
+}
+::view-transition-old(root) { animation-name: page-fade-out; }
+::view-transition-new(root) { animation-name: page-fade-in;  }
+
+@keyframes page-fade-out {
+  to   { opacity: 0; transform: translateY(-6px); }
+}
+@keyframes page-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+}
+
+/* Persistent surfaces — sidebar, header, footer — are named so the browser
+   tweens them as continuous regions across the nav. The visual feel: the
+   chrome holds steady while only the content area fades + slides. */
+.site-header { view-transition-name: site-header; }
+.sidebar     { view-transition-name: workshop-sidebar; }
+.site-footer { view-transition-name: site-footer; }
+
+/* Don't animate the persistent surfaces — they should appear unchanged. */
+::view-transition-old(site-header),
+::view-transition-new(site-header),
+::view-transition-old(workshop-sidebar),
+::view-transition-new(workshop-sidebar),
+::view-transition-old(site-footer),
+::view-transition-new(site-footer) {
+  animation: none;
+}
