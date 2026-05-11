@@ -37,14 +37,16 @@
 
   <div class="page page--narrow page--no-pad-top">
     <div class="content content--full" id="content">
-      {{- /* If the homepage has its own .Content (e.g. uses {{% children %}}
-         in the body to lay out the workshop cards itself), trust the author
-         and render only that — don't append a second auto-card-grid below.
-         Otherwise fall back to an auto-listing of top-level sections so an
-         empty _index.md still produces a useful landing. */ -}}
-      {{- if .Content -}}
-        {{ .Content }}
-      {{- else -}}
+      {{- /* Render the markdown body, then optionally an auto-card-grid.
+         Skip the auto-grid only when the body already produces its own
+         cards (e.g. an author dropped {{% children type=card %}} inline);
+         otherwise prose bodies still get the navigational card grid below. */ -}}
+      {{- $hasOwnCards := and .Content (or
+            (strings.Contains (.Content | string) "class=\"cards")
+            (strings.Contains (.Content | string) "shortcode-card")) -}}
+      {{ with .Content }}{{ . }}{{ end }}
+
+      {{- if not $hasOwnCards -}}
         {{ $items := slice }}
         {{ with .Site.Params.homeSections }}
           {{ range . }}
