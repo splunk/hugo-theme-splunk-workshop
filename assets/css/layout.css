@@ -536,6 +536,11 @@
   gap: 1rem;
   margin: 4rem 0 1rem;
 }
+/* Single-button pagers (start / end of a workshop) collapse to one column
+   and pin the remaining button to its natural edge instead of leaving an
+   empty grid cell on the other side. */
+.pager--start { grid-template-columns: minmax(0, 32rem); justify-content: end; }
+.pager--end   { grid-template-columns: minmax(0, 32rem); justify-content: start; }
 .pager__btn {
   display: flex;
   flex-direction: column;
