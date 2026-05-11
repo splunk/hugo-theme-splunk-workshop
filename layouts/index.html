@@ -37,41 +37,45 @@
 
   <div class="page page--narrow page--no-pad-top">
     <div class="content content--full" id="content">
-      {{ with .Content }}{{ . }}{{ end }}
-
-      {{- /* Home listing — every top-level section, weight-ordered, hidden filtered.
-         Override the picked sections by setting `homeSections` in [params],
-         e.g.  homeSections = ["workshops", "2-hpa", "resources"]   */ -}}
-      {{ $items := slice }}
-      {{ with .Site.Params.homeSections }}
-        {{ range . }}
-          {{ with $.Site.GetPage (printf "/%s" .) }}{{ $items = $items | append . }}{{ end }}
-        {{ end }}
-      {{ else }}
-        {{ $items = partial "visible-pages.html" .Site.Sections }}
-      {{ end }}
-      {{ if $items }}
-        <h2 class="home__items-heading">{{ i18n "workshops" }}</h2>
-        <div class="cards">
-          {{ range $i, $page := $items }}
-            <a class="card" href="{{ .RelPermalink }}">
-              <span class="card__num">{{ printf "%02d" (add $i 1) }}</span>
-              <h2 class="card__title">{{ .LinkTitle }}</h2>
-              {{ with .Description }}<p class="card__desc">{{ . }}</p>{{ end }}
-              <div class="card__meta">
-                {{ with .Params.duration }}<span class="card__meta-item">{{ . }}</span>{{ end }}
-                {{ with .Params.time     }}<span class="card__meta-item">{{ . }}</span>{{ end }}
-                {{ with .Params.difficulty }}<span class="card__meta-item">{{ . }}</span>{{ end }}
-                {{- /* Recursive count of leaf pages — gives the same number whether
-                       the card represents a hub (counts all leaves below) or a
-                       chapter (counts its direct lessons). */ -}}
-                {{- $leaves := where .RegularPagesRecursive "Params.hidden" "!=" true -}}
-                {{ if gt (len $leaves) 1 }}<span class="card__meta-item">{{ i18n "pagesCount" (dict "Count" (len $leaves)) }}</span>{{ end }}
-              </div>
-            </a>
+      {{- /* If the homepage has its own .Content (e.g. uses {{% children %}}
+         in the body to lay out the workshop cards itself), trust the author
+         and render only that — don't append a second auto-card-grid below.
+         Otherwise fall back to an auto-listing of top-level sections so an
+         empty _index.md still produces a useful landing. */ -}}
+      {{- if .Content -}}
+        {{ .Content }}
+      {{- else -}}
+        {{ $items := slice }}
+        {{ with .Site.Params.homeSections }}
+          {{ range . }}
+            {{ with $.Site.GetPage (printf "/%s" .) }}{{ $items = $items | append . }}{{ end }}
           {{ end }}
-        </div>
-      {{ end }}
+        {{ else }}
+          {{ $items = partial "visible-pages.html" .Site.Sections }}
+        {{ end }}
+        {{ if $items }}
+          <h2 class="home__items-heading">{{ i18n "workshops" }}</h2>
+          <div class="cards">
+            {{ range $i, $page := $items }}
+              <a class="card" href="{{ .RelPermalink }}">
+                <span class="card__num">{{ printf "%02d" (add $i 1) }}</span>
+                <h2 class="card__title">{{ .LinkTitle }}</h2>
+                {{ with .Description }}<p class="card__desc">{{ . }}</p>{{ end }}
+                <div class="card__meta">
+                  {{ with .Params.duration }}<span class="card__meta-item">{{ . }}</span>{{ end }}
+                  {{ with .Params.time     }}<span class="card__meta-item">{{ . }}</span>{{ end }}
+                  {{ with .Params.difficulty }}<span class="card__meta-item">{{ . }}</span>{{ end }}
+                  {{- /* Recursive count of leaf pages — gives the same number whether
+                         the card represents a hub (counts all leaves below) or a
+                         chapter (counts its direct lessons). */ -}}
+                  {{- $leaves := where .RegularPagesRecursive "Params.hidden" "!=" true -}}
+                  {{ if gt (len $leaves) 1 }}<span class="card__meta-item">{{ i18n "pagesCount" (dict "Count" (len $leaves)) }}</span>{{ end }}
+                </div>
+              </a>
+            {{ end }}
+          </div>
+        {{ end }}
+      {{- end -}}
     </div>
   </div>
 </main>
