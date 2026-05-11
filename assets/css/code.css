@@ -196,8 +196,16 @@ pre code { background: transparent !important; padding: 0 !important; border: 0 
 .chroma .gd { color: #c44; background: rgba(196,68,68,0.07); }
 .chroma .gi { color: #2f7c47; background: rgba(47,124,71,0.07); }
 
-/* Line highlighting */
-.chroma .hl { background: color-mix(in oklab, var(--color-accent) 12%, transparent); }
+/* Line highlighting — accent wash behind highlighted lines.
+   Dark mode needs a heavier blend because the wash sits on a very dark
+   navy background and 12% accent disappears into the bg. */
+.chroma .hl {
+  background: color-mix(in oklab, var(--color-accent) 18%, transparent);
+  box-shadow: inset 3px 0 0 var(--color-accent);
+}
+[data-theme="dark"] .chroma .hl {
+  background: color-mix(in oklab, var(--color-accent) 28%, transparent);
+}
 .chroma .ln, .chroma .lnt {
   color: var(--color-ink-muted);
   margin-right: 0.6rem;

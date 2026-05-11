@@ -60,7 +60,7 @@ Your alert in Session 3 fired when a metric drifted more than 2σ from its 24-ho
 
 This is the search that powered the dashboard you built. Save it as a macro and reuse it on any host.
 
-{{< highlight spl "linenos=true,hl_lines=1 4" >}}
+{{< highlight spl "linenos=true,hl_lines=1 3" >}}
 search index=main earliest=-24h
 | stats avg(response_ms) as avg, stdev(response_ms) as stdev by host
 | eval upper = avg + (2 * stdev)
@@ -68,7 +68,7 @@ search index=main earliest=-24h
 | sort -response_ms
 {{< /highlight >}}
 
-The highlighted lines are the two you'd most likely tweak: the time window (`earliest=-24h`) and the deviation multiplier (`2 * stdev`).
+The highlighted lines are the two you'd most likely tweak: the time window (`earliest=-24h`) on line 1, and the deviation multiplier (`2 * stdev`) on line 3.
 
 ## SPL quick reference
 
