@@ -43,7 +43,11 @@ curl -L https://github.com/splunk/hugo-theme-splunk-workshop/archive/refs/heads/
 Step-by-step instructions, troubleshooting, and a minimal `hugo.toml` are in the
 [Getting Started docs](https://splunk.github.io/hugo-theme-splunk-workshop/docs/getting-started/).
 
-## Quick start (run the demo locally)
+## Quick start
+
+Two paths, depending on what you're doing.
+
+### A. Try the theme / contribute — clone and run the demo
 
 ```bash
 git clone https://github.com/splunk/hugo-theme-splunk-workshop.git
@@ -51,7 +55,22 @@ cd hugo-theme-splunk-workshop
 make serve         # http://localhost:1313
 ```
 
-That's it — the demo IS the docs. Search, navigate, toggle dark mode, see every shortcode in context.
+That serves the [`exampleSite/`](exampleSite/) directory — the live demo at the URL above. The demo IS the docs: search, navigate, toggle dark mode, see every shortcode in context. Edit anything under `exampleSite/content/` and the browser reloads on save.
+
+### B. Build your own workshop site
+
+Two sub-options, depending on whether you want the theme as an isolated *site* (you author content in this repo) or as a *dependency* (you author content in your own repo).
+
+**Author in this repo** — fastest start, no setup beyond cloning:
+
+```bash
+git clone https://github.com/splunk/hugo-theme-splunk-workshop.git my-workshop
+cd my-workshop
+hugo new --kind workshop content/workshops/my-workshop/01-intro.md
+hugo server         # http://localhost:1313 — serves YOUR content/
+```
+
+**Install as a dependency** — recommended for production sites you want to keep upgrade-able. See the [Install docs](https://splunk.github.io/hugo-theme-splunk-workshop/docs/getting-started/01-install/) for the three install methods (Hugo Module, submodule, direct download).
 
 ## Documentation
 
