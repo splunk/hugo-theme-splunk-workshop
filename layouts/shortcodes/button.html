@@ -38,20 +38,14 @@
 {{- $tag := "a" -}}
 {{- if not $href }}{{ $tag = "button" }}{{ end -}}
 {{- $iconHTML := "" -}}
-{{- if $icon }}
+{{- if $icon -}}
   {{- $iconHTML = printf `<span class="btn__icon">%s</span>` (partial "icon-svg.html" $icon) -}}
 {{- end -}}
+{{- /* Emit on a single line. Multi-line output breaks the surrounding
+       paragraph when the shortcode is used inline (markdown splits at the
+       internal line-breaks, producing nested <p> stragglers). */ -}}
 {{- if eq $tag "a" -}}
-<a class="{{ $cls }}" href="{{ $href }}"{{ with $target }} target="{{ . }}"{{ if eq . "_blank" }} rel="noopener"{{ end }}{{ end }}{{ with $color }} style="--btn-color: {{ . }}"{{ end }}>
-  {{ if and $icon (eq $iconpos "left") }}{{ $iconHTML | safeHTML }}{{ end }}
-  <span>{{ $body | safeHTML }}</span>
-  {{ if and $icon (eq $iconpos "right") }}{{ $iconHTML | safeHTML }}{{ end }}
-  {{ if not $icon }}<span class="btn__arrow">&rarr;</span>{{ end }}
-</a>
+<a class="{{ $cls }}" href="{{ $href }}"{{ with $target }} target="{{ . }}"{{ if eq . "_blank" }} rel="noopener"{{ end }}{{ end }}{{ with $color }} style="--btn-color: {{ . }}"{{ end }}>{{ if and $icon (eq $iconpos "left") }}{{ $iconHTML | safeHTML }}{{ end }}<span>{{ $body | safeHTML }}</span>{{ if and $icon (eq $iconpos "right") }}{{ $iconHTML | safeHTML }}{{ end }}{{ if not $icon }}<span class="btn__arrow">&rarr;</span>{{ end }}</a>
 {{- else -}}
-<button class="{{ $cls }}" type="button"{{ with $color }} style="--btn-color: {{ . }}"{{ end }}>
-  {{ if and $icon (eq $iconpos "left") }}{{ $iconHTML | safeHTML }}{{ end }}
-  <span>{{ $body | safeHTML }}</span>
-  {{ if and $icon (eq $iconpos "right") }}{{ $iconHTML | safeHTML }}{{ end }}
-</button>
+<button class="{{ $cls }}" type="button"{{ with $color }} style="--btn-color: {{ . }}"{{ end }}>{{ if and $icon (eq $iconpos "left") }}{{ $iconHTML | safeHTML }}{{ end }}<span>{{ $body | safeHTML }}</span>{{ if and $icon (eq $iconpos "right") }}{{ $iconHTML | safeHTML }}{{ end }}</button>
 {{- end -}}
