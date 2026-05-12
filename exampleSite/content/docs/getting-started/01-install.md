@@ -33,7 +33,7 @@ Then in `hugo.toml`:
 Pin to a release:
 
 ```bash
-hugo mod get github.com/splunk/hugo-theme-splunk-workshop@v1.0.0
+hugo mod get github.com/splunk/hugo-theme-splunk-workshop@v0.1.0
 ```
 
 Update later:

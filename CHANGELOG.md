@@ -5,7 +5,7 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [0.1.0] - 2026-05-12
 
 ### Added
 
@@ -26,7 +26,7 @@ versions follow [Semantic Versioning](https://semver.org/).
 - `i18n/en.yaml` extracts every UI string for translation.
 - Print stylesheet — hides chrome, prevents code blocks from breaking across pages, forces light colors.
 - Render hooks for code (with `{file=…}` filename header + copy button), images (zoomable + lightbox), headings (anchor permalinks), and external links (auto target + arrow icon).
-- IBM Plex typography (Sans + Mono) matching `splunk.github.io/observability-workshop`.
+- Splunk Data Sans Pro display/body + JetBrains Mono code, matching `splunk.github.io/observability-workshop`.
 - Splunk brand palette: official Magenta 50 `#FF007F` → Orange 50 `#FF9000` gradient with 10/90 stops, plus supplementary amber `#FFAB0F` for warm callouts.
 - Brand-asset hero backgrounds — official Splunk-light and Splunk-dark gradient bloom WebP images swap automatically with theme mode (`heroBackgroundLight` / `heroBackgroundDark` params).
 - Full-bleed responsive layout pinning sidebar/TOC to viewport edges with a flexing content column.
