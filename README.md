@@ -97,7 +97,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for code conventions, the test loop, and 
 
 ## Credits
 
-The `notice` shortcode is a relearn-compatible drop-in. Credit to [hugo-theme-relearn](https://github.com/McShelby/hugo-theme-relearn) by [Sören Weber](https://github.com/McShelby).
+This theme is a relearn-compatible drop-in. Credit to [hugo-theme-relearn](https://github.com/McShelby/hugo-theme-relearn) by [Sören Weber](https://github.com/McShelby).
 
 ## License
 
