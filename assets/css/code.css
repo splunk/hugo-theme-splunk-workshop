@@ -104,12 +104,16 @@
 }
 .code-block__copy svg { width: 0.8rem; height: 0.8rem; }
 
-/* When wrapped by .code-block, pre is flush — no border, no radius, no extra bg */
+/* When wrapped by .code-block, pre is flush — no border, no radius, no extra bg.
+   font-family is set explicitly because <pre> and <code> both carry a UA
+   `font-family: monospace` rule that overrides inheritance from .code-block. */
 .code-block pre,
+.code-block code,
 .code-block .chroma {
   margin: 0;
   padding: 1rem 1.1rem;
   overflow-x: auto;
+  font-family: var(--font-mono);
   font-size: 0.85rem;
   line-height: 1.65;
   background: transparent !important;
@@ -117,7 +121,8 @@
   border: 0;
   border-radius: 0;
 }
-.code-block .chroma pre { padding: 0; }
+.code-block .chroma pre,
+.code-block pre code { padding: 0; }
 
 .code-block:not(:has(.code-block__header)) pre,
 .code-block:not(:has(.code-block__header)) .chroma { padding: 1.15rem; }

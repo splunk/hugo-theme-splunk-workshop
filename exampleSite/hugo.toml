@@ -76,10 +76,11 @@ theme   = "hugo-theme-splunk-workshop"
   colorInk          = "#0C1724"
   colorInkMuted     = "#585B61"   # bumped from #4B4D52 to clear AA threshold
   colorPaper        = "#FFFFFF"
-  colorSurface      = "#F7F6F3"
-  colorSurfaceAlt   = "#EFEDE7"
-  colorBorder       = "#E5E2DA"
-  colorBorderStrong = "#D6D2C8"
+  # Cool gray neutrals — see theme hugo.toml for rationale.
+  colorSurface      = "#F4F6FA"
+  colorSurfaceAlt   = "#E9EDF2"
+  colorBorder       = "#E1E5EC"
+  colorBorderStrong = "#C7CDD8"
 
   colorInkDark          = "#F4F1EA"
   colorInkMutedDark     = "#9CA3AF"
@@ -92,10 +93,10 @@ theme   = "hugo-theme-splunk-workshop"
   # ---- Typography (matches splunk.github.io/observability-workshop) ----
   # Splunk Data Sans Pro is loaded via @font-face in theme-vars.html
   # (Splunk's own CDN). fontUrl pulls only the mono companion.
-  fontUrl     = "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+  fontUrl     = "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap"
   fontDisplay = "'Splunk Data Sans Pro', ui-sans-serif, system-ui, sans-serif"
   fontBody    = "'Splunk Data Sans Pro', ui-sans-serif, system-ui, sans-serif"
-  fontMono    = "'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace"
+  fontMono    = "'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace"
 
   # ---- Layout toggles ----
   showSidebar     = true

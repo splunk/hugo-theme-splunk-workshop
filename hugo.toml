@@ -95,10 +95,15 @@ enableGitInfo = true
   colorInk          = "#0C1724"
   colorInkMuted     = "#585B61"   # bumped from #4B4D52 to clear the AA threshold (≈4.6:1)
   colorPaper        = "#FFFFFF"
-  colorSurface      = "#F7F6F3"
-  colorSurfaceAlt   = "#EFEDE7"
-  colorBorder       = "#E5E2DA"
-  colorBorderStrong = "#D6D2C8"
+  # Cool gray neutrals — paired with the cool navy dark-mode palette so
+  # toggling between modes reads as two ends of one hue family instead of
+  # warm-light + cool-dark mismatch. Splunk magenta brand accents pop
+  # against these neutrals; warm beige muddied them. Harmonizes with the
+  # already-cool --code-bg (#EDF0F4).
+  colorSurface      = "#F4F6FA"
+  colorSurfaceAlt   = "#E9EDF2"
+  colorBorder       = "#E1E5EC"
+  colorBorderStrong = "#C7CDD8"
 
   # ---- Colors (dark mode) ------------------------------------------------
   colorInkDark          = "#F4F1EA"
@@ -112,10 +117,10 @@ enableGitInfo = true
   # ---- Typography — same stack as splunk.github.io/observability-workshop --
   # Splunk Data Sans Pro is loaded via @font-face in theme-vars.html
   # (Splunk's own CDN). fontUrl pulls only the mono companion from Google Fonts.
-  fontUrl     = "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+  fontUrl     = "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap"
   fontDisplay = "'Splunk Data Sans Pro', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
   fontBody    = "'Splunk Data Sans Pro', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
-  fontMono    = "'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Monaco, Consolas, monospace"
+  fontMono    = "'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Monaco, Consolas, monospace"
 
   # ---- Layout ------------------------------------------------------------
   showSidebar     = true

@@ -39,13 +39,13 @@ The `exercise` shortcode is the canonical way to mark a hands-on task. It render
 {{< exercise "Find the slowest endpoint" >}}
 Modify the SPL below to return the **single slowest** request grouped by URI, by p95 response time.
 
-```spl
+```text
 index=web sourcetype=access_combined
 | stats avg(response_time) as avg by uri
 ```
 
 {{< solution >}}
-```spl
+```text
 index=web sourcetype=access_combined
 | stats perc95(response_time) as p95 by uri
 | sort -p95

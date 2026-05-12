@@ -5,7 +5,7 @@ weight      = 20
 +++
 
 {{< lead >}}
-The theme defaults to **Splunk Data Sans Pro** (the official Splunk typeface, also used on `help.splunk.com`) for display and body, paired with **IBM Plex Mono** for code. Three params change every font on the site; one is loaded from Splunk's CDN, the others from Google Fonts.
+The theme defaults to **Splunk Data Sans Pro** (the official Splunk typeface, also used on `help.splunk.com`) for display and body, paired with **JetBrains Mono** for code. Three params change every font on the site; one is loaded from Splunk's CDN, the other two from Google Fonts.
 {{< /lead >}}
 
 ## The three font slots
@@ -15,10 +15,10 @@ The theme defaults to **Splunk Data Sans Pro** (the official Splunk typeface, al
   # Splunk Data Sans Pro is loaded via @font-face rules emitted by
   # theme-vars.html (six weights from Splunk's own CDN). fontUrl below
   # only pulls the mono companion.
-  fontUrl     = "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+  fontUrl     = "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap"
   fontDisplay = "'Splunk Data Sans Pro', ui-sans-serif, system-ui, sans-serif"
   fontBody    = "'Splunk Data Sans Pro', ui-sans-serif, system-ui, sans-serif"
-  fontMono    = "'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace"
+  fontMono    = "'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace"
 ```
 
 ### Where Splunk Data Sans Pro comes from

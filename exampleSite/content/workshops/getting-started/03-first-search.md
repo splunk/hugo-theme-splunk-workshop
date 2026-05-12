@@ -28,7 +28,7 @@ Once the upload finishes, switch to **Search & Reporting** and pick *Last 24 hou
 {{< step "Run your first SPL query" "2" "5 min" >}}
 Type the following into the search bar:
 
-```spl {file="search.spl"}
+```text {file="search.spl"}
 index=main sourcetype=tutorial
 | stats count by status
 | sort -count
@@ -62,7 +62,7 @@ Hit **Save As → Report**. Give it a name, set a default time range, and save. 
 Modify the query above to count events grouped by `useragent` instead of `status`, and limit the output to the top five.
 
 {{< solution >}}
-```spl
+```text
 index=main sourcetype=tutorial
 | stats count by useragent
 | sort -count
