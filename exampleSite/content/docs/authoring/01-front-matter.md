@@ -38,6 +38,7 @@ author      = "Pieter Hagen"         # alias of authors[0] (legacy singular)
 lastmod     = "2026-04-28"           # optional override; otherwise from git
 hidden      = false                  # exclude from sidebar, TOC, search, prev/next
 nopager     = false                  # render the page but suppress prev/next
+showToc     = true                   # override site-wide `showToc` per page
 subtitle    = "Chapter · Foo"        # eyebrow text on chapter pages
 tagline     = "01 · Foundation"      # extra text in the chapter sidebar
 +++
@@ -82,6 +83,29 @@ When `true`, suppresses the prev/next pager on this specific page. Useful for:
 - Special pages (404, search results, glossary)
 
 The page still appears in the sidebar and search; only the pager block is hidden.
+
+### `showToc`
+
+Per-page override of the site-wide `showToc` param. When `false`, the right-rail "On this page" TOC is hidden on this page and the content column expands into the freed space. When `true`, the TOC is shown even if disabled site-wide. When omitted, the site param wins.
+
+Useful for dashboard pages, very wide diagrams, or landing-style indexes where the TOC adds little but takes width.
+
+```yaml
++++
+title   = "Dashboard"
+showToc = false
++++
+```
+
+**Cascading to a whole section.** Plain `showToc = false` in a section's `_index.md` only affects that one index page — Hugo's `.Params` are per-page. To hide the TOC across a whole subtree, use Hugo's built-in `[cascade]` block:
+
+```toml
+# in some-section/_index.md
+[cascade]
+  showToc = false
+```
+
+Every descendant inherits unless it sets its own `showToc`. The same mechanism works for any other front-matter key.
 
 ## Home page hero
 

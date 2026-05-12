@@ -37,7 +37,7 @@ Defaults to `true`. Hide it for sites where every page is a top-level resource (
 
 ### `showToc`
 
-Right-rail "On this page" auto-generated from H2/H3 headings. Hide for landing pages or pages with little structure. Auto-suppresses when the page has no headings.
+Right-rail "On this page" auto-generated from H2/H3 headings. Hide for landing pages or pages with little structure. Auto-suppresses when the page has no headings. Override per-page with `showToc = false` (or `true`) in front matter — see [Front matter » `showToc`](/docs/authoring/01-front-matter/#showtoc).
 
 ### `showProgress`
 
@@ -69,13 +69,14 @@ Some toggles can be overridden per-page in front matter:
 
 ```yaml
 +++
-title  = "..."
-hidden = true        # exclude from sidebar, TOC, search, prev/next
-nopager= true        # render the page but suppress the prev/next pager
+title   = "..."
+hidden  = true        # exclude from sidebar, TOC, search, prev/next
+nopager = true        # render the page but suppress the prev/next pager
+showToc = false       # hide the right-rail TOC on this page only
 +++
 ```
 
-`hidden: true` is the canonical way to draft pages that should ship invisibly. `nopager: true` is for special pages (intro, outro, glossary) where prev/next doesn't make sense.
+`hidden: true` is the canonical way to draft pages that should ship invisibly. `nopager: true` is for special pages (intro, outro, glossary) where prev/next doesn't make sense. `showToc: false` widens the content column on dashboard-style or landing pages.
 
 ## Picking which sections appear on the home
 
