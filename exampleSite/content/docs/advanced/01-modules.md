@@ -11,7 +11,7 @@ Hugo Modules are the modern way to consume themes. They give you version pinning
 ## Pinning a version
 
 ```bash
-hugo mod get github.com/splunk/hugo-theme-splunk-workshop@v0.1.0
+hugo mod get github.com/splunk/hugo-theme-splunk-workshop@v0.2.0
 ```
 
 Hugo writes the resolved version to your `go.mod`. Future `hugo build` and `hugo server` invocations use that exact version. Available tags are on the [releases page](https://github.com/splunk/hugo-theme-splunk-workshop/releases).
