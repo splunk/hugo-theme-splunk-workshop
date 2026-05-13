@@ -4,7 +4,7 @@
 name = "Splunk Workshop"
 license = "MIT"
 licenselink = "https://github.com/splunk/hugo-theme-splunk-workshop/blob/main/LICENSE"
-description = "A modern, customizable Hugo theme for technical workshops. Three-column layout, light/dark/auto mode, signature gradient motif, IBM Plex typography, and 50+ workshop-specific shortcodes (callouts, steps, exercises, tabs, terminal, mermaid, math, presenter notes, and more). Branded for Splunk by default; rebrand-able to any company via params."
+description = "A modern, customizable Hugo theme for technical workshops. Three-column layout, light/dark/auto mode, signature gradient motif, Inter + JetBrains Mono typography, and 50+ workshop-specific shortcodes (callouts, steps, exercises, tabs, terminal, mermaid, math, presenter notes, and more). Branded for Splunk by default; rebrand-able to any company via params."
 homepage = "https://github.com/splunk/hugo-theme-splunk-workshop"
 demosite = "https://splunk.github.io/hugo-theme-splunk-workshop/"
 min_version = "0.125.0"
