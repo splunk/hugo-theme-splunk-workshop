@@ -8,6 +8,18 @@ weight      = 10
 Hugo extended **0.125 or newer** is required. Check with `hugo version` — you want a build that says `extended`.
 {{< /lead >}}
 
+## Before you start
+
+All three methods below install the theme **into an existing Hugo site**. If you don't have one yet, scaffold a blank site first:
+
+```bash
+hugo new site my-workshops
+cd my-workshops
+git init
+```
+
+If you already have a Hugo site, just `cd` into its root. Every command on this page runs from that directory.
+
 ## Pick your method
 
 {{< tabs groupid="install-method" >}}

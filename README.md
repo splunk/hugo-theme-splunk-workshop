@@ -23,12 +23,21 @@ If you're writing self-paced reference docs rather than workshops, [hugo-theme-r
 
 > Requires Hugo **0.125+** extended.
 
-## Install
+## Install into an existing Hugo site
 
-Three install methods, in order of preference:
+Run the commands below from the root of your Hugo site. If you don't have one yet, start one first:
 
 ```bash
-# 1. Hugo Module — version-pinned, easy upgrades
+hugo new site my-workshops
+cd my-workshops
+git init
+```
+
+Then pick one of the three install methods, in order of preference:
+
+```bash
+# 1. Hugo Module — version-pinned, easy upgrades (requires Go 1.18+)
+hugo mod init github.com/your-org/my-workshops       # one-time only
 hugo mod get github.com/splunk/hugo-theme-splunk-workshop
 
 # 2. Git submodule — no Go required
@@ -36,12 +45,12 @@ git submodule add https://github.com/splunk/hugo-theme-splunk-workshop.git \
   themes/hugo-theme-splunk-workshop
 
 # 3. Direct download
-curl -L https://github.com/splunk/hugo-theme-splunk-workshop/archive/refs/heads/main.tar.gz \
-  | tar -xz -C themes/
+mkdir -p themes && curl -L https://github.com/splunk/hugo-theme-splunk-workshop/archive/refs/heads/main.tar.gz \
+  | tar -xz -C themes/ && mv themes/hugo-theme-splunk-workshop-main themes/hugo-theme-splunk-workshop
 ```
 
-Step-by-step instructions, troubleshooting, and a minimal `hugo.toml` are in the
-[Getting Started docs](https://splunk.github.io/hugo-theme-splunk-workshop/docs/getting-started/).
+Wire the theme into `hugo.toml` — Hugo Modules use a `[module]` block, the other two use a `theme = "..."` line. The minimal config (plus the `unsafe = true` and `outputs` lines the theme needs) is in the
+[Getting Started docs](https://splunk.github.io/hugo-theme-splunk-workshop/docs/getting-started/01-install/).
 
 ## Quick start
 
