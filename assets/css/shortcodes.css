@@ -16,8 +16,7 @@
   padding: 1rem 1.25rem 1rem 1.1rem;
   margin: 1.5rem 0;
   background: var(--callout-bg);
-  border: 1px solid var(--callout-border);
-  border-left: 3px solid var(--callout-color);
+  border-left: 5px solid var(--callout-color);
   border-radius: var(--radius-lg);
   font-size: 0.95rem;
 }
@@ -47,17 +46,23 @@
   margin-bottom: 0.25rem;
 }
 
-.callout--tip     { --callout-color: #FFAB0F; --callout-bg: color-mix(in oklab, #FFAB0F 10%, transparent); --callout-border: color-mix(in oklab, #FFAB0F 35%, transparent); }
-.callout--note    { --callout-color: var(--color-ink-muted); --callout-bg: var(--color-surface); --callout-border: var(--color-border); }
-.callout--info    { --callout-color: #1d5d99; --callout-bg: color-mix(in oklab, #1d5d99 8%, transparent); --callout-border: color-mix(in oklab, #1d5d99 35%, transparent); }
-.callout--warning { --callout-color: #FF712B; --callout-bg: color-mix(in oklab, #FF712B 8%, transparent); --callout-border: color-mix(in oklab, #FF712B 35%, transparent); }
-.callout--danger  { --callout-color: #d4341f; --callout-bg: color-mix(in oklab, #d4341f 7%, transparent); --callout-border: color-mix(in oklab, #d4341f 35%, transparent); }
-.callout--success { --callout-color: #2f7c47; --callout-bg: color-mix(in oklab, #2f7c47 8%, transparent); --callout-border: color-mix(in oklab, #2f7c47 35%, transparent); }
+/* Docusaurus-aligned palette — same hues as docusaurus.io/docs admonitions. */
+.callout--tip     { --callout-color: #0d9488; --callout-bg: color-mix(in oklab, #0d9488 10%, transparent); --callout-border: color-mix(in oklab, #0d9488 35%, transparent); }
+.callout--note    { --callout-color: #6b7280; --callout-bg: var(--color-surface);                              --callout-border: var(--color-border); }
+.callout--info    { --callout-color: #0284c7; --callout-bg: color-mix(in oklab, #0284c7 8%,  transparent); --callout-border: color-mix(in oklab, #0284c7 35%, transparent); }
+.callout--warning { --callout-color: #ea580c; --callout-bg: color-mix(in oklab, #ea580c 8%,  transparent); --callout-border: color-mix(in oklab, #ea580c 35%, transparent); }
+.callout--danger  { --callout-color: #dc2626; --callout-bg: color-mix(in oklab, #dc2626 7%,  transparent); --callout-border: color-mix(in oklab, #dc2626 35%, transparent); }
+.callout--success { --callout-color: #16a34a; --callout-bg: color-mix(in oklab, #16a34a 10%, transparent); --callout-border: color-mix(in oklab, #16a34a 35%, transparent); }
 
-[data-theme="dark"] .callout--note { --callout-bg: var(--color-surface); --callout-border: var(--color-border); }
-[data-theme="dark"] .callout--info    { --callout-color: #6dafdf; }
-[data-theme="dark"] .callout--success { --callout-color: #74d49a; }
-[data-theme="dark"] .callout--danger  { --callout-color: #ff6c5a; }
+/* Dark mode: brighten the accent colours for contrast on dark surfaces and
+   bump the background tint mix (8→12%, 10→14%) so each callout reads as a
+   distinct surface without needing a perimeter border. */
+[data-theme="dark"] .callout--note    { --callout-color: #9ca3af; --callout-bg: var(--color-surface); --callout-border: var(--color-border); }
+[data-theme="dark"] .callout--info    { --callout-color: #38bdf8; --callout-bg: color-mix(in oklab, #0284c7 12%, transparent); }
+[data-theme="dark"] .callout--tip     { --callout-color: #2dd4bf; --callout-bg: color-mix(in oklab, #0d9488 14%, transparent); }
+[data-theme="dark"] .callout--success { --callout-color: #4ade80; --callout-bg: color-mix(in oklab, #16a34a 14%, transparent); }
+[data-theme="dark"] .callout--warning { --callout-color: #fb923c; --callout-bg: color-mix(in oklab, #ea580c 12%, transparent); }
+[data-theme="dark"] .callout--danger  { --callout-color: #f87171; --callout-bg: color-mix(in oklab, #dc2626 11%, transparent); }
 
 /* ---------- Collapsible callout (relearn-compatible expanded notices) ----- */
 details.callout {

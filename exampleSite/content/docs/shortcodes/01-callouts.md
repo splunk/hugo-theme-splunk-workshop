@@ -70,9 +70,9 @@ All parameters are optional. Positional 0/1/2 map to `style`/`title`/`icon`.
 | `style=` | maps to |
 | --- | --- |
 | `note` (default) | `note` |
-| `info` `primary` | `info` |
+| `info` `primary` `important` | `info` |
 | `tip` | `tip` |
-| `warning` `caution` `important` `orange` `yellow` | `warning` |
+| `warning` `caution` `orange` `yellow` | `warning` |
 | `danger` `error` `red` | `danger` |
 | `success` `green` | `success` |
 | `blue` | `info` |
@@ -154,7 +154,7 @@ GitHub's five types map onto the theme's six like this:
 | --- | --- | --- |
 | `[!NOTE]` | → | `note` |
 | `[!TIP]` | → | `tip` |
-| `[!IMPORTANT]` | → | `warning` (yellow) |
+| `[!IMPORTANT]` | → | `info` (sky blue) |
 | `[!WARNING]` | → | `warning` |
 | `[!CAUTION]` | → | `danger` (red) |
 
