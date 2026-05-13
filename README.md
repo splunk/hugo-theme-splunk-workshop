@@ -21,7 +21,7 @@ If you're writing self-paced reference docs rather than workshops, [hugo-theme-r
 - **Print-friendly** — workshops print cleanly with no chrome
 - **No build dependencies** — pure Hugo extended; no PostCSS, no Node toolchain
 
-> Requires Hugo **0.125+** extended.
+> Requires Hugo **0.161+** extended.
 
 ## Install into an existing Hugo site
 

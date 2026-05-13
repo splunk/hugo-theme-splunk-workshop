@@ -39,7 +39,7 @@ In a minute the site will be live at `https://<your-org>.github.io/<repo>/`.
   command = "hugo --minify"
 
 [build.environment]
-  HUGO_VERSION = "0.125.0"
+  HUGO_VERSION = "0.161.1"
 ```
 
 Connect the repo on netlify.com — done.
@@ -50,7 +50,7 @@ In the Cloudflare dashboard:
 
 - **Build command:** `hugo --minify`
 - **Output dir:** `public`
-- **Environment variable:** `HUGO_VERSION = 0.125.0`
+- **Environment variable:** `HUGO_VERSION = 0.161.1`
 
 ## Plain static hosting (S3, nginx, etc.)
 

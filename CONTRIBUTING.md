@@ -6,8 +6,8 @@ Thanks for considering a contribution. The theme is small enough that you can re
 
 You need:
 
-- **Hugo extended ≥ 0.125** (`brew install hugo`, `apt install hugo`, or pull a binary from [gohugo.io/installation](https://gohugo.io/installation/))
-- **Go ≥ 1.18** (only if you're testing Hugo Modules wiring)
+- **Hugo extended ≥ 0.161** (`brew install hugo`, `apt install hugo`, or pull a binary from [gohugo.io/installation](https://gohugo.io/installation/))
+- **Go ≥ 1.23** (only if you're testing Hugo Modules wiring)
 - **GNU Make** (the bundled Makefile uses standard targets; if you don't have `make`, the equivalent `hugo` commands are in the Makefile itself)
 
 ## Local loop

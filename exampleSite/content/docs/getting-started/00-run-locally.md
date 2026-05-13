@@ -11,7 +11,7 @@ Two ways to use the theme: clone this repo to try the demo or contribute, or ins
 
 ## Prerequisites
 
-- **Hugo extended 0.125 or newer.** Check with `hugo version` — the build line must include `extended`.
+- **Hugo extended 0.161 or newer.** Check with `hugo version` — the build line must include `extended`.
   - macOS: `brew install hugo`
   - Linux: download the `_extended_` `.deb` / `.rpm` from [gohugo.io/installation](https://gohugo.io/installation/) (package-manager versions are usually outdated and non-extended)
   - Windows: `choco install hugo-extended`

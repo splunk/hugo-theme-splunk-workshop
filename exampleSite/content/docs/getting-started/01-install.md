@@ -5,7 +5,7 @@ weight      = 10
 +++
 
 {{< lead >}}
-Hugo extended **0.125 or newer** is required. Check with `hugo version` — you want a build that says `extended`.
+Hugo extended **0.161 or newer** is required. Check with `hugo version` — you want a build that says `extended`.
 {{< /lead >}}
 
 ## Before you start
