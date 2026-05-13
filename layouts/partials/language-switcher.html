@@ -6,7 +6,7 @@
   exists (.Translations); otherwise it falls back to the language's home page.
   The current language is rendered as a non-link button with aria-current.
 */ -}}
-{{- if gt (len site.Languages) 1 -}}
+{{- if gt (len hugo.Sites) 1 -}}
 {{- $page := . -}}
 <div class="lang-switch" data-lang-switch>
   <button class="lang-switch__btn" type="button" data-lang-switch-toggle aria-haspopup="listbox" aria-expanded="false" aria-label="{{ i18n "languageSwitcher" | default "Language" }}">
@@ -15,9 +15,9 @@
     <span class="lang-switch__chev" aria-hidden="true"></span>
   </button>
   <ul class="lang-switch__menu" role="listbox" hidden>
-    {{- range site.Languages -}}
-    {{- $code := .Lang -}}
-    {{- $name := .Label | default .Lang -}}
+    {{- range hugo.Sites -}}
+    {{- $code := .Language.Lang -}}
+    {{- $name := .Language.Params.label | default .Language.LanguageName | default .Language.Lang -}}
     {{- $isActive := eq $code $page.Site.Language.Lang -}}
     {{- /* Pick the matching translation if it exists, else fall back to the
            language's home page so the user lands somewhere sensible. */ -}}
@@ -26,7 +26,7 @@
       {{- if eq .Lang $code }}{{ $href = .RelPermalink }}{{ end -}}
     {{- end -}}
     {{- if not $href -}}
-      {{- $href = printf "/%s/" $code | relURL -}}
+      {{- $href = .Home.RelPermalink -}}
     {{- end -}}
     <li role="option" aria-selected="{{ if $isActive }}true{{ else }}false{{ end }}">
       <a class="lang-switch__option{{ if $isActive }} is-active{{ end }}" href="{{ $href }}" lang="{{ $code }}"{{ if $isActive }} aria-current="true"{{ end }}>{{ $name }}</a>
