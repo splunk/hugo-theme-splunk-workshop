@@ -91,8 +91,10 @@ theme   = "hugo-theme-splunk-workshop"
   colorBorderStrongDark = "#2A3A56"
 
   # ---- Typography (matches splunk.github.io/observability-workshop) ----
-  # Splunk Data Sans Pro is loaded via @font-face in theme-vars.html
-  # (Splunk's own CDN). fontUrl pulls only the mono companion.
+  # splunkDataSansPro = true emits the six @font-face rules pointing at
+  # Splunk's CDN. fontDisplay/fontBody then resolve to that family.
+  # fontUrl pulls only the mono companion from Google Fonts.
+  splunkDataSansPro = true
   fontUrl     = "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap"
   fontDisplay = "'Splunk Data Sans Pro', ui-sans-serif, system-ui, sans-serif"
   fontBody    = "'Splunk Data Sans Pro', ui-sans-serif, system-ui, sans-serif"

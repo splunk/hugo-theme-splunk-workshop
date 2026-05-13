@@ -114,12 +114,13 @@ enableGitInfo = true
   colorBorderDark       = "#1F2C44"
   colorBorderStrongDark = "#2A3A56"
 
-  # ---- Typography — same stack as splunk.github.io/observability-workshop --
-  # Splunk Data Sans Pro is loaded via @font-face in theme-vars.html
-  # (Splunk's own CDN). fontUrl pulls only the mono companion from Google Fonts.
-  fontUrl     = "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap"
-  fontDisplay = "'Splunk Data Sans Pro', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
-  fontBody    = "'Splunk Data Sans Pro', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+  # ---- Typography — Inter (Google Fonts) + JetBrains Mono ----------------
+  # Splunk sites: set `splunkDataSansPro = true` and point fontDisplay/fontBody
+  # at "'Splunk Data Sans Pro', ..." — see exampleSite/hugo.toml for the
+  # canonical Splunk-branded config.
+  fontUrl     = "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+  fontDisplay = "'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+  fontBody    = "'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
   fontMono    = "'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Monaco, Consolas, monospace"
 
   # ---- Layout ------------------------------------------------------------
