@@ -111,6 +111,10 @@ details.callout:not([open]) > .callout__body { display: none; }
   align-items: start;
   position: relative;
 }
+/* Without min-width:0 the right column grows to its intrinsic content
+   width — a wide <pre> inside .step__body would push the whole .page
+   grid horizontally on mobile. */
+.step > * { min-width: 0; }
 .step::before {
   content: "";
   position: absolute;
