@@ -65,6 +65,7 @@ Pin to a release (recommended for CI):
 ```bash
 hugo mod get github.com/splunk/hugo-theme-splunk-workshop@v0.1.0
 ```
+
 {{< /tab >}}
 
 {{< tab "Git submodule" >}}
@@ -87,6 +88,7 @@ When cloning the site fresh later:
 ```bash
 git submodule update --init --recursive
 ```
+
 {{< /tab >}}
 
 {{< tab "Direct download" >}}
@@ -104,6 +106,7 @@ In `hugo.toml`:
 ```toml
 theme = "hugo-theme-splunk-workshop"
 ```
+
 {{< /tab >}}
 {{< /tabs >}}
 
@@ -180,7 +183,7 @@ You'll want to layer in `[params]` for branding once the basics work — see [Cu
 hugo server
 ```
 
-Open http://localhost:1313. You should see the theme's default home with your site title. If something goes wrong, check the [troubleshooting](#troubleshooting) section below.
+Open [http://localhost:1313](http://localhost:1313). You should see the theme's default home with your site title. If something goes wrong, check the [troubleshooting](#troubleshooting) section below.
 
 {{< checkpoint "Theme installed and a blank site renders at localhost:1313" >}}
 
@@ -196,6 +199,7 @@ The search modal needs `home = ["HTML", "RSS", "JSON"]` in your `[outputs]` bloc
 
 {{% notice style="warning" title="hugo: command not found" %}}
 Install Hugo extended:
+
 - macOS: `brew install hugo`
 - Linux: download from [gohugo.io/installation](https://gohugo.io/installation/) (the package manager versions are often outdated and not the extended build)
 - Windows: `choco install hugo-extended`
