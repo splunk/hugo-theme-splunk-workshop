@@ -497,6 +497,12 @@ pre.file-tree .file-tree__dir-line {
 /* ---------- Image / figure --------------------------------------------- */
 .figure {
   margin: 2rem 0;
+  /* Hug the image: a screenshot smaller than the cap gets a snug frame +
+     caption. Capped at the prose width (--content-max, default 720px) so
+     large screenshots align visually with the surrounding paragraphs and
+     readers click-to-zoom for detail. Drops to 100% on narrow columns. */
+  width: fit-content;
+  max-width: min(100%, var(--content-max));
 }
 .figure__inner {
   position: relative;
@@ -507,7 +513,7 @@ pre.file-tree .file-tree__dir-line {
 }
 .figure__inner img {
   display: block;
-  width: 100%;
+  max-width: 100%;
   height: auto;
   cursor: zoom-in;
 }
@@ -530,7 +536,7 @@ pre.file-tree .file-tree__dir-line {
 .content { counter-reset: figure-counter; }
 .figure { counter-increment: figure-counter; }
 
-.figure--bleed { margin-left: -2rem; margin-right: -2rem; }
+.figure--bleed { margin-left: -2rem; margin-right: -2rem; max-width: none; }
 .figure--align-left  { float: left;  margin: 0.5rem 1.5rem 1rem 0; max-width: 40%; }
 .figure--align-right { float: right; margin: 0.5rem 0 1rem 1.5rem; max-width: 40%; }
 @media (max-width: 720px) {
