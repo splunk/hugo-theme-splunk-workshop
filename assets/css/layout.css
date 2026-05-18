@@ -334,6 +334,11 @@
   color: var(--color-ink);
 }
 
+/* iOS interprets a tap on the chapter title as a text-selection gesture
+   (magenta selection highlight) instead of a disclosure toggle. Suppress
+   selection on the summary itself; the children inside remain selectable. */
+.sidebar-tree__summary { user-select: none; -webkit-user-select: none; }
+
 /* Active row — the only row that gets a visible highlight. Accent border-
    left + accent-tinted gradient backdrop. Bumped weight + ink colour. */
 .sidebar-tree__link.is-active,
@@ -371,6 +376,24 @@
 .sidebar-tree__self.is-visited.is-active::before {
   opacity: 1;
   transform: translateY(-50%) scale(1.15);
+}
+
+/* Roll-up indicator — when every descendant page under a chapter group has
+   been visited, paint a small accent checkmark AFTER the chapter title.
+   Different glyph (tick) from the leaf "visited" dot on purpose: the dot
+   means "page seen", the tick means "section complete". Drawn with two
+   rotated borders, same technique as the chevron. */
+.sidebar-tree__summary.is-complete .sidebar-tree__chapter::after {
+  content: "";
+  display: inline-block;
+  width: 0.32rem;
+  height: 0.55rem;
+  margin-left: 0.5rem;
+  border-right: 2px solid var(--color-accent);
+  border-bottom: 2px solid var(--color-accent);
+  transform: rotate(45deg) translateY(-1px);
+  opacity: 0.65;
+  vertical-align: middle;
 }
 
 /* Suppress the native disclosure marker so we can paint our own chevron. */

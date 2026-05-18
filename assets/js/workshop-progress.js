@@ -27,10 +27,27 @@ export function initWorkshopProgress() {
   const state = read();
   const visited = new Set(state[root] || []);
 
+  // Walk each <details> chapter group; if every descendant page link inside
+  // it carries .is-visited, mark the group's <summary> as .is-complete so
+  // the user sees a roll-up indicator without expanding the branch.
+  // Recursive by construction — `:scope [data-page-url]` matches nested
+  // sub-chapter leaves too, so completeness propagates up the tree.
+  const repaintCompleteness = () => {
+    const groups = sidebar.querySelectorAll(".sidebar-tree__group");
+    for (const g of groups) {
+      const descendants = g.querySelectorAll(":scope [data-page-url]");
+      const all = descendants.length > 0 &&
+        Array.from(descendants).every(a => a.classList.contains("is-visited"));
+      const summary = g.querySelector(":scope > details > summary");
+      summary?.classList.toggle("is-complete", all);
+    }
+  };
+
   // Paint visited dots from existing state.
   for (const a of links) {
     if (visited.has(a.dataset.pageUrl)) a.classList.add("is-visited");
   }
+  repaintCompleteness();
 
   // Mark the current page visited after dwell, unless it's already there.
   const currentUrl = window.location.pathname;
@@ -43,6 +60,7 @@ export function initWorkshopProgress() {
     write(state);
     const active = links.find(a => a.dataset.pageUrl === currentUrl);
     active?.classList.add("is-visited");
+    repaintCompleteness();
   }, DWELL_MS);
 
   // If the attendee leaves before the dwell completes, cancel — accidental
