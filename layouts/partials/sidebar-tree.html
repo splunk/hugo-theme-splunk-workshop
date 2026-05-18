@@ -38,7 +38,7 @@
   {{- $isOnPath := or $isCurrent (and (ne .RelPermalink "/") (hasPrefix $current.RelPermalink .RelPermalink)) -}}
   {{- if $hasChildren -}}
 <li class="sidebar-tree__group{{ if $isOnPath }} is-open{{ end }}">
-<details{{ if $isOnPath }} open{{ end }}>
+<details{{ if $isOnPath }} open{{ end }} data-section-url="{{ .RelPermalink }}">
 <summary class="sidebar-tree__summary"><span class="sidebar-tree__chev" aria-hidden="true"></span><span class="sidebar-tree__chapter">{{ .LinkTitle }}</span></summary>
 {{- /* Self-link: clicking the chapter title navigates to the chapter landing,
        not just toggling. We surface this as the first item INSIDE the open

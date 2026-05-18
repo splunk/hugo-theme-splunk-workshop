@@ -332,6 +332,7 @@
 .sidebar-tree__self:hover,
 .sidebar-tree__summary:hover {
   color: var(--color-ink);
+  text-decoration: none; /* override global a:hover underline */
 }
 
 /* iOS interprets a tap on the chapter title as a text-selection gesture

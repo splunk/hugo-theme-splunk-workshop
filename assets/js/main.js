@@ -9,6 +9,7 @@ import { initCodeExpand }  from "./code-expand.js";
 import { initLightbox }    from "./lightbox.js";
 import { initProgress }    from "./progress.js";
 import { initWorkshopProgress } from "./workshop-progress.js";
+import { initSidebarState }     from "./sidebar-state.js";
 import { initMobileNav }   from "./mobile-nav.js";
 import { initQuiz }        from "./quiz.js";
 import { initPresenter }    from "./presenter.js";
@@ -25,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initLightbox();
   initProgress();
   initWorkshopProgress();
+  initSidebarState();
   initMobileNav();
   initQuiz();
   initPresenter();
