@@ -13,6 +13,36 @@ function cleanLineText(text) {
 }
 
 export function initCopyCode() {
+  // Terminal copy — pulls ONLY the command lines (those rendered with a
+  // .terminal__prompt child), skipping output, `#` comments, and the
+  // trailing blinking-cursor row. The shell `$ ` prefix is painted via
+  // ::before content, so it isn't in textContent — what we copy is the
+  // command exactly as the user typed it.
+  document.querySelectorAll(".terminal__copy").forEach((btn) => {
+    btn.innerHTML = `${ICON_COPY}<span>Copy</span>`;
+    btn.addEventListener("click", async () => {
+      const terminal = btn.closest(".terminal");
+      if (!terminal) return;
+      const commands = Array.from(
+        terminal.querySelectorAll(".terminal__line:not(.terminal__line--cursor)")
+      )
+        .filter((line) => line.querySelector(".terminal__prompt"))
+        .map((line) => line.textContent.trim())
+        .join("\n");
+      try {
+        await navigator.clipboard.writeText(commands);
+        btn.innerHTML = `${ICON_DONE}<span>Copied</span>`;
+        btn.classList.add("is-copied");
+        setTimeout(() => {
+          btn.innerHTML = `${ICON_COPY}<span>Copy</span>`;
+          btn.classList.remove("is-copied");
+        }, 1600);
+      } catch {
+        btn.innerHTML = `<span>Press ⌘C</span>`;
+      }
+    });
+  });
+
   // Block-level copy button (existing behaviour — full code block).
   document.querySelectorAll(".code-block__copy").forEach((btn) => {
     btn.innerHTML = `${ICON_COPY}<span>Copy</span>`;

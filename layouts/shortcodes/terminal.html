@@ -15,10 +15,17 @@
 */ -}}
 {{- $title := .Get "title" | default "zsh" -}}
 {{- $body  := trim .Inner "\n\r" -}}
+{{- /* Pre-scan: only render the copy button when there's at least one
+       command line ($ prefix). Avoids a dead button on output-only blocks. */ -}}
+{{- $hasCommand := false -}}
+{{- range split $body "\n" -}}
+  {{- if hasPrefix . "$ " -}}{{- $hasCommand = true -}}{{- end -}}
+{{- end -}}
 <div class="terminal" data-terminal>
   <div class="terminal__bar">
     <span class="terminal__dots"><span class="terminal__dot"></span><span class="terminal__dot"></span><span class="terminal__dot"></span></span>
     <span class="terminal__title">{{ $title }}</span>
+    {{- if $hasCommand }}<button type="button" class="terminal__copy" aria-label="Copy commands"></button>{{ end -}}
   </div>
   <div class="terminal__body"><code>{{- range $i, $line := split $body "\n" -}}
 {{- if hasPrefix $line "$ " -}}

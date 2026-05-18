@@ -380,6 +380,31 @@ details.callout:not([open]) > .callout__body { display: none; }
   color: #6e7891;
   text-transform: uppercase;
 }
+/* Copy-commands button — same proportions as .code-block__copy but
+   restyled for the dark terminal palette. Pushed flush-right with
+   margin-left:auto so the title sits where it always did. */
+.terminal__copy {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid #2a3344;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: #9ca3af;
+  background: transparent;
+  cursor: pointer;
+  transition: color var(--t-fast) var(--ease),
+              border-color var(--t-fast) var(--ease);
+}
+.terminal__copy:hover,
+.terminal__copy.is-copied {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+.terminal__copy svg { width: 0.75rem; height: 0.75rem; }
 .terminal__body {
   padding: 1rem 1.1rem;
   overflow-x: auto;
