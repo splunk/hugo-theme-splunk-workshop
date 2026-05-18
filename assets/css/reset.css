@@ -48,14 +48,13 @@ button {
 a {
   color: var(--color-accent);
   text-decoration: none;
-  text-underline-offset: 0.18em;
-  text-decoration-thickness: 1px;
   transition: color var(--t-fast) var(--ease);
 }
 /* Hover keeps the brand pink #FF007F — Splunk's official magenta. The dark
    variant token is reserved for borders/shadows where a slightly deeper shade
-   improves contrast; never used on text. */
-a:hover { color: var(--color-accent); text-decoration: underline; }
+   improves contrast; never used on text. No underline on hover — modern
+   theme convention; cards, buttons, and tree rows are their own affordance. */
+a:hover { color: var(--color-accent); }
 
 ::selection { background: var(--color-accent); color: #fff; }
 

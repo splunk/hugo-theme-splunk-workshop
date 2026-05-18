@@ -332,7 +332,6 @@
 .sidebar-tree__self:hover,
 .sidebar-tree__summary:hover {
   color: var(--color-ink);
-  text-decoration: none; /* override global a:hover underline */
 }
 
 /* iOS interprets a tap on the chapter title as a text-selection gesture
@@ -629,12 +628,9 @@
   text-decoration: none;
   transition: all var(--t-fast) var(--ease);
 }
-/* Defeat the global a:hover underline — the card itself is the
-   affordance; an underline on the title would just clutter the chrome. */
 .pager__btn:hover {
   border-color: var(--color-accent);
   color: var(--color-ink);
-  text-decoration: none;
   transform: translateY(-1px);
   box-shadow: 0 4px 16px color-mix(in oklab, var(--color-accent) 12%, transparent);
 }
@@ -655,19 +651,21 @@
   transition: color var(--t-fast) var(--ease);
 }
 .pager__btn--prev .pager__label::before {
-  content: "\2190  ";
+  content: "< ";
   color: var(--color-accent);
   display: inline-block;
+  font-weight: 700;
   transition: transform var(--t-base) var(--ease);
 }
 .pager__btn--next .pager__label::after {
-  content: "  \2192";
+  content: " >";
   color: var(--color-accent);
   display: inline-block;
+  font-weight: 700;
   transition: transform var(--t-base) var(--ease);
 }
 /* Nudge the arrow on hover — small directional flourish that signals
-   forward/back motion without an underline. */
+   forward/back motion on the pager. */
 .pager__btn--prev:hover .pager__label::before { transform: translateX(-3px); }
 .pager__btn--next:hover .pager__label::after  { transform: translateX(3px); }
 .pager__hint {
