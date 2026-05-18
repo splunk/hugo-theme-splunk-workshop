@@ -3,7 +3,11 @@
 export function initMobileNav() {
   const btn = document.querySelector("[data-menu-btn]");
   const sidebar = document.querySelector(".sidebar");
-  if (!btn || !sidebar) return;
+  if (!btn) return;
+  // No workshop sidebar on this page (home, docs hub, etc.) — hide the
+  // hamburger entirely so it doesn't look like a dead button. Search and
+  // theme-toggle remain visible in the header on mobile.
+  if (!sidebar) { btn.hidden = true; return; }
 
   const sync = () => btn.setAttribute("aria-expanded", sidebar.classList.contains("is-open") ? "true" : "false");
   const close = () => { sidebar.classList.remove("is-open"); sync(); };

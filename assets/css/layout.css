@@ -761,7 +761,20 @@
     z-index: 40;
   }
   .sidebar.is-open { transform: translateX(0); }
-  .menu-btn { display: inline-flex; }
-  .nav { display: none; }
+  .menu-btn { display: inline-flex; margin-left: 0.4rem; }
+  /* Respect [hidden] set by JS when no .sidebar exists on the page —
+     otherwise the explicit `display: inline-flex` above wins over the
+     UA stylesheet's `[hidden] { display: none }` and the button stays
+     visible but inert. */
+  .menu-btn[hidden] { display: none; }
+  /* Keep .nav visible on mobile so search + theme toggle remain reachable.
+     Hide the parts that don't fit a narrow header (menu links, repo link,
+     language switcher) and collapse the search trigger to icon-only. */
+  .nav { gap: 0.4rem; }
+  .nav__link,
+  .lang-switch { display: none; }
+  .site-search-trigger { padding: 0.5rem; }
+  .site-search-trigger__label,
+  .site-search-trigger__kbd { display: none; }
   .pager { grid-template-columns: 1fr; }
 }
