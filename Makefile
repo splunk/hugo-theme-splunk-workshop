@@ -6,6 +6,11 @@ EXAMPLE_DIR   := exampleSite
 PORT          ?= 1313
 HUGO          ?= hugo
 
+## LAN IP for serving on all interfaces — auto-detected for mobile testing.
+## Tries macOS Wi-Fi (en0), then macOS Ethernet (en1), then Linux `hostname -I`.
+## Override with `LAN_IP=192.168.x.y make serve` if the wrong interface is picked.
+LAN_IP        ?= $(shell ipconfig getifaddr en0 2>/dev/null || ipconfig getifaddr en1 2>/dev/null || hostname -I 2>/dev/null | awk '{print $$1}' || echo 127.0.0.1)
+
 .DEFAULT_GOAL := help
 
 .PHONY: help
@@ -14,12 +19,12 @@ help: ## Show this help
 	  awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-14s\033[0m %s\n", $$1, $$2}'
 
 .PHONY: serve
-serve: ## Run the demo (exampleSite) on http://localhost:$(PORT)
-	$(HUGO) server --source $(EXAMPLE_DIR) --themesDir ../.. --port $(PORT) --disableFastRender
+serve: ## Run the demo on http://$(LAN_IP):$(PORT) (LAN-reachable for mobile testing)
+	$(HUGO) server --source $(EXAMPLE_DIR) --themesDir ../.. --port $(PORT) --bind 0.0.0.0 --baseURL http://$(LAN_IP) --disableFastRender
 
 .PHONY: serve-drafts
-serve-drafts: ## Run the demo with drafts visible
-	$(HUGO) server --source $(EXAMPLE_DIR) --themesDir ../.. --port $(PORT) --buildDrafts --disableFastRender
+serve-drafts: ## Run the demo with drafts visible (LAN-reachable)
+	$(HUGO) server --source $(EXAMPLE_DIR) --themesDir ../.. --port $(PORT) --bind 0.0.0.0 --baseURL http://$(LAN_IP) --buildDrafts --disableFastRender
 
 .PHONY: build
 build: ## Build the demo to exampleSite/public
