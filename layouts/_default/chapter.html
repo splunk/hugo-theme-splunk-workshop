@@ -3,7 +3,7 @@
 {{- $workshop := partial "workshop-root.html" . -}}
 {{- $hasSidebar := and $p.showSidebar $workshop -}}
 {{- $showToc := cond (isset .Params "showtoc") .Params.showToc $p.showToc -}}
-{{- $hasToc := and $showToc .Fragments.Headings -}}
+{{- $hasToc := and $showToc (strings.Contains (printf "%s" .TableOfContents) "<li") -}}
 
 <main class="page {{ if not $hasSidebar }}page--narrow{{ else if not $hasToc }}page--with-sidebar-only{{ end }}">
 
