@@ -26,11 +26,29 @@ If you already have a Hugo site, just `cd` into its root. Every command on this 
 {{< tab "Hugo Module (recommended)" >}}
 Hugo Modules give you version-pinned installs and one-command upgrades. Requires **Go 1.18+** for the one-time init.
 
-```bash
-# 1. Init your site as a Hugo Module (one time only)
-hugo mod init github.com/your-org/your-site
+**Step 1 — Initialise the site as a Hugo Module (once per site).**
 
-# 2. Add the theme as a dependency
+```bash
+hugo mod init github.com/your-org/your-site
+```
+
+This creates a `go.mod` file in your site root. The path can be anything you control — it's just your site's module identity, separate from any GitHub repo you may or may not push to.
+
+{{% notice style="warning" title="Don't skip `hugo mod init`" %}}
+Going straight to `hugo mod get` without initialising first produces this confusing error, because Hugo falls back to looking for the theme as a directory under `themes/`:
+
+```text
+ERROR failed to load modules: module "github.com/splunk/hugo-theme-splunk-workshop"
+not found in "<your-site>/themes/github.com/splunk/hugo-theme-splunk-workshop";
+either add it as a Hugo Module or store it in "<your-site>/themes".
+```
+
+Fix: run `hugo mod init <your-module-path>` in the site root, then re-run `hugo mod get`.
+{{% /notice %}}
+
+**Step 2 — Add the theme as a dependency.**
+
+```bash
 hugo mod get github.com/splunk/hugo-theme-splunk-workshop
 ```
 
@@ -42,16 +60,10 @@ Then in `hugo.toml`:
     path = "github.com/splunk/hugo-theme-splunk-workshop"
 ```
 
-Pin to a release:
+Pin to a release (recommended for CI):
 
 ```bash
-hugo mod get github.com/splunk/hugo-theme-splunk-workshop@v0.2.0
-```
-
-Update later:
-
-```bash
-hugo mod get -u
+hugo mod get github.com/splunk/hugo-theme-splunk-workshop@v0.1.0
 ```
 {{< /tab >}}
 
@@ -99,6 +111,49 @@ theme = "hugo-theme-splunk-workshop"
 Use **Hugo Modules** unless you have a strong reason not to — the version pin makes upgrades and CI deterministic. Submodule is fine for personal sites; direct download is fine for quick prototypes.
 {{< /notice >}}
 
+## Upgrading
+
+Released versions are listed on the [GitHub releases page](https://github.com/splunk/hugo-theme-splunk-workshop/releases) — skim the release notes there before upgrading. Upgrade commands match the install method you picked above:
+
+{{< tabs groupid="install-method" >}}
+{{< tab "Hugo Module (recommended)" >}}
+
+```bash
+# Latest tag
+hugo mod get -u github.com/splunk/hugo-theme-splunk-workshop
+
+# Specific tag (also the rollback workflow)
+hugo mod get github.com/splunk/hugo-theme-splunk-workshop@v0.1.0
+```
+
+Commit the updated `go.mod` / `go.sum` so collaborators and CI build against the same version. See [Hugo Modules deep-dive](/docs/advanced/01-modules/) for `replace` directives and the override-without-forking pattern.
+
+{{< /tab >}}
+
+{{< tab "Git submodule" >}}
+
+```bash
+cd themes/hugo-theme-splunk-workshop
+git pull origin main           # or: git checkout v0.1.0 for a pinned tag
+cd ../..
+git add themes/hugo-theme-splunk-workshop
+git commit -m "Bump theme"
+```
+
+{{< /tab >}}
+
+{{< tab "Direct download" >}}
+
+```bash
+rm -rf themes/hugo-theme-splunk-workshop
+curl -L https://github.com/splunk/hugo-theme-splunk-workshop/archive/refs/heads/main.tar.gz \
+  | tar -xz -C themes/
+mv themes/hugo-theme-splunk-workshop-main themes/hugo-theme-splunk-workshop
+```
+
+{{< /tab >}}
+{{< /tabs >}}
+
 ## Minimal `hugo.toml`
 
 After installing the theme, this is the smallest config that produces a working site:
@@ -144,4 +199,15 @@ Install Hugo extended:
 - macOS: `brew install hugo`
 - Linux: download from [gohugo.io/installation](https://gohugo.io/installation/) (the package manager versions are often outdated and not the extended build)
 - Windows: `choco install hugo-extended`
+{{% /notice %}}
+
+{{% notice style="warning" title="module does not exist" %}}
+You're installing with Hugo Modules but skipped the one-time `hugo mod init` step. Run it once in your site root with any module path you control, then re-run `hugo mod get`:
+
+```bash
+hugo mod init github.com/your-org/your-site
+hugo mod get github.com/splunk/hugo-theme-splunk-workshop
+```
+
+If you can't (or don't want to) install Go, switch to the submodule install method instead.
 {{% /notice %}}
