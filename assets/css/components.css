@@ -797,7 +797,7 @@
   display: flex;
   gap: 1.25rem;
   padding: 0.6rem 1rem;
-  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
   font-family: var(--font-mono);
   font-size: 0.7rem;
   color: var(--color-ink-muted);

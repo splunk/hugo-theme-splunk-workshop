@@ -82,14 +82,19 @@ function buildModal() {
   root.setAttribute("role", "dialog");
   root.setAttribute("aria-modal", "true");
   root.setAttribute("aria-label", "Search");
+  /* Combobox pattern (WAI-ARIA 1.2): the input is the only Tab stop;
+     `aria-controls` points at the listbox; arrow keys move the
+     virtually-focused option via `aria-activedescendant`, set in
+     setActive() below. Screen readers announce option changes as
+     the user arrows through results. */
   root.innerHTML = `
     <div class="site-search__panel">
       <div class="site-search__input-row">
         <svg class="site-search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input class="site-search__input" type="search" placeholder="Search workshops…" aria-label="Search" autocomplete="off" spellcheck="false">
+        <input class="site-search__input" type="search" placeholder="Search workshops…" aria-label="Search" role="combobox" aria-controls="site-search-results" aria-autocomplete="list" aria-expanded="false" autocomplete="off" spellcheck="false">
         <kbd class="site-search__esc">esc</kbd>
       </div>
-      <ul class="site-search__results" role="listbox"></ul>
+      <ul class="site-search__results" id="site-search-results" role="listbox" aria-label="Search results"></ul>
       <p class="site-search__empty" hidden>No matches</p>
       <div class="site-search__footer">
         <span><kbd>&uarr;</kbd> <kbd>&darr;</kbd> navigate</span>
@@ -106,8 +111,12 @@ export function initSearch() {
   let activeIdx = -1;
   let scrollY = 0;
   let lastResults = [];
+  // Element that had focus before the modal opened — focus returns here on
+  // close so keyboard users land back on the trigger that opened the modal,
+  // not at the top of <body>.
+  let lastTrigger = null;
 
-  const open = () => {
+  const open = (trigger) => {
     if (!modal) {
       modal = buildModal();
       input   = modal.querySelector(".site-search__input");
@@ -118,8 +127,10 @@ export function initSearch() {
       input.addEventListener("keydown", onKey);
       modal.addEventListener("click", (e) => { if (e.target === modal) close(); });
     }
+    lastTrigger = trigger || document.activeElement;
     loadIndex();
     modal.classList.add("is-open");
+    input.setAttribute("aria-expanded", "true");
     // Scroll-lock the page while the modal is open. Use the body-position
     // technique rather than `documentElement.style.overflow = "hidden"`
     // because iOS Safari ignores the latter on the html element, which
@@ -135,19 +146,34 @@ export function initSearch() {
   const close = () => {
     if (!modal) return;
     modal.classList.remove("is-open");
+    input.setAttribute("aria-expanded", "false");
+    input.removeAttribute("aria-activedescendant");
     document.body.style.position = "";
     document.body.style.top = "";
     document.body.style.left = "";
     document.body.style.right = "";
     window.scrollTo(0, scrollY);
     activeIdx = -1;
+    if (lastTrigger && typeof lastTrigger.focus === "function") {
+      lastTrigger.focus();
+    }
+    lastTrigger = null;
   };
 
   const setActive = (i) => {
     const items = results.querySelectorAll(".site-search__result");
     activeIdx = Math.max(0, Math.min(i, items.length - 1));
-    items.forEach((el, idx) => el.classList.toggle("is-active", idx === activeIdx));
-    items[activeIdx]?.scrollIntoView({ block: "nearest" });
+    items.forEach((el, idx) => {
+      el.classList.toggle("is-active", idx === activeIdx);
+      el.setAttribute("aria-selected", idx === activeIdx ? "true" : "false");
+    });
+    const active = items[activeIdx];
+    if (active) {
+      input.setAttribute("aria-activedescendant", active.id);
+      active.scrollIntoView({ block: "nearest" });
+    } else {
+      input.removeAttribute("aria-activedescendant");
+    }
   };
 
   const onQuery = (q) => {
@@ -166,13 +192,17 @@ export function initSearch() {
     empty.hidden = true;
     results.innerHTML = lastResults.map((r, i) => `
       <li>
-        <a class="site-search__result ${i === 0 ? "is-active" : ""}" href="${r.url}" role="option">
+        <a class="site-search__result ${i === 0 ? "is-active" : ""}" href="${r.url}" id="site-search-opt-${i}" role="option" aria-selected="${i === 0 ? "true" : "false"}">
           <span class="site-search__result-title">${highlight(r.title, terms)}</span>
           ${r.section ? `<span class="site-search__result-section">${escapeHtml(r.section)}</span>` : ""}
           ${r.description ? `<span class="site-search__result-desc">${highlight(r.description, terms)}</span>` : ""}
         </a>
       </li>`).join("");
     activeIdx = 0;
+    // Sync aria-activedescendant after rendering so the first result is
+    // announced to screen readers as the virtually-focused option.
+    const first = results.querySelector(".site-search__result");
+    if (first) input.setAttribute("aria-activedescendant", first.id);
   };
 
   const onKey = (e) => {
@@ -184,12 +214,17 @@ export function initSearch() {
       const items = results.querySelectorAll(".site-search__result");
       const link = items[activeIdx];
       if (link) { window.location.href = link.href; }
+      return;
     }
+    // Trap Tab inside the input — combobox pattern keeps focus on input,
+    // arrow keys do option navigation. Without this, Tab leaves the modal
+    // and focus disappears behind the overlay.
+    if (e.key === "Tab") { e.preventDefault(); }
   };
 
   // Global triggers
   document.querySelectorAll("[data-search-trigger]").forEach(btn => {
-    btn.addEventListener("click", open);
+    btn.addEventListener("click", () => open(btn));
   });
   document.addEventListener("keydown", (e) => {
     if (e.target && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.isContentEditable)) return;

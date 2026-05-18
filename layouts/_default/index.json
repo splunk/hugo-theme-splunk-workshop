@@ -18,7 +18,7 @@
     "section"     $section
     "url"         .RelPermalink
     "tags"        (.Params.tags | default slice)
-    "summary"     (.Content | plainify | truncate 600 "")
+    "summary"     (.Content | plainify | truncate 4000 "")
   -}}
   {{- $idx = $idx | append $entry -}}
 {{- end -}}
