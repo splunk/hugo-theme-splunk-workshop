@@ -1,0 +1,45 @@
+{{- /*
+  Pager override shortcode.
+
+  Replaces the default auto-pager's prev/next destinations on this page.
+  Authors specify URLs and (optionally) labels in the markdown body; the
+  bottom pager partial reads these from .Page.Scratch and renders them
+  in place of the DFS-computed neighbours.
+
+  Args (any combination of; everything optional):
+    prev      = "/path/" or "https://..."  URL for the Previous button.
+    prevLabel = "..."                      Label for Previous. If omitted
+                                           and `prev` resolves to a local
+                                           page, the page's LinkTitle is
+                                           used; otherwise the URL.
+    next      = "..."                      Same shape as `prev`.
+    nextLabel = "..."
+
+  Only the side you provide is overridden — omit `prev` to leave the
+  Previous button auto-computed by DFS, override only `next`. Author
+  can place the shortcode anywhere in the body; the visual pager
+  always renders at the bottom of the page.
+
+  The shortcode itself emits no output; it only writes to Scratch.
+
+  Honored after `nopager: true` — a page with `nopager: true` in front
+  matter still renders no pager even if this shortcode is present.
+*/ -}}
+{{- $prevURL := .Get "prev" -}}
+{{- $nextURL := .Get "next" -}}
+
+{{- with $prevURL -}}
+  {{- $label := $.Get "prevLabel" -}}
+  {{- if not $label -}}
+    {{- with $.Site.GetPage . -}}{{- $label = .LinkTitle -}}{{- end -}}
+  {{- end -}}
+  {{- $.Page.Scratch.Set "pager_override_prev" (dict "url" . "title" ($label | default .)) -}}
+{{- end -}}
+
+{{- with $nextURL -}}
+  {{- $label := $.Get "nextLabel" -}}
+  {{- if not $label -}}
+    {{- with $.Site.GetPage . -}}{{- $label = .LinkTitle -}}{{- end -}}
+  {{- end -}}
+  {{- $.Page.Scratch.Set "pager_override_next" (dict "url" . "title" ($label | default .)) -}}
+{{- end -}}

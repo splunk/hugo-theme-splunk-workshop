@@ -63,6 +63,44 @@ A horizontal divider with a centered gradient dot. Section break for long pages 
 
 No args. Pure decoration; doesn't affect document outline.
 
+### `pager`
+
+Override the bottom prev/next pager's destinations on this page. The default pager walks the page tree via DFS; this shortcode lets a branching page (decision point, alternate path, "go elsewhere from here") send the reader to a different next step than the linear order suggests.
+
+Place the shortcode anywhere in the markdown body — the pager always renders at the bottom of the page, only the values change.
+
+```markdown
+{{</* pager next="/docs/advanced/" nextLabel="Jump straight to the advanced track" */>}}
+```
+
+Args (every one optional; supply only the side(s) you want to override):
+
+- `prev` — URL for the Previous button (relative `/path/` or absolute `https://...`).
+- `prevLabel` — Label for Previous. If omitted and `prev` resolves to a local page, that page's `linkTitle` is used.
+- `next` — same shape as `prev`.
+- `nextLabel` — same shape as `prevLabel`.
+
+Sides you don't override remain auto-computed by DFS. So overriding only `next` keeps Previous pointing at the natural prior page; overriding both replaces the whole pager.
+
+Honored after `nopager: true` — a page with `nopager: true` in front matter still renders no pager even if this shortcode is present.
+
+Typical branching pattern:
+
+```markdown
++++
+title = "Pick your install method"
++++
+
+Choose the path that matches your environment, then continue.
+
+- **Splunk Cloud** — managed, no agents to install.
+- **Splunk Enterprise** — self-hosted, full control of the cluster.
+
+{{</* pager next="/workshops/cloud-track/01-prerequisites/" nextLabel="Continue with Splunk Cloud" */>}}
+```
+
+For a "two-way branch" page, render two `card` shortcodes inline (one per path) and use `pager` to pick a default Next — most readers click a card, the rest fall through to the pager destination.
+
 ## Templating helpers
 
 ### `include`
