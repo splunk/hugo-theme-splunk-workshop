@@ -1,8 +1,14 @@
-{{- /* Right-rail "On this page" — Hugo's built-in TOC, with scroll-spy hook. */ -}}
-{{- $toc := .TableOfContents -}}
-{{- if $toc -}}
+{{- /* Right-rail "On this page" — Hugo's built-in TOC, with scroll-spy hook.
+
+       Use .Fragments.Headings (not .TableOfContents) for the truthiness
+       check: .TableOfContents returns `<nav id="TableOfContents"></nav>`
+       — a non-empty wrapper string — even when the page has no headings,
+       which would otherwise render the "On this page" label with no
+       items below it. .Fragments.Headings is empty when there's nothing
+       to list, so the check actually means what it reads. */ -}}
+{{- if .Fragments.Headings -}}
 <aside class="toc" data-toc aria-label="On this page">
   <p class="toc__label">{{ i18n "onThisPage" }}</p>
-  {{ $toc | safeHTML }}
+  {{ .TableOfContents | safeHTML }}
 </aside>
 {{- end -}}

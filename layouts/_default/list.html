@@ -3,7 +3,7 @@
 {{- $workshop := partial "workshop-root.html" . -}}
 {{- $hasSidebar := and $p.showSidebar $workshop -}}
 {{- $showToc := cond (isset .Params "showtoc") .Params.showToc $p.showToc -}}
-{{- $hasToc := and $showToc .TableOfContents -}}
+{{- $hasToc := and $showToc .Fragments.Headings -}}
 
 {{- /* Two rendering modes:
        - Hub mode: the page has no workshop root (language home or category
