@@ -99,7 +99,7 @@ export function initCopyCode() {
           setTimeout(() => {
             pill.textContent = "Copy";
             pill.classList.remove("is-copied");
-          }, 1400);
+          }, 1600);
         } catch {
           pill.textContent = "⌘C";
         }

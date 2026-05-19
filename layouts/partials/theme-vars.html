@@ -9,11 +9,12 @@
      Splunk's own CDN (same files help.splunk.com serves). Opt in by setting
      `splunkDataSansPro = true` in your site's [params] and pointing
      fontDisplay / fontBody at "'Splunk Data Sans Pro', ...". */
-  @font-face {
-    font-family: 'Splunk Data Sans Pro';
-    src: url('https://assets.portal.heretto.com/splunk/26.02.26/SplunkDataSansPro_Lt.ttf') format('truetype');
-    font-weight: 300; font-style: normal; font-display: swap;
-  }
+  {{- /* Only the weights the CSS actually requests are declared. CSS rules
+         use 400 / 450 / 500 / 600 / 650 / 700 / 800; the browser maps the
+         in-between values (450, 600, 650) to the nearest declared face
+         via standard font-weight matching. Lt (300) and Blk (900) were
+         loaded historically but never referenced; dropped to keep the
+         inline <style> tight. */ -}}
   @font-face {
     font-family: 'Splunk Data Sans Pro';
     src: url('https://assets.portal.heretto.com/splunk/26.02.26/SplunkDataSansPro_Rg.ttf') format('truetype');
@@ -33,11 +34,6 @@
     font-family: 'Splunk Data Sans Pro';
     src: url('https://assets.portal.heretto.com/splunk/26.02.26/SplunkDataSansPro_XBd.ttf') format('truetype');
     font-weight: 800; font-style: normal; font-display: swap;
-  }
-  @font-face {
-    font-family: 'Splunk Data Sans Pro';
-    src: url('https://assets.portal.heretto.com/splunk/26.02.26/SplunkDataSansPro_Blk.ttf') format('truetype');
-    font-weight: 900; font-style: normal; font-display: swap;
   }
 </style>
 {{- end -}}

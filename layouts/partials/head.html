@@ -25,6 +25,35 @@
 <link rel="stylesheet" href="{{ . | safeURL }}">
 {{- end }}
 
+{{- /* LCP-font preloads. The hero h1 is the largest contentful element on
+       every page; paint-blocking on Bold-weight font fetch is the single
+       biggest opportunity to clean up first-paint. Two paths gated by the
+       same params that activate the underlying @font-face / @import. */ -}}
+
+{{- /* Path 1: Google Fonts (Inter Bold, latin subset). URL is versioned
+       by Google (/s/inter/v{N}/...). When Google rotates the version the
+       file still serves but the @font-face fetch inside the Google Fonts
+       stylesheet will request a different URL and this preload becomes a
+       cache miss. Refresh by fetching the live stylesheet at $p.fontUrl
+       and copying the woff2 URL whose unicode-range covers U+0000-00FF. */ -}}
+{{- if and $p.fontUrl (in $p.fontUrl "Inter") }}
+<link rel="preload"
+      href="https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff2"
+      as="font" type="font/woff2" crossorigin>
+{{- end }}
+
+{{- /* Path 2: Splunk's Heretto CDN (Splunk Data Sans Pro Bold TTF). No
+       preconnect today, no shared-CDN cache benefit, and TTF is ~30%
+       heavier than woff2 — biggest preload ROI in the theme. URL must
+       stay in sync with the Bold weight @font-face in theme-vars.html
+       (search SplunkDataSansPro_Bd). */ -}}
+{{- if $p.splunkDataSansPro }}
+<link rel="preconnect" href="https://assets.portal.heretto.com" crossorigin>
+<link rel="preload"
+      href="https://assets.portal.heretto.com/splunk/26.02.26/SplunkDataSansPro_Bd.ttf"
+      as="font" type="font/ttf" crossorigin>
+{{- end }}
+
 {{- /* Theme tokens (Hugo params → CSS custom properties) */ -}}
 {{ partial "theme-vars.html" . }}
 
