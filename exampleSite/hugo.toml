@@ -52,7 +52,7 @@ theme   = "hugo-theme-splunk-workshop"
   copyright       = "&copy; {year} Splunk LLC All rights reserved."   # `{year}` expands to the current year
   logoLight       = "images/splunk-logo-black.png"
   logoDark        = "images/splunk-logo-white.png"
-  logoHeight      = "34"
+  logoHeight      = "40"
   favicon         = "favicon.svg"
 
   # ---- Hero background (the "light trails" gradient bloom) ----
