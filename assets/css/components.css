@@ -250,7 +250,6 @@
   --card-sweep: 100%;
   transform: translateY(-3px);
   border-color: transparent;
-  text-decoration: none;
   /* Dual-layer magenta-tinted shadow — the lift feels intentional rather
      than generic translateY+grey-shadow that ships with every Hugo theme. */
   box-shadow:
@@ -406,7 +405,6 @@
 }
 .btn-inline:hover {
   color: var(--color-ink);
-  text-decoration: none;
   transform: translateY(-1px);
   background: var(--color-surface);
   border-color: var(--color-border-strong);
@@ -758,7 +756,6 @@
   background: var(--color-surface);
   border-left-color: var(--color-accent);
   color: var(--color-ink);
-  text-decoration: none;
 }
 .site-search__result-title {
   font-family: var(--font-display);

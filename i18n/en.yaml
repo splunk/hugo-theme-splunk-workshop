@@ -2,14 +2,10 @@
   translation: "Home"
 - id: workshops
   translation: "Workshops"
-- id: about
-  translation: "About"
 - id: previous
   translation: "Previous"
 - id: next
   translation: "Next"
-- id: allWorkshops
-  translation: "All workshops"
 - id: onThisPage
   translation: "On this page"
 - id: skipToContent
@@ -33,20 +29,12 @@
   translation:
     one: "{{ .Count }} page"
     other: "{{ .Count }} pages"
-- id: explore
-  translation: "Explore"
-- id: connect
-  translation: "Connect"
-- id: presenter
-  translation: "Presenter"
 - id: copyCode
   translation: "Copy"
 - id: copied
   translation: "Copied"
 - id: chapter
   translation: "Chapter"
-- id: foundation
-  translation: "Foundation"
 - id: notFoundTitle
   translation: "Not found."
 - id: notFoundLead
@@ -99,10 +87,6 @@
   translation: "Expand"
 - id: details
   translation: "Details"
-- id: whatYouLearn
-  translation: "What you'll learn"
-- id: beforeYouStart
-  translation: "Before you start"
 - id: presenterNote
   translation: "Presenter Note"
 - id: lastModified

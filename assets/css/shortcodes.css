@@ -848,7 +848,6 @@ a.shortcode-card:hover {
   box-shadow:
     0 10px 26px color-mix(in oklab, var(--card-accent) 18%, transparent),
     0 2px 8px color-mix(in oklab, var(--card-accent) 10%, transparent);
-  text-decoration: none;
   color: inherit;
 }
 a.shortcode-card:hover .shortcode-card__title { color: var(--color-accent-text); }
@@ -940,18 +939,6 @@ a.shortcode-card:hover .shortcode-card__title { color: var(--color-accent-text);
   .shortcode-card__media { aspect-ratio: 21 / 9; }
 }
 
-.cards--shortcode {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
-  gap: 1.25rem;
-  margin: 2rem 0;
-}
-/* When cards carry featured images, prefer a 3-up grid at typical viewport
-   widths so the banner images get visual weight. */
-.cards--shortcode.cards--with-images {
-  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
-}
-
 /* Attachments / resources list */
 .attachments {
   margin: 1.5rem 0;
@@ -999,6 +986,11 @@ a.shortcode-card:hover .shortcode-card__title { color: var(--color-accent-text);
   grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
   gap: 1rem;
   margin: 2rem 0;
+}
+/* When cards carry featured images, prefer a wider tile so the banner
+   images get visual weight (3-up at typical desktop widths). */
+.cards--shortcode.cards--with-images {
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
 }
 .cards--shortcode .shortcode-card { margin: 0; height: 100%; }
 

@@ -560,7 +560,6 @@
   color: #FFFFFF;
   background: rgba(255, 255, 255, 0.06);
   transform: translateY(-1px);
-  text-decoration: none;
 }
 .site-footer__social svg { width: 1.05rem; height: 1.05rem; }
 
