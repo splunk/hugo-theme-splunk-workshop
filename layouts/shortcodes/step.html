@@ -26,7 +26,13 @@
 <div class="step__num">{{ $num }}</div>
 <div>
 <header class="step__head">
-<h3 class="step__title">{{ $title }}</h3>
+{{- /* Rendered as <p>, not <h3>: a step is a numbered subdivision of
+       an exercise (or workshop section), not a peer heading of the
+       surrounding prose. The .step__num circle + accent border give
+       enough visual weight on their own; semantic heading status is
+       unnecessary and would clutter both the page outline and the
+       right-rail TOC. */ -}}
+<p class="step__title">{{ $title }}</p>
 {{- with $time }}<span class="step__time">{{ . }}</span>{{ end }}
 </header>
 <div class="step__body">{{ $body }}</div>

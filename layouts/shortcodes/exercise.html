@@ -10,7 +10,13 @@
 {{- .Page.Scratch.Set "step_counter" 0 -}}
 <section class="exercise">
   <p class="exercise__label">{{ i18n "exercise" }}</p>
-  <h3 class="exercise__title">{{ $title }}</h3>
+  {{- /* Rendered as <p>, not <h3>, on purpose: exercises don't claim a
+         heading level in the page outline. The surrounding prose
+         headings define the structure; an exercise is a labelled
+         block within that structure, not a peer of it. Avoids the
+         heading-order violations axe-core flags when {{< exercise >}}
+         sits inside an h3 section. */ -}}
+  <p class="exercise__title">{{ $title }}</p>
   <div class="exercise__body">
     {{ .Inner | .Page.RenderString }}
   </div>
