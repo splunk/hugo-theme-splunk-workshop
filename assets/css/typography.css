@@ -127,18 +127,78 @@ small { font-size: var(--fs-sm); }
   font-size: inherit;
 }
 
-/* ---- Blockquote ---- */
+/* ---- Blockquote — modern speech-bubble pull-quote.
+       Plain `> text` markdown renders as a tinted card with paired
+       decorative curly quotes and a small bubble tail. For semantic
+       callouts (tip / note / warning / etc.) authors should use GitHub
+       Alerts syntax `> [!TIP]` — those route through callout-render.html,
+       not this rule. See exampleSite/content/docs/authoring/04-markdown.md. */
 blockquote {
-  border-left: 3px solid var(--color-accent);
-  padding: 0.5rem 0 0.5rem 1.5rem;
+  position: relative;
+  margin: 2rem 0 2.5rem;
+  padding: 1.4rem 3.25rem 1.4rem 3.5rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
   font-family: var(--font-display);
   font-size: var(--fs-lg);
   font-style: italic;
   font-weight: 400;
-  color: var(--color-ink-muted);
+  line-height: 1.55;
+  color: var(--color-ink);
+  box-shadow: 0 1px 3px color-mix(in oklab, var(--color-ink) 4%, transparent);
 }
-blockquote p:first-child::before { content: "\201C"; margin-right: 0.1em; color: var(--color-accent-text); }
-blockquote p:last-child::after  { content: "\201D"; margin-left: 0.1em;  color: var(--color-accent-text); }
+/* Opening curly quote — top-left, upright display type so it reads as
+   typographic ornament, not as a glyph in the prose. */
+blockquote::before {
+  content: "\201C";
+  position: absolute;
+  top: 0.1rem;
+  left: 0.85rem;
+  font-family: var(--font-display);
+  font-size: 4rem;
+  line-height: 1;
+  font-style: normal;
+  color: var(--color-accent-text);
+  opacity: 0.55;
+}
+/* Closing curly quote — bottom-right, mirroring the opening mark for
+   typographic balance. Absolutely positioned against the blockquote
+   (the nearest positioned ancestor), so paragraph-internal flow is
+   undisturbed. blockquote::after is taken by the bubble tail; mounting
+   the closing mark on the last paragraph's ::after lets both coexist. */
+blockquote p:last-child::after {
+  content: "\201D";
+  position: absolute;
+  right: 0.85rem;
+  bottom: -0.5rem;
+  font-family: var(--font-display);
+  font-size: 4rem;
+  line-height: 1;
+  font-style: normal;
+  color: var(--color-accent-text);
+  opacity: 0.55;
+}
+/* Speech-bubble tail — rotated square at the bottom-left, painted in the
+   bubble's surface colour with the border continuing across two of its
+   sides so the seam disappears against the card. */
+blockquote::after {
+  content: "";
+  position: absolute;
+  bottom: -0.6rem;
+  left: 2rem;
+  width: 1rem;
+  height: 1rem;
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  transform: rotate(45deg);
+}
+/* Suppress the original per-paragraph opening glyph (now handled at
+   blockquote level) and tighten paragraph margins inside the bubble. */
+blockquote p:first-child::before { content: none; }
+blockquote p:first-child { margin-top: 0; }
+blockquote p:last-child { margin-bottom: 0; }
 
 /* ---- Horizontal rule — gradient version ---- */
 hr {
