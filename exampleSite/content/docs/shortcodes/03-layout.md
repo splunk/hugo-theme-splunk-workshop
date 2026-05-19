@@ -399,10 +399,43 @@ A standalone `card` outside a `cards` container renders as a single full-width c
 
 ## Indicators
 
+Two inline-pill shortcodes for surfacing workshop metadata anywhere in the body. They render as `<span class="indicator">` so they sit cleanly mid-prose.
+
 {{< time "20 min" >}} &nbsp; {{< difficulty 3 >}}
 
 ```markdown
 {{</* time "20 min" */>}} &nbsp; {{</* difficulty 3 */>}}
 ```
 
-Useful in workshop meta rows or as inline annotations. `difficulty` accepts 1–5.
+### `time`
+
+Clock icon + free-form duration label. Takes a single positional argument — any string.
+
+```markdown
+{{</* time "20 min" */>}}
+{{</* time "1 hour" */>}}
+{{</* time "About a coffee" */>}}
+```
+
+### `difficulty`
+
+Five-dot meter + labelled difficulty band. Takes either a positional integer or a `level=` named arg, range 1–5:
+
+| Value | Label |
+| --- | --- |
+| 1 | Beginner |
+| 2 | Easy |
+| 3 | Intermediate |
+| 4 | Advanced |
+| 5 | Expert |
+
+```markdown
+{{</* difficulty 3 */>}}
+{{</* difficulty level=4 */>}}
+```
+
+Out-of-range values cap to 1 or 5; missing values default to 1 (Beginner). The dot meter is `aria-label`-described for screen readers.
+
+### When to reach for indicators vs front matter
+
+If the value is **about the whole page** (the workshop's total duration / overall difficulty), put it in front matter — the workshop-meta partial renders it in the page header automatically. Use the shortcodes mid-prose only when the indicator describes a *section* of the page (a single exercise's duration, a per-step difficulty), not the page as a whole.
