@@ -33,7 +33,7 @@
           {{ range $i, $page := $items }}
             <a class="card" href="{{ .RelPermalink }}">
               <span class="card__num">{{ printf "%02d" (add $i 1) }}</span>
-              <h2 class="card__title">{{ .LinkTitle }}</h2>
+              <h3 class="card__title">{{ .LinkTitle }}</h3>
               {{ with .Description }}<p class="card__desc">{{ . }}</p>{{ end }}
               <div class="card__meta">
                 {{ with .Params.duration }}<span class="card__meta-item">{{ . }}</span>{{ end }}

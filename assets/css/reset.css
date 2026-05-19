@@ -46,27 +46,37 @@ button {
 }
 
 a {
-  color: var(--color-accent);
+  /* `--color-accent-text` (Magenta 60 in light mode, Magenta 30 in dark)
+     is the AA-contrast variant of the brand pink — 6.4:1 against paper-light,
+     8.6:1 against paper-dark. The token system's other accent var
+     (`--color-accent` = Magenta 50 #FF007F) is reserved for decorative use
+     (gradients, large display text, icons, borders) where 4.39:1 is fine. */
+  color: var(--color-accent-text);
   text-decoration: none;
   transition: color var(--t-fast) var(--ease);
 }
-/* Hover keeps the brand pink #FF007F — Splunk's official magenta. The dark
-   variant token is reserved for borders/shadows where a slightly deeper shade
-   improves contrast; never used on text. No underline on hover — modern
-   theme convention; cards, buttons, and tree rows are their own affordance. */
-a:hover { color: var(--color-accent); }
+/* No colour change on hover: the rest state is already the brand pink and
+   passes WCAG AA in both modes. A hover colour shift would either fail AA
+   transiently (brightening to Magenta 50) or trade brand identity for ink
+   contrast. No underline on hover — modern theme convention; cards, buttons,
+   and tree rows are their own affordance. */
+a:hover { color: var(--color-accent-text); }
 
 ::selection { background: var(--color-accent); color: #fff; }
 
 /* ------ Focus rings — keyboard-only via :focus-visible ------ */
-/* Single rule for every focusable element: 2px ring, 3px offset, accent
-   colour. Components that need a different border-radius set it on their
-   own selector — the focus ring just inherits via border-radius: inherit
-   below. */
+/* Ring uses `currentColor` so it contrasts every surface — the previous
+   `--color-accent` version disappeared on magenta surfaces (CTA button,
+   terminal cursor, magenta-tinted card hover). The `box-shadow` halo in
+   `--color-paper` adds a guaranteed-contrast separation between the ring
+   and any same-colour background it might sit on. WCAG 2.2 SC 2.4.13.
+   Components that need a different border-radius set it on their own
+   selector — the ring inherits via `border-radius: inherit` below. */
 :focus { outline: none; }
 :focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid currentColor;
   outline-offset: 3px;
+  box-shadow: 0 0 0 4px var(--color-paper);
   border-radius: inherit;
 }
 
