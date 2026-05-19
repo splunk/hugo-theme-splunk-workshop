@@ -229,3 +229,29 @@ Args:
 - positional 0 — alias of `color`
 
 Accepts markdown in the body, so you can combine: `{{</* textcolor "#FF007F" */>}}**critical**{{</* /textcolor */>}}`.
+
+## Typography
+
+### `lead`
+
+A larger, italic intro paragraph for the top of a page. Drop it directly under the page H1 — it bridges the title and the rest of the prose, the way the eyebrow + lead pair works on landing pages.
+
+```markdown
++++
+title = "Layout helpers"
++++
+
+{{</* lead */>}}
+The visual building blocks for non-prose content — anything you'd want to
+break into columns, a labeled chip, or a visually distinct block.
+{{</* /lead */>}}
+
+## First real section
+…
+```
+
+Renders the inner content as a `<p class="shortcode-lead">` with display typography, lighter weight, and a max-width that constrains the line length. Accepts markdown in the body (so inline links, bold, code spans all work).
+
+Used at the top of every page in this docs section — open any source file under `/docs/shortcodes/` for live examples.
+
+No args; just opens and closes around the body text. One per page is the convention.
