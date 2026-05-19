@@ -36,9 +36,9 @@
 
     {{ .Content }}
 
-    {{ partial "page-meta-footer.html" . }}
-
     {{ partial "pager.html" . }}
+
+    {{ partial "page-meta-footer.html" . }}
 
     {{- /* Edit-on-GitHub */ -}}
     {{ with .Site.Params.editURL }}{{ if $.File }}

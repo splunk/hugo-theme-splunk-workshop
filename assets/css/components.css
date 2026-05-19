@@ -521,7 +521,7 @@
   margin-right: 0.05rem;
 }
 
-/* ---- Page-meta footer (Last Modified, shown above the pager) ---- */
+/* ---- Page-meta footer (Last Modified, shown below the pager) ---- */
 .page-meta-footer {
   display: inline-flex;
   align-items: center;
