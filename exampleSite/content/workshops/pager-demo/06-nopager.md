@@ -46,4 +46,4 @@ If the page IS part of a linear sequence — even if it's a hands-on exercise in
 - Doesn't hide the page from the sidebar (that's `hidden: true`).
 - Doesn't remove it from the search index (also `hidden: true`).
 - Doesn't break direct links — the page renders at its URL like any other.
-- Doesn't affect the pager-override shortcode — a `{{< pager next="…" >}}` on a different page can still target this one explicitly.
+- Doesn't affect the pager-override shortcode — a `{{</* pager next="…" */>}}` on a different page can still target this one explicitly.
