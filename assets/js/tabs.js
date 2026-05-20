@@ -1,4 +1,11 @@
 // Tabs — handles button clicks, ARIA, keyboard nav, and groupid sync.
+//
+// Authoring contract for `data-tabs-group`: when two tab sets across pages
+// share a groupid, their tab LABELS must match exactly for sync to work.
+// If page A has "macOS" and page B has "Mac OS", a reader who picked "macOS"
+// on page A will silently land on tab index 0 on page B (because the saved
+// label doesn't match). Use the same labels across pages, or use distinct
+// groupids when the sets genuinely differ.
 
 const KEY = "splunk-workshop-tabs";
 function loadSelection() {

@@ -44,7 +44,7 @@
   backdrop-filter: saturate(180%) blur(12px);
   -webkit-backdrop-filter: saturate(180%) blur(12px);
   border-bottom: 1px solid var(--color-border);
-  z-index: 50;
+  z-index: var(--z-header);
 }
 
 .site-header__inner {
@@ -231,7 +231,7 @@
   left: 0; right: 0;
   height: 2px;
   background: transparent;
-  z-index: 49;
+  z-index: var(--z-meta-bar);
 }
 .progress__bar {
   height: 100%;
@@ -757,7 +757,7 @@
     padding: 1.5rem;
     transform: translateX(-100%);
     transition: transform var(--t-slow) var(--ease);
-    z-index: 40;
+    z-index: var(--z-mobile-sidebar);
   }
   .sidebar.is-open { transform: translateX(0); }
   .menu-btn { display: inline-flex; margin-left: 0.4rem; }

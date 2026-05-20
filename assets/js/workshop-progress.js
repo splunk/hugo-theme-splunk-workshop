@@ -63,7 +63,13 @@ export function initWorkshopProgress() {
     repaintCompleteness();
   }, DWELL_MS);
 
-  // If the attendee leaves before the dwell completes, cancel — accidental
-  // clicks shouldn't pollute the visited set.
-  window.addEventListener("beforeunload", () => window.clearTimeout(handle), { once: true });
+  // Cancel the dwell timer if the attendee leaves before it completes —
+  // accidental clicks shouldn't pollute the visited set. `pagehide` fires
+  // reliably on iOS + bfcache where `beforeunload` doesn't; pair it with
+  // `visibilitychange` so tab-switches also cancel.
+  const cancel = () => window.clearTimeout(handle);
+  window.addEventListener("pagehide", cancel, { once: true });
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") cancel();
+  }, { once: true });
 }

@@ -86,26 +86,45 @@
   <script type="module">
     import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.esm.min.mjs";
     const themeFor = () => document.documentElement.dataset.theme === "dark" ? "dark" : "default";
-    const init = () => mermaid.initialize({ startOnLoad: false, theme: themeFor(), securityLevel: "loose" });
-    init();
-    mermaid.run({ querySelector: ".mermaid" });
-    // Re-render diagrams when the user toggles light/dark.
-    new MutationObserver(async () => {
-      init();
-      // Mermaid mutates each .mermaid node and stamps `data-processed`; reset to re-run.
-      document.querySelectorAll(".mermaid[data-processed]").forEach(el => {
-        const src = el.getAttribute("data-mermaid-source") || el.textContent;
-        el.removeAttribute("data-processed");
-        el.innerHTML = src;
-        if (!el.getAttribute("data-mermaid-source")) el.setAttribute("data-mermaid-source", src);
-      });
-      await mermaid.run({ querySelector: ".mermaid" });
-    }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-    // Stash original sources for re-render.
+    // securityLevel "strict" blocks HTML labels and click handlers in diagrams.
+    // Workshops occasionally embed Mermaid from un-reviewed contributors; strict
+    // mode removes the XSS-adjacent surface. If you need clickable diagrams or
+    // raw-HTML labels, downgrade per-site rather than re-enabling it globally.
+    const init = () => mermaid.initialize({ startOnLoad: false, theme: themeFor(), securityLevel: "strict" });
+
+    // Stash the original mermaid source BEFORE the first mermaid.run() —
+    // mermaid mutates each .mermaid element's textContent into rendered
+    // SVG asynchronously, so reading textContent any time after run()
+    // is fired races against the mutation. Without this pre-stash, theme
+    // toggling reads `data-mermaid-source` containing SVG instead of the
+    // original diagram syntax → mermaid throws "syntax error in text".
     document.querySelectorAll(".mermaid").forEach(el => {
       if (!el.getAttribute("data-mermaid-source")) {
         el.setAttribute("data-mermaid-source", el.textContent.trim());
       }
     });
+
+    init();
+    mermaid.run({ querySelector: ".mermaid" });
+    // Re-render diagrams when the user toggles light/dark. Debounce the
+    // callback so a rapid light→dark→light flip doesn't race the async
+    // mermaid.run() and leave a diagram in the stale theme. Disconnect
+    // on pagehide so the observer doesn't outlive the page in bfcache.
+    let rerunTimer = null;
+    const observer = new MutationObserver(() => {
+      clearTimeout(rerunTimer);
+      rerunTimer = setTimeout(async () => {
+        init();
+        document.querySelectorAll(".mermaid[data-processed]").forEach(el => {
+          const src = el.getAttribute("data-mermaid-source");
+          if (!src) return;
+          el.removeAttribute("data-processed");
+          el.innerHTML = src;
+        });
+        await mermaid.run({ querySelector: ".mermaid" });
+      }, 60);
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    window.addEventListener("pagehide", () => observer.disconnect(), { once: true });
   </script>
 {{ end }}

@@ -198,12 +198,13 @@
   gap: 1.25rem;
   margin: 3rem 0;
 }
-/* @property registration lets background-size interpolate via a typed
-   custom property — the top-edge gradient sweep on .card:hover. Browsers
-   without @property support skip the sweep; everything else stays. */
+/* @property registration lets width interpolate via a typed custom
+   property — the top-edge gradient sweep on .shortcode-card:hover.
+   `inherits: true` so `.shortcode-card::before` can read the live value
+   off the parent (it can't define its own :hover). */
 @property --card-sweep {
   syntax: '<percentage>';
-  inherits: false;
+  inherits: true;
   initial-value: 0%;
 }
 
@@ -212,15 +213,12 @@
   display: flex;
   flex-direction: column;
   padding: 1.75rem 1.75rem 1.5rem;
-  /* Layered background: top-edge accent stripe (animated by --card-sweep) +
-     the paper fill. Together they give the card its signature hover stripe. */
-  background:
-    linear-gradient(90deg, var(--color-accent), var(--color-accent2)) 0 0 / var(--card-sweep) 2px no-repeat,
-    var(--color-paper);
+  /* Hover ring effect: ::before paints the gradient, ::after masks it
+     with paper inset 1px — only the 1px edge shows through. See below. */
+  background: var(--color-paper);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   transition:
-    --card-sweep 380ms var(--ease),
     transform 280ms var(--ease),
     border-color var(--t-base) var(--ease),
     box-shadow 280ms var(--ease);
@@ -247,7 +245,6 @@
   z-index: -1;
 }
 .card:hover {
-  --card-sweep: 100%;
   transform: translateY(-3px);
   border-color: transparent;
   /* Dual-layer magenta-tinted shadow — the lift feels intentional rather
@@ -683,7 +680,7 @@
   background: color-mix(in oklab, var(--color-ink) 60%, transparent);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  z-index: 80;
+  z-index: var(--z-modal);
   animation: fadeIn var(--t-fast) var(--ease);
 }
 .site-search.is-open { display: flex; }
@@ -816,7 +813,7 @@
   display: none;
   align-items: center;
   justify-content: center;
-  z-index: 100;
+  z-index: var(--z-modal);
   padding: 2rem;
   cursor: zoom-out;
   opacity: 0;

@@ -17,19 +17,19 @@ enableGitInfo = true
 # See: exampleSite/content/docs/advanced/07-multilingual.md for the full
 # walkthrough — directory layout, per-language i18n strings, hreflang, etc.
 #
-# defaultContentLanguageInSubdir = true
-# [languages]
-#   [languages.en]
-#     label      = "English"
-#     locale     = "en"
-#     weight     = 1
-#     contentDir = "content/en"
-#   [languages.ja]
-#     label          = "日本語"
-#     locale         = "ja"
-#     weight         = 2
-#     hasCJKLanguage = true
-#     contentDir     = "content/ja"
+defaultContentLanguageInSubdir = true
+[languages]
+  [languages.en]
+    label      = "English"
+    locale     = "en"
+    weight     = 1
+    contentDir = "content/en"
+  [languages.ja]
+    label          = "日本語"
+    locale         = "ja"
+    weight         = 2
+    hasCJKLanguage = true
+    contentDir     = "content/ja"
 
 # Markup configuration — Goldmark with attributes & raw HTML enabled for rich content
 [markup]

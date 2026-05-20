@@ -62,6 +62,18 @@ a {
    and tree rows are their own affordance. */
 a:hover { color: var(--color-accent-text); }
 
+/* WCAG 1.4.1 — inline prose links can't be distinguishable by colour alone.
+   Underline anchors inside prose containers (paragraphs, list items, dd)
+   that DON'T carry a class — markdown-emitted links have no class, while
+   component chrome (.btn, .card, .shortcode-card, .attachments__item a)
+   does. Cards, buttons, and tree rows derive their interactivity from
+   their container, not from a text underline. */
+.content :is(p, li, dd) > a:not([class]) {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
 ::selection { background: var(--color-accent); color: #fff; }
 
 /* ------ Focus rings — keyboard-only via :focus-visible ------ */
@@ -95,7 +107,7 @@ a:hover { color: var(--color-accent-text); }
   text-decoration: none !important;
   transform: translateY(-200%);
   transition: transform var(--t-fast) var(--ease);
-  z-index: 100;
+  z-index: var(--z-skip);
 }
 .skip-link:focus {
   transform: translateY(0);

@@ -1,6 +1,15 @@
 {{- /*
   Keyboard key — accepts one or more keys joined by + or ,.
-  Usage: {{< kbd "Cmd+Shift+P" >}} or {{< kbd "Ctrl" "K" >}}
+
+  Two calling patterns:
+    {{< kbd "Cmd+Shift+P" >}}        // single combo string
+    {{< kbd "Ctrl" "K" >}}           // positional args
+    {{< kbd "Ctrl" "Alt" "Del" >}}   // up to 6 positional args
+
+  Six is an arbitrary cap on the positional form — increase by widening
+  the `seq 0 5` range below, but real-world combos rarely exceed three
+  modifiers. Hugo template language has no while-loop, hence the fixed
+  upper bound.
 */ -}}
 {{- $raw := .Get 0 -}}
 {{- if not $raw -}}

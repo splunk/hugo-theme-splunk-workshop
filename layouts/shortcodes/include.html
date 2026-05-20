@@ -10,8 +10,14 @@
   {{- $html := .RenderShortcodes -}}
   {{- $rendered := $html | $.Page.RenderString -}}
   {{- if $hide -}}
-    {{- /* crude strip of first <h1>...</h1> */ -}}
-    {{- $rendered = replaceRE `(?s)^(?:\s*)<h1[^>]*>.*?</h1>` "" ($rendered | string) -}}
+    {{- /* Split at the first </h1> and discard everything up to and including
+           it. Robust to nested HTML inside the heading (Goldmark won't generate
+           a literal "</h1>" inside an h1, and code blocks render entity-escaped
+           — `&lt;/h1&gt;` — so a fake `</h1>` is implausible). */ -}}
+    {{- $parts := split ($rendered | string) "</h1>" -}}
+    {{- if gt (len $parts) 1 -}}
+      {{- $rendered = strings.Join (after 1 $parts) "</h1>" -}}
+    {{- end -}}
   {{- end -}}
   {{ $rendered | safeHTML }}
 {{- else -}}

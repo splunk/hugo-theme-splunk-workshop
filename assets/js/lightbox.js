@@ -1,5 +1,7 @@
 // Click-to-zoom for figure images.
 
+import { lock, unlock } from "./scroll-lock.js";
+
 export function initLightbox() {
   let box = document.querySelector(".lightbox");
   if (!box) {
@@ -9,6 +11,7 @@ export function initLightbox() {
     document.body.appendChild(box);
   }
   const img = box.querySelector("img");
+  let isOpen = false;
 
   document.querySelectorAll(".figure__inner img, .figure img").forEach((src) => {
     if (src.dataset.nozoom !== undefined) return;
@@ -17,13 +20,16 @@ export function initLightbox() {
       img.src = src.currentSrc || src.src;
       img.alt = src.alt || "";
       box.classList.add("is-open");
-      document.documentElement.style.overflow = "hidden";
+      lock();
+      isOpen = true;
     });
   });
 
   const close = () => {
+    if (!isOpen) return;
     box.classList.remove("is-open");
-    document.documentElement.style.overflow = "";
+    unlock();
+    isOpen = false;
   };
   box.addEventListener("click", close);
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });

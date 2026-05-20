@@ -89,6 +89,20 @@
     --t-base:  200ms;     /* card lifts, sidebar chevron rotation */
     --t-slow:  300ms;     /* modal open, theme toggle, image zoom */
 
+    /* Z-index scale — ordered stack of overlay layers. Local z-index
+       values (1-9) within isolated stacking contexts don't use these
+       tokens; the scale only applies to elements that compete for
+       document-level layering. Skip link sits above modals so keyboard
+       users can always reach the "skip to content" affordance even
+       with a modal open. */
+    --z-mobile-sidebar: 40;   /* mobile slide-in workshop sidebar */
+    --z-meta-bar:       49;   /* workshop-meta sticky strip */
+    --z-header:         50;   /* fixed site header */
+    --z-presenter:      60;   /* floating presenter-mode toggle pill */
+    --z-menu:           80;   /* language switcher dropdown */
+    --z-modal:         100;   /* search modal, image lightbox */
+    --z-skip:          200;   /* skip-to-content link (beats modal) */
+
     /* Hero background images — empty string falls through to CSS radial gradient. */
     --hero-bg-light: {{ with $p.heroBackgroundLight }}url("{{ . | relURL }}"){{ else }}none{{ end }};
     --hero-bg-dark:  {{ with $p.heroBackgroundDark  }}url("{{ . | relURL }}"){{ else }}none{{ end }};

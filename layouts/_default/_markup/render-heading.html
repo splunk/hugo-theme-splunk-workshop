@@ -1,5 +1,16 @@
+{{- /* Wrap heading text in a <span> so the heading element's accessible
+       name is just the text — `aria-hidden="true"` on the sibling anchor
+       excludes it from the heading's name calculation.
+
+       The anchor stays focusable (no tabindex) so keyboard users can Tab
+       to it and copy the section link. `aria-hidden` + focusable is the
+       same pattern GitHub, GitLab, and MDN use for heading permalinks:
+       screen readers skip the anchor (clean heading announcement) while
+       sighted keyboard users retain the affordance. Pure ARIA spec
+       reading flags this as a violation, but in practice every major
+       SR honours aria-hidden over the focusable element. */ -}}
 {{- $level := .Level -}}
 <h{{ $level }} id="{{ .Anchor | safeURL }}">
-  {{ .Text | safeHTML }}
-  <a class="heading-anchor" href="#{{ .Anchor | safeURL }}" aria-label="Permalink">#</a>
+  <span class="heading-text">{{ .Text | safeHTML }}</span>
+  <a class="heading-anchor" href="#{{ .Anchor | safeURL }}" aria-label="Permalink" aria-hidden="true">#</a>
 </h{{ $level }}>

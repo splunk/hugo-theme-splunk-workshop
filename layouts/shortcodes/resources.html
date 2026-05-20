@@ -1,35 +1,11 @@
-{{- /* Alias of attachments — same listing logic, different default title.
+{{- /* Alias of `attachments` — same listing logic, different default title.
        Both shortcode names exist so relearn content migrates without
-       rewriting; the implementation lives in attachments.html. */ -}}
+       rewriting. Body lives in partials/resource-list.html. */ -}}
 {{- $_unused := .Inner -}}
-{{- $title   := .Get "title" | default "Resources" -}}
-{{- $pattern := .Get "pattern" -}}
-{{- $sort    := .Get "sort" | default "asc" -}}
-{{- $icon    := .Get "icon" | default "file" -}}
-{{- $items   := .Page.Resources -}}
-{{- if $pattern -}}
-  {{- /* Hugo's `where` has no regexp operator — filter manually. */ -}}
-  {{- $filtered := slice -}}
-  {{- range $items -}}
-    {{- if findRE $pattern .Name -}}{{- $filtered = $filtered | append . -}}{{- end -}}
-  {{- end -}}
-  {{- $items = $filtered -}}
-{{- end -}}
-{{- $items = where $items "ResourceType" "ne" "image" -}}
-{{- $items = sort $items "Title" -}}
-{{- if eq $sort "desc" }}{{ $items = sort $items "Title" "desc" }}{{ end -}}
-{{- if $items }}
-<aside class="attachments">
-  <p class="attachments__title">{{ $title }}</p>
-  <ul class="attachments__list">
-    {{ range $items }}
-      <li class="attachments__item">
-        <a href="{{ .RelPermalink }}" download>
-          <span class="attachments__icon">{{ partial "icon-svg.html" $icon }}</span>
-          <span class="attachments__name">{{ .Title | default .Name }}</span>
-        </a>
-      </li>
-    {{ end }}
-  </ul>
-</aside>
-{{ end -}}
+{{- partial "resource-list.html" (dict
+    "page"    .Page
+    "title"   (.Get "title"   | default "Resources")
+    "pattern" (.Get "pattern")
+    "sort"    (.Get "sort"    | default "asc")
+    "icon"    (.Get "icon"    | default "file")
+) -}}

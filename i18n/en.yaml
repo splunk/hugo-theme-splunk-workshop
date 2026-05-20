@@ -24,11 +24,6 @@
   translation:
     one: "{{ .Count }} page"
     other: "{{ .Count }} pages"
-# kept for back-compat with existing themes/sites that haven't migrated yet
-- id: lessonsCount
-  translation:
-    one: "{{ .Count }} page"
-    other: "{{ .Count }} pages"
 - id: copyCode
   translation: "Copy"
 - id: copied
@@ -97,3 +92,13 @@
   translation: "Authors"
 - id: workshopVersion
   translation: "Workshop Version"
+- id: difficultyBeginner
+  translation: "Beginner"
+- id: difficultyEasy
+  translation: "Easy"
+- id: difficultyIntermediate
+  translation: "Intermediate"
+- id: difficultyAdvanced
+  translation: "Advanced"
+- id: difficultyExpert
+  translation: "Expert"

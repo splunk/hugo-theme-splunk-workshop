@@ -5,37 +5,15 @@
     pattern  - regex to match resource paths (default: all non-image)
     sort     - asc | desc (default asc)
     icon     - icon name to prefix each row
+
+  Body shared with the `resources` shortcode via partials/resource-list.html;
+  the only difference is the default title.
 */ -}}
 {{- $_unused := .Inner -}}
-{{- $title   := .Get "title" | default "Attachments" -}}
-{{- $pattern := .Get "pattern" -}}
-{{- $sort    := .Get "sort" | default "asc" -}}
-{{- $icon    := .Get "icon" | default "file" -}}
-{{- $items   := .Page.Resources -}}
-{{- if $pattern -}}
-  {{- /* Hugo's `where` has no regexp operator — filter manually. */ -}}
-  {{- $filtered := slice -}}
-  {{- range $items -}}
-    {{- if findRE $pattern .Name -}}{{- $filtered = $filtered | append . -}}{{- end -}}
-  {{- end -}}
-  {{- $items = $filtered -}}
-{{- end -}}
-{{- $items = where $items "ResourceType" "ne" "image" -}}
-{{- $items = sort $items "Title" -}}
-{{- if eq $sort "desc" }}{{ $items = sort $items "Title" "desc" }}{{ end -}}
-{{- if $items }}
-<aside class="attachments">
-  <p class="attachments__title">{{ $title }}</p>
-  <ul class="attachments__list">
-    {{ range $items }}
-      <li class="attachments__item">
-        <a href="{{ .RelPermalink }}" download>
-          <span class="attachments__icon">{{ partial "icon-svg.html" $icon }}</span>
-          <span class="attachments__name">{{ .Title | default .Name }}</span>
-          <span class="attachments__size">{{ if gt .ResourceType "0" }}{{ end }}</span>
-        </a>
-      </li>
-    {{ end }}
-  </ul>
-</aside>
-{{ end -}}
+{{- partial "resource-list.html" (dict
+    "page"    .Page
+    "title"   (.Get "title"   | default "Attachments")
+    "pattern" (.Get "pattern")
+    "sort"    (.Get "sort"    | default "asc")
+    "icon"    (.Get "icon"    | default "file")
+) -}}

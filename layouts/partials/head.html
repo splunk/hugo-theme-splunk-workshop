@@ -18,6 +18,16 @@
 <link rel="icon" href="{{ . | relURL }}" type="image/svg+xml">
 {{- end }}
 
+{{- /* Search index URL — emit via meta so search.js works under both:
+         1. a baseURL with a subpath (e.g. GitHub Pages `owner.github.io/repo/`)
+         2. multilingual + `defaultContentLanguageInSubdir = true`, where the
+            JSON lives at `/<lang>/index.json` not the site root.
+       Reading the JSON output's RelPermalink off `site.Home` gives us both
+       for free — Home is language-aware and Hugo handles the subpath. */ -}}
+{{- with site.Home.OutputFormats.Get "json" }}
+<meta name="search-index-url" content="{{ .RelPermalink }}">
+{{- end }}
+
 {{- /* Fonts (loaded from URL param so users can swap) */ -}}
 {{- with $p.fontUrl }}
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -69,8 +79,9 @@
 }}
 {{- /* view-transitions.css intentionally NOT bundled — cross-document
        transitions flash light-mode defaults on dark-mode pages before
-       the pre-paint theme script runs. Revisit when browsers handle
-       dark mode + view transitions more gracefully. */ -}}
+       the pre-paint theme script runs. The file is kept in assets/css/
+       and imported by main.css for tooling/preview workflows. Revisit
+       when browsers handle dark mode + view transitions more gracefully. */ -}}
 {{ $css := $files | resources.Concat "css/bundle.css" }}
 {{ if hugo.IsProduction }}
   {{ $css = $css | resources.Minify | resources.Fingerprint }}

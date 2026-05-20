@@ -1,4 +1,8 @@
-// Site search — vanilla JS modal over the JSON index produced by /index.json.
+// Site search — vanilla JS modal over the JSON index produced by the home
+// page's JSON output format. The actual path is language- and baseURL-
+// dependent (`/en/index.json`, `/ja/index.json`, `/workshop/en/index.json`,
+// …); the URL is read at runtime from the `<meta name="search-index-url">`
+// tag Hugo emits in head.html.
 //
 // Triggers: header button, "/" key, Cmd/Ctrl-K. Results live-updated as you type.
 // Closes: Esc, click outside, click a result.
@@ -7,13 +11,23 @@
 // rarely have enough pages to need a real ranking algorithm, and a small
 // dependency-free matcher beats pulling in Fuse.js for ~50KB.
 
+import { lock, unlock } from "./scroll-lock.js";
+
 let INDEX = null;
 let INDEX_LOADING = null;
 
 async function loadIndex() {
   if (INDEX) return INDEX;
   if (INDEX_LOADING) return INDEX_LOADING;
-  INDEX_LOADING = fetch("/index.json", { credentials: "same-origin" })
+  // Read the index URL from the meta tag Hugo emits — it accounts for the
+  // site's baseURL (subpath included) AND the active language under
+  // `defaultContentLanguageInSubdir`. The `/index.json` fallback only fires
+  // on sites that explicitly disabled the home `JSON` output format; under
+  // multilingual + subdir it'll 404, but that's a deliberate site-level
+  // config choice. Better a graceful empty-result search than a hard crash.
+  const url = document.querySelector('meta[name="search-index-url"]')?.content
+              || "/index.json";
+  INDEX_LOADING = fetch(url, { credentials: "same-origin" })
     .then(r => r.ok ? r.json() : [])
     .then(data => { INDEX = Array.isArray(data) ? data : []; return INDEX; })
     .catch(() => { INDEX = []; return INDEX; });
@@ -109,7 +123,7 @@ function buildModal() {
 export function initSearch() {
   let modal, input, results, empty;
   let activeIdx = -1;
-  let scrollY = 0;
+  let isOpen = false;
   let lastResults = [];
   // Element that had focus before the modal opened — focus returns here on
   // close so keyboard users land back on the trigger that opened the modal,
@@ -117,6 +131,7 @@ export function initSearch() {
   let lastTrigger = null;
 
   const open = (trigger) => {
+    if (isOpen) return;
     if (!modal) {
       modal = buildModal();
       input   = modal.querySelector(".site-search__input");
@@ -131,28 +146,18 @@ export function initSearch() {
     loadIndex();
     modal.classList.add("is-open");
     input.setAttribute("aria-expanded", "true");
-    // Scroll-lock the page while the modal is open. Use the body-position
-    // technique rather than `documentElement.style.overflow = "hidden"`
-    // because iOS Safari ignores the latter on the html element, which
-    // would let the page scroll underneath the modal.
-    scrollY = window.scrollY;
-    document.body.style.position = "fixed";
-    document.body.style.top = `-${scrollY}px`;
-    document.body.style.left = "0";
-    document.body.style.right = "0";
+    lock();
+    isOpen = true;
     setTimeout(() => input.focus(), 30);
   };
 
   const close = () => {
-    if (!modal) return;
+    if (!modal || !isOpen) return;
     modal.classList.remove("is-open");
     input.setAttribute("aria-expanded", "false");
     input.removeAttribute("aria-activedescendant");
-    document.body.style.position = "";
-    document.body.style.top = "";
-    document.body.style.left = "";
-    document.body.style.right = "";
-    window.scrollTo(0, scrollY);
+    unlock();
+    isOpen = false;
     activeIdx = -1;
     if (lastTrigger && typeof lastTrigger.focus === "function") {
       lastTrigger.focus();

@@ -1,0 +1,44 @@
+{{- /*
+  Shared body for the `attachments` and `resources` shortcodes. Renders the
+  page's non-image resources as a downloadable list. Both shortcodes call
+  this with their own default title.
+
+  Args (dict):
+    page    - the Hugo Page whose .Resources we list.
+    title   - heading text.
+    pattern - optional regex filter on resource Name.
+    sort    - "asc" or "desc" (default asc).
+    icon    - icon-svg name to prefix each row (default "file").
+*/ -}}
+{{- $page    := .page -}}
+{{- $title   := .title -}}
+{{- $pattern := .pattern -}}
+{{- $sort    := .sort | default "asc" -}}
+{{- $icon    := .icon | default "file" -}}
+{{- $items   := $page.Resources -}}
+{{- if $pattern -}}
+  {{- /* Hugo's `where` has no regexp operator — filter manually. */ -}}
+  {{- $filtered := slice -}}
+  {{- range $items -}}
+    {{- if findRE $pattern .Name -}}{{- $filtered = $filtered | append . -}}{{- end -}}
+  {{- end -}}
+  {{- $items = $filtered -}}
+{{- end -}}
+{{- $items = where $items "ResourceType" "ne" "image" -}}
+{{- $items = sort $items "Title" -}}
+{{- if eq $sort "desc" }}{{ $items = sort $items "Title" "desc" }}{{ end -}}
+{{- if $items }}
+<aside class="attachments">
+  <p class="attachments__title">{{ $title }}</p>
+  <ul class="attachments__list">
+    {{ range $items }}
+      <li class="attachments__item">
+        <a href="{{ .RelPermalink }}" download>
+          <span class="attachments__icon">{{ partial "icon-svg.html" $icon }}</span>
+          <span class="attachments__name">{{ .Title | default .Name }}</span>
+        </a>
+      </li>
+    {{ end }}
+  </ul>
+</aside>
+{{ end -}}

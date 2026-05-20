@@ -22,9 +22,12 @@ export function initPresenter() {
     try { on = localStorage.getItem(KEY) === "1"; } catch {}
   }
 
-  // Render the toggle pill if the page has presenter notes
-  const hasNotes = document.querySelector(".presenter-only");
-  if (hasNotes) {
+  // Render the toggle pill if the page has presenter notes, OR if presenter
+  // mode is currently on — without the second condition, enabling the mode
+  // on one page and navigating to a page without notes would strand the user
+  // with no way to turn it off.
+  const hasNotes = !!document.querySelector(".presenter-only");
+  if (hasNotes || on) {
     const btn = document.createElement("button");
     btn.className = "presenter-toggle";
     btn.type = "button";

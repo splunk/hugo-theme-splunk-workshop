@@ -15,8 +15,9 @@
     presenter title="Timing"          - custom label
 */ -}}
 {{- $title := .Get "title" | default (i18n "presenterNote") -}}
-{{- /* Flag the page so the toggle pill is rendered in the footer */ -}}
-{{- .Page.Store.Set "_has_presenter" true -}}
+{{- /* The toggle pill is gated by presenter.js doing
+       `document.querySelector(".presenter-only")` — checking the DOM
+       directly. No Page.Store flag needed. */ -}}
 <aside class="presenter-only" aria-label="{{ $title }}">
   <div class="presenter-only__label">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h20v14H2z"/><path d="M8 21h8M12 17v4"/></svg>

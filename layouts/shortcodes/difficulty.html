@@ -11,10 +11,10 @@
     {{ end }}
   </span>
   <span>
-  {{- if eq $n 1 -}}Beginner
-  {{- else if eq $n 2 -}}Easy
-  {{- else if eq $n 3 -}}Intermediate
-  {{- else if eq $n 4 -}}Advanced
-  {{- else -}}Expert{{- end -}}
+  {{- if eq $n 1 -}}{{ i18n "difficultyBeginner" }}
+  {{- else if eq $n 2 -}}{{ i18n "difficultyEasy" }}
+  {{- else if eq $n 3 -}}{{ i18n "difficultyIntermediate" }}
+  {{- else if eq $n 4 -}}{{ i18n "difficultyAdvanced" }}
+  {{- else -}}{{ i18n "difficultyExpert" }}{{- end -}}
   </span>
 </span>

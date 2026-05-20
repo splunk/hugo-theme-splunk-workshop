@@ -455,16 +455,18 @@ kbd, .kbd {
 .kbd-combo__plus { color: var(--color-ink-muted); font-family: var(--font-mono); font-size: 0.85em; }
 
 /* ---------- File tree --------------------------------------------------- */
-/* Inline filename chip */
-code.inline-file {
+/* Inline filename chip. Scoped under `.content` so the selector specificity
+   is (0,2,1) — beats typography.css's `:not(pre):not(.terminal__body) > code`
+   inline-code rule (0,1,2) without needing !important on every property. */
+.content code.inline-file {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.05em 0.5em 0.1em !important;
-  background: var(--color-surface-alt) !important;
-  color: var(--color-ink) !important;
-  border: 1px solid var(--color-border) !important;
-  border-radius: 5px !important;
+  padding: 0.05em 0.5em 0.1em;
+  background: var(--color-surface-alt);
+  color: var(--color-ink);
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
   font-family: var(--font-mono);
   font-size: 0.85em;
   font-weight: 500;
@@ -773,7 +775,7 @@ pre.file-tree .file-tree__dir-line {
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--color-ink-muted);
-  z-index: 60;
+  z-index: var(--z-presenter);
   transition: all var(--t-fast) var(--ease);
 }
 .presenter-toggle:hover { color: var(--color-accent); border-color: var(--color-accent); }
@@ -826,10 +828,7 @@ pre.file-tree .file-tree__dir-line {
   display: block;
   padding: 1.4rem 1.5rem;
   margin: 1.5rem 0;
-  /* Same signature: a top-edge accent stripe that grows in on hover. */
-  background:
-    linear-gradient(90deg, var(--card-accent), var(--color-accent2, var(--card-accent))) 0 0 / var(--card-sweep) 2px no-repeat,
-    var(--color-surface);
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   transition:
@@ -840,6 +839,21 @@ pre.file-tree .file-tree__dir-line {
   text-decoration: none;
   color: inherit;
   overflow: hidden;
+}
+/* Top-edge accent stripe that grows in on hover. Rendered as a ::before so
+   it paints ABOVE any image bleeding to the card's top edge (`__image` and
+   `__media` use negative margins to reach the inner border, which would
+   otherwise cover a background-image stripe). */
+.shortcode-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--card-sweep);
+  height: 1px;
+  background: linear-gradient(90deg, var(--card-accent), var(--color-accent-2, var(--card-accent)));
+  pointer-events: none;
+  z-index: 1;
 }
 a.shortcode-card:hover {
   --card-sweep: 100%;
@@ -920,7 +934,7 @@ a.shortcode-card:hover .shortcode-card__title { color: var(--color-accent-text);
   margin: -1.4rem -1.5rem 1rem;
   overflow: hidden;
   aspect-ratio: 16 / 9;
-  background: var(--color-surface-alt);
+  /*background: var(--color-surface-alt);*/
   /* Match the card's outer border-radius so the image fills the rounded
      top corners. Card uses --radius-lg with a 1px border; - 1px keeps the
      inner edge flush. */
@@ -932,6 +946,8 @@ a.shortcode-card:hover .shortcode-card__title { color: var(--color-accent-text);
   height: 100%;
   object-fit: cover;
   display: block;
+  padding: 5px;
+  border-radius: var(--radius-lg);
 }
 /* On narrow viewports, flatten the banner so it doesn't dominate compressed
    cards. 21:9 leaves room for the title + meta without scrolling. */
