@@ -8,7 +8,7 @@
              danger|error|success|primary|secondary|default|code) OR
              a relearn colour alias (blue|green|orange|yellow|red|gray|grey).
     title    Header label. Falls back to the i18n-resolved type name.
-    icon     Icon override (Lucide name; see layouts/partials/icon-svg.html).
+    icon     Icon override (Lucide name; see layouts/_partials/icon-svg.html).
              Falls back to the type's default icon.
     color    Custom accent colour for the border + icon. Any CSS colour.
     expanded "true" | "false" | "" — render as a collapsible <details>:
@@ -46,14 +46,6 @@
     "grey"      "note"
 -}}
 {{- $type := index $map $styleKey | default "note" -}}
-{{- /* Strip HTML comments from the body before piping through Goldmark.
-       Comments containing fenced code blocks (or other markdown constructs)
-       inside a percent-form shortcode confuse Goldmark — the closing `-->`
-       gets rendered as text and breaks the surrounding paragraph nesting.
-       Migrating workshop content frequently has commented-out alternates
-       inside notices; strip them so the rest of the page still lays out. */ -}}
-{{- $inner := string .Inner -}}
-{{- $inner = replaceRE "(?s)<!--.*?-->" "" $inner -}}
 {{- partial "callout-render.html" (dict
     "page"     .Page
     "type"     $type
@@ -62,4 +54,4 @@
     "color"    (.Get "color")
     "expanded" (.Get "expanded")
     "groupid"  (.Get "groupid")
-    "inner"    ($inner | .Page.RenderString)) -}}
+    "inner"    (.Inner | .Page.RenderString)) -}}

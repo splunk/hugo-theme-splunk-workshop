@@ -39,12 +39,13 @@
     <div class="content content--full" id="content">
       {{- /* Render the markdown body, then optionally an auto-card-grid.
          Skip the auto-grid only when the body already produces its own
-         cards (e.g. an author dropped {{% children type=card %}} inline);
-         otherwise prose bodies still get the navigational card grid below. */ -}}
-      {{- $hasOwnCards := and .Content (or
-            (strings.Contains (.Content | string) "class=\"cards")
-            (strings.Contains (.Content | string) "shortcode-card")) -}}
+         cards. Detection is declarative: the `cards`, `card`, and
+         `children type="card"` shortcodes set `_has_cards` on Page.Store
+         when they emit markup. Reading that flag is more robust than the
+         old substring-sniff against rendered HTML, which false-positived
+         on any unrelated `class="cards-…"` substring. */ -}}
       {{ with .Content }}{{ . }}{{ end }}
+      {{- $hasOwnCards := .Page.Store.Get "_has_cards" -}}
 
       {{- if not $hasOwnCards -}}
         {{ $items := slice }}
@@ -64,8 +65,10 @@
                 <h3 class="card__title">{{ .LinkTitle }}</h3>
                 {{ with .Description }}<p class="card__desc">{{ . }}</p>{{ end }}
                 <div class="card__meta">
-                  {{ with .Params.duration }}<span class="card__meta-item">{{ . }}</span>{{ end }}
-                  {{ with .Params.time     }}<span class="card__meta-item">{{ . }}</span>{{ end }}
+                  {{- /* `time` is the relearn-style key; `duration` is the
+                         theme-native alias. Prefer `time` and fall back so
+                         pages that set both don't render duplicate items. */ -}}
+                  {{ with (.Params.time | default .Params.duration) }}<span class="card__meta-item">{{ . }}</span>{{ end }}
                   {{ with .Params.difficulty }}<span class="card__meta-item">{{ . }}</span>{{ end }}
                   {{- /* Recursive count of leaf pages — gives the same number whether
                          the card represents a hub (counts all leaves below) or a

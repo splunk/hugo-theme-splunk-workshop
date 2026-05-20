@@ -1,0 +1,51 @@
+{{- /*
+  Shared three-column shell for single.html, list.html (workshop mode),
+  and chapter.html. Wraps the outer chrome (main + sidebar + article open
+  → inner content partial → pager + meta-footer + edit-link → article
+  close + TOC + main close) so the three callers don't each re-duplicate
+  ~50 lines of identical scaffolding.
+
+  Args (dict):
+    page            — the Page (use `.` from the caller)
+    innerPartial    — name of a partial to render INSIDE the <article>.
+                      The shell calls `partial .innerPartial .page` so the
+                      named partial receives the page as its context. Use
+                      `page-inner-single.html`, `page-inner-chapter.html`,
+                      or `page-inner-list-workshop.html`.
+    showMetaFooter  — bool, default false. Single-page bottom meta strip
+                      (last-modified pill, authors) — only single.html
+                      currently renders it.
+
+  Hub-mode pages (`workshop-root` returns false) shouldn't be calling this
+  partial — they want the centered-hero hub layout instead. list.html
+  keeps its own branch for that case.
+*/ -}}
+{{- $page  := .page -}}
+{{- $p := $page.Site.Params -}}
+{{- $workshop := partialCached "workshop-root.html" $page $page.RelPermalink -}}
+{{- $hasSidebar := and $p.showSidebar $workshop -}}
+{{- $showToc := cond (isset $page.Params "showtoc") $page.Params.showToc $p.showToc -}}
+{{- $hasToc := and $showToc (strings.Contains (printf "%s" $page.TableOfContents) "<li") -}}
+
+<main class="page {{ if not $hasSidebar }}page--narrow{{ else if not $hasToc }}page--with-sidebar-only{{ end }}">
+
+  {{ if $hasSidebar }}{{ partial "sidebar.html" $page }}{{ end }}
+
+  <article class="content" id="content">
+    {{ partial .innerPartial $page }}
+
+    {{ partial "pager.html" $page }}
+
+    {{ if .showMetaFooter }}{{ partial "page-meta-footer.html" $page }}{{ end }}
+
+    {{ with $page.Site.Params.editURL }}{{ if $page.File }}
+      <p class="edit-link">
+        <a href="{{ . }}{{ $page.File.Path }}" target="_blank" rel="noopener">
+          <span class="edit-link__arrow">&rarr;</span> {{ i18n "editOnGitHub" }}
+        </a>
+      </p>
+    {{ end }}{{ end }}
+  </article>
+
+  {{ if $hasToc }}{{ partial "toc.html" $page }}{{ end }}
+</main>

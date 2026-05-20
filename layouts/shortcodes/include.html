@@ -11,9 +11,12 @@
   {{- $rendered := $html | $.Page.RenderString -}}
   {{- if $hide -}}
     {{- /* Split at the first </h1> and discard everything up to and including
-           it. Robust to nested HTML inside the heading (Goldmark won't generate
-           a literal "</h1>" inside an h1, and code blocks render entity-escaped
-           — `&lt;/h1&gt;` — so a fake `</h1>` is implausible). */ -}}
+           it. We deliberately operate on RENDERED HTML (not .RawContent) so
+           that Goldmark has already escaped any `</h1>` inside code fences
+           to `&lt;/h1&gt;` — that makes the split safer than a markdown-
+           level regex, which would need its own code-fence awareness to
+           avoid false matches like `# shell comment` inside ```bash blocks.
+           Goldmark always emits lowercase tags, so `</H1>` never appears. */ -}}
     {{- $parts := split ($rendered | string) "</h1>" -}}
     {{- if gt (len $parts) 1 -}}
       {{- $rendered = strings.Join (after 1 $parts) "</h1>" -}}

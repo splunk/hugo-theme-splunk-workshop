@@ -39,6 +39,7 @@ lastmod     = "2026-04-28"           # optional override; otherwise from git
 hidden      = false                  # exclude from sidebar, TOC, search, prev/next
 nopager     = false                  # render the page but suppress prev/next
 showToc     = true                   # override site-wide `showToc` per page
+subsections = false                  # section-only: list sub-sections instead of pages
 subtitle    = "Chapter · Foo"        # eyebrow text on chapter pages
 tagline     = "01 · Foundation"      # extra text in the chapter sidebar
 +++
@@ -106,6 +107,21 @@ showToc = false
 ```
 
 Every descendant inherits unless it sets its own `showToc`. The same mechanism works for any other front-matter key.
+
+### `subsections`
+
+Section-only flag (set on an `_index.md`, not on regular pages). When `true` and the section has child sub-sections, the section's auto-card-grid lists those sub-sections instead of its regular pages. Use it on **hub-of-workshops landings** where each child is itself a section bundle:
+
+```toml
+# content/workshops/_index.md
++++
+title       = "Workshops"
+description = "Pick a workshop and dive in."
+subsections = true                   # show one card per sub-workshop
++++
+```
+
+Without the flag (default `false`), the auto-grid lists the section's regular `.md` pages. The flag has no effect on sections that have no sub-sections, or on pages that author their own card grid with `{{</* cards */>}}` / `{{</* children type="card" */>}}` (the body wins).
 
 ## Home page hero
 

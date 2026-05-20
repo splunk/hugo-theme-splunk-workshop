@@ -1,0 +1,16 @@
+{{- /*
+  Breadcrumb nav. Renders Home → Ancestors → current page.
+  Shared by single.html and list.html (workshop mode).
+*/ -}}
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <a href="{{ partial "site-href.html" "/" }}">{{ i18n "home" }}</a>
+  {{- $pages := .Ancestors.Reverse -}}
+  {{- range $pages -}}
+    {{- if ne .RelPermalink "/" }}
+      <span class="breadcrumb__sep">/</span>
+      <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+    {{- end -}}
+  {{- end -}}
+  <span class="breadcrumb__sep">/</span>
+  <span aria-current="page">{{ .LinkTitle }}</span>
+</nav>

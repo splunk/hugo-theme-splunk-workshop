@@ -45,7 +45,7 @@ shortcodes: ## List every shortcode shipped with the theme
 
 .PHONY: stats
 stats: ## Print line-counts for layouts/CSS/JS
-	@echo "== Templates ==";    wc -l layouts/_default/*.html layouts/partials/*.html 2>/dev/null
+	@echo "== Templates ==";    wc -l layouts/_default/*.html layouts/_partials/*.html 2>/dev/null
 	@echo;                       echo "== Shortcodes =="
 	@find layouts/shortcodes -name '*.html' | wc -l | xargs printf "  %s shortcodes\n"
 	@echo;                       echo "== Stylesheets =="; wc -l assets/css/*.css

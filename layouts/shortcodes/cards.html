@@ -10,6 +10,9 @@
 {{- /* Force inner to render so children push */ -}}
 {{- $_ := .Inner -}}
 {{- $items := .Page.Scratch.Get $key | default slice -}}
+{{- /* Flag the page so layouts (notably index.html) suppress their
+       auto-card-grid when the body has already authored cards. */ -}}
+{{- .Page.Store.Set "_has_cards" true -}}
 <div class="cards cards--shortcode">
   {{ range $items }}
     {{ $tag := "div" }}{{ if .href }}{{ $tag = "a" }}{{ end }}

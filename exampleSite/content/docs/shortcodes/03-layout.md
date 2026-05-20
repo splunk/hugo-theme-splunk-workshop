@@ -356,7 +356,7 @@ Common Font Awesome aliases are accepted too: `fas-check`, `fa-circle-info`, `ex
 
 ### Adding your own icons
 
-To register a new icon, edit [`layouts/partials/icon-svg.html`](https://github.com/splunk/hugo-theme-splunk-workshop/blob/main/layouts/partials/icon-svg.html) (override it in your own site to keep your changes outside the theme). Drop a new entry into the `$icons` dict — paste the SVG path data only, without the `<svg>` wrapper:
+To register a new icon, edit [`layouts/_partials/icon-svg.html`](https://github.com/splunk/hugo-theme-splunk-workshop/blob/main/layouts/_partials/icon-svg.html) (override it in your own site to keep your changes outside the theme). Drop a new entry into the `$icons` dict — paste the SVG path data only, without the `<svg>` wrapper:
 
 ```go-html-template
 "my-icon" `<path d="M3 12h18M12 3l9 9-9 9" stroke-linecap="round"/>`

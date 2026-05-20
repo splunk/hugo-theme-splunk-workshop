@@ -25,7 +25,7 @@ The dot intensifies (full opacity, slight scale-up) on the active page so the "y
 
 ## How it works
 
-- On every workshop page, the sidebar emits a `data-workshop-root="<path>"` attribute on `<aside class="sidebar">`. The workshop root is the section the [`workshop-root.html`](https://github.com/splunk/hugo-theme-splunk-workshop/blob/main/layouts/partials/workshop-root.html) partial returns — typically `/<lang>/<category>/<workshop>/` or `/<lang>/<workshop>/` for flat workshops.
+- On every workshop page, the sidebar emits a `data-workshop-root="<path>"` attribute on `<aside class="sidebar">`. The workshop root is the section the [`workshop-root.html`](https://github.com/splunk/hugo-theme-splunk-workshop/blob/main/layouts/_partials/workshop-root.html) partial returns — typically `/<lang>/<category>/<workshop>/` or `/<lang>/<workshop>/` for flat workshops.
 - Every link in the sidebar tree gets a `data-page-url="<RelPermalink>"` attribute.
 - After 2 seconds on a workshop page, the client-side `workshop-progress.js` module appends the current URL to a localStorage entry keyed by the workshop root.
 - On every subsequent page load, the module re-paints `.is-visited` on every matching link in the sidebar.
@@ -48,7 +48,7 @@ The outer key is constant; the inner JSON is a map from workshop-root URL to an 
 
 There's no UI button — attendees who want a fresh start clear the `splunk-workshop:visited` localStorage entry via DevTools, or use their browser's "Clear site data" option. The theme doesn't surface a "Reset progress" button because the audience (workshop attendees in a guided session) almost never wants one; surfacing it would just risk accidental clicks.
 
-If you author content for a context where reset is needed, add a small footer button to your own `layouts/partials/footer.html` override that calls `localStorage.removeItem("splunk-workshop:visited")` and reloads the page.
+If you author content for a context where reset is needed, add a small footer button to your own `layouts/_partials/footer.html` override that calls `localStorage.removeItem("splunk-workshop:visited")` and reloads the page.
 
 ## Why no counter or percentage?
 

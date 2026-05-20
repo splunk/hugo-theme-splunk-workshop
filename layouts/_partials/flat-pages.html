@@ -28,7 +28,7 @@
   {{- else -}}
     {{- /* Section landing: include the index itself, then its children. */ -}}
     {{- $out = $out | append . -}}
-    {{- $sub := partial "flat-pages.html" . -}}
+    {{- $sub := partialCached "flat-pages.html" . .RelPermalink -}}
     {{- if $sub }}{{ $out = $out | append $sub }}{{ end -}}
   {{- end -}}
 {{- end -}}

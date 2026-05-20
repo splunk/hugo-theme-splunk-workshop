@@ -1,0 +1,48 @@
+{{- /*
+  Auto card-grid for a section whose _index.md has no body content. Lists
+  visible pages by default; lists visible sub-sections when the caller
+  asks (chapter.html, or any list section with `subsections = true`).
+
+  Calling modes:
+    - With a Page directly:   {{ partial "cards-auto-grid.html" . }}
+      Uses .Params.subsections (bool) to decide pages-vs-sections.
+    - With a dict:            {{ partial "cards-auto-grid.html" (dict "page" . "preferSections" true) }}
+      The `preferSections` flag overrides; useful for chapter.html which
+      always prefers sub-sections when they exist.
+
+  Emits nothing when there are no visible items.
+*/ -}}
+{{- $page := . -}}
+{{- $preferSections := false -}}
+{{- if reflect.IsMap . -}}
+  {{- $page = .page -}}
+  {{- $preferSections = .preferSections -}}
+{{- else -}}
+  {{- $preferSections = eq ($page.Params.subsections | default false) true -}}
+{{- end -}}
+
+{{- $items := partial "visible-pages.html" $page.Pages -}}
+{{- if and $preferSections $page.Sections -}}
+  {{- $items = partial "visible-pages.html" $page.Sections -}}
+{{- end -}}
+
+{{ if $items }}
+<div class="cards">
+  {{ range $i, $card := $items }}
+    <a class="card" href="{{ .RelPermalink }}">
+      <span class="card__num">{{ printf "%02d" (add $i 1) }}</span>
+      <h3 class="card__title">{{ .LinkTitle }}</h3>
+      {{ with .Description }}<p class="card__desc">{{ . }}</p>{{ end }}
+      <div class="card__meta">
+        {{- /* `time` is the relearn-style key; `duration` is the theme-native
+               alias. Workshop-meta.html prefers `time` and falls back; mirror
+               that here so the card meta agrees with the in-page meta strip. */ -}}
+        {{ with (.Params.time | default .Params.duration) }}<span class="card__meta-item">{{ . }}</span>{{ end }}
+        {{ with .Params.difficulty }}<span class="card__meta-item">{{ . }}</span>{{ end }}
+        {{- $leaves := where .RegularPagesRecursive "Params.hidden" "!=" true -}}
+        {{ if gt (len $leaves) 1 }}<span class="card__meta-item">{{ i18n "pagesCount" (dict "Count" (len $leaves)) }}</span>{{ end }}
+      </div>
+    </a>
+  {{ end }}
+</div>
+{{ end }}

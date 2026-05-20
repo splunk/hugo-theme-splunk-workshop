@@ -34,6 +34,9 @@
 {{- if eq $sort "title" }}{{ $items = $items.ByTitle }}{{ else }}{{ $items = $items.ByWeight }}{{ end -}}
 
 {{- if eq $type "card" -}}
+{{- /* Flag the page so layouts (notably index.html) suppress their
+       auto-card-grid when the body has already authored cards. */ -}}
+{{- .Page.Store.Set "_has_cards" true -}}
 <div class="cards cards--shortcode{{ if $img }} cards--with-images{{ end }}">
 {{- range $items -}}
 {{- $child := . -}}
@@ -65,7 +68,7 @@
     {{- end -}}
   {{- end -}}
 {{- end -}}
-<a class="shortcode-card shortcode-card--children{{ if $imgURL }} shortcode-card--with-image{{ end }}" href="{{ .RelPermalink }}">{{ if $imgURL }}<div class="shortcode-card__media"><img src="{{ $imgURL }}" alt="" loading="lazy"></div>{{ end }}<p class="shortcode-card__title">{{ .LinkTitle }}</p>{{ if and $desc .Description }}<div class="shortcode-card__body"><p>{{ .Description }}</p></div>{{ end }}<div class="shortcode-card__meta">{{ with .Params.duration }}<span>{{ . }}</span>{{ end }}{{ with .Params.time }}<span>{{ . }}</span>{{ end }}{{ with .Params.difficulty }}<span>{{ . }}</span>{{ end }}{{ $leaves := where .RegularPagesRecursive "Params.hidden" "!=" true }}{{ if gt (len $leaves) 1 }}<span>{{ i18n "pagesCount" (dict "Count" (len $leaves)) }}</span>{{ end }}</div></a>
+<a class="shortcode-card shortcode-card--children{{ if $imgURL }} shortcode-card--with-image{{ end }}" href="{{ .RelPermalink }}">{{ if $imgURL }}<div class="shortcode-card__media"><img src="{{ $imgURL }}" alt="" loading="lazy"></div>{{ end }}<p class="shortcode-card__title">{{ .LinkTitle }}</p>{{ if and $desc .Description }}<div class="shortcode-card__body"><p>{{ .Description }}</p></div>{{ end }}<div class="shortcode-card__meta">{{ with (.Params.time | default .Params.duration) }}<span>{{ . }}</span>{{ end }}{{ with .Params.difficulty }}<span>{{ . }}</span>{{ end }}{{ $leaves := where .RegularPagesRecursive "Params.hidden" "!=" true }}{{ if gt (len $leaves) 1 }}<span>{{ i18n "pagesCount" (dict "Count" (len $leaves)) }}</span>{{ end }}</div></a>
 {{- end -}}
 </div>
 {{- else if or (eq $type "h2") (eq $type "h3") (eq $type "h4") -}}

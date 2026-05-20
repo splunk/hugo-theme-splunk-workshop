@@ -177,12 +177,14 @@ Renders the latest OpenTelemetry Collector version, pulled from a value the site
 Install OTel Collector {{</* otel-version */>}}.
 ```
 
-The shortcode reads `Site.Params.splunk.otelVersion`. Set it once in `hugo.toml`:
+The shortcode reads `Site.Params.stableOtelVersion`. Set it once in `hugo.toml`:
 
 ```toml
-[params.splunk]
-otelVersion = "0.110.0"
+[params]
+stableOtelVersion = "0.110.0"
 ```
+
+The legacy snake_case key `stable_otel_version` is still honoured as a fallback for sites that haven't migrated yet, but new sites should use the camelCase form.
 
 ### `linkedin`
 

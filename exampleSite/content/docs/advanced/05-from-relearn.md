@@ -41,8 +41,8 @@ Most relearn front-matter keys are honored as-is. Differences:
 | `description` | `description` | Same — renders as lead paragraph + meta description |
 | `hidden` | `hidden` | Same — excludes from sidebar, search, pager, children listings |
 | `chapter` | use `layout = "chapter"` | Triggers the gradient weight-number hero |
-| `head` | (not supported) | Override `layouts/partials/head.html` in your own site instead |
-| `menuPre` / `menuPost` | (not supported) | Customise the sidebar via your own `layouts/partials/sidebar.html` |
+| `head` | (not supported) | Override `layouts/_partials/head.html` in your own site instead |
+| `menuPre` / `menuPost` | (not supported) | Customise the sidebar via your own `layouts/_partials/sidebar.html` |
 | `disableToc` | `showToc = false` (theme param) or `nopager = true` (page-level pager only) | TOC is a theme-wide param; pager can be suppressed per page |
 
 For full front-matter coverage on this theme see [Authoring › Front matter](../../authoring/01-front-matter/).
@@ -50,7 +50,7 @@ For full front-matter coverage on this theme see [Authoring › Front matter](..
 ## What changes visually
 
 - **The hero**. Relearn's chapter pages have a numbered banner. This theme uses a similar gradient weight-number hero, but the gradient and typography are different. Set `colorAccent`, `colorAccent2`, `fontDisplay`, and `fontBody` in your `hugo.toml` to rebrand.
-- **Sidebar**. Relearn has nested expandable groups. This theme has a flat scoped sidebar that shows the current chapter's pages — chapter switching is the responsibility of the breadcrumb / parent listing. If you depend on the nested-tree UX, override `layouts/partials/sidebar.html` in your own site.
+- **Sidebar**. Relearn has nested expandable groups. This theme has a flat scoped sidebar that shows the current chapter's pages — chapter switching is the responsibility of the breadcrumb / parent listing. If you depend on the nested-tree UX, override `layouts/_partials/sidebar.html` in your own site.
 - **Print stylesheet**. Both themes ship one. This theme's is in `assets/css/print.css`.
 - **Edit-on-GitHub link**. Set `params.editURL` in your `hugo.toml` and pages get a "Edit this page on GitHub" link in the footer.
 
@@ -81,6 +81,19 @@ Plus the hero gradient bloom, the JSON-indexed fuzzy search, keyboard navigation
     - A custom partial you'd overridden → reapply against the new partial
 4. **Rebrand**. Copy the `[params]` block from this theme's `hugo.toml` and adjust colors/fonts/logos. The five Splunk colors (`colorAccent` etc.) and the four fonts (`fontDisplay`, `fontBody`, `fontMono`, `fontUrl`) cover most needs.
 5. **Adopt the workshop shortcodes incrementally**. There's no rush — relearn-compat keeps your old content working while you migrate page-by-page to `step`, `exercise`, `checkpoint`, etc.
+
+## Behaviour differences worth knowing
+
+### `notice` does not pre-strip HTML comments
+
+Relearn's content sometimes wraps fenced code in HTML comments inside `{{%/* notice */%}}` blocks (e.g. commented-out alternates left in for translators). Older versions of this theme silently pre-stripped `<!-- … -->` from notice bodies before passing the content to Goldmark, so those comments rendered invisibly.
+
+That strip was removed in v0.7. The motivation: it nuked any `<!-- … -->` content **inside** a fenced code block too — so a notice demonstrating HTML syntax lost the very comments it was trying to show. The fix is per-content rather than per-theme:
+
+- **If you actually want the comment visible** (e.g. a code sample): escape the angle brackets — `&lt;!-- … --&gt;` — or use a code fence with a language tag, which renders the comment as code, not HTML.
+- **If you don't want it visible**: remove the `<!-- … -->` from the markdown source.
+
+Notices that didn't contain HTML comments are unaffected.
 
 ## Things that don't transfer
 

@@ -105,7 +105,7 @@ Run your accent through [oklch.com](https://oklch.com) or Tailwind's color palet
 The flow is:
 
 1. Param value lives in `hugo.toml` (this is what you edit).
-2. `layouts/partials/theme-vars.html` reads the param and emits a `<style>` block with `--color-…` custom properties.
+2. `layouts/_partials/theme-vars.html` reads the param and emits a `<style>` block with `--color-…` custom properties.
 3. Every CSS file in `assets/css/` references `var(--color-…)`.
 4. Dark mode flips the values via `[data-theme="dark"]` selectors.
 

@@ -79,9 +79,10 @@
 }}
 {{- /* view-transitions.css intentionally NOT bundled — cross-document
        transitions flash light-mode defaults on dark-mode pages before
-       the pre-paint theme script runs. The file is kept in assets/css/
-       and imported by main.css for tooling/preview workflows. Revisit
-       when browsers handle dark mode + view transitions more gracefully. */ -}}
+       the pre-paint theme script runs. The file stays in assets/css/ so
+       it's reachable for opt-in inclusion by sites that don't care about
+       the dark-mode FOUC; revisit when browsers handle dark mode + view
+       transitions more gracefully. */ -}}
 {{ $css := $files | resources.Concat "css/bundle.css" }}
 {{ if hugo.IsProduction }}
   {{ $css = $css | resources.Minify | resources.Fingerprint }}

@@ -12,7 +12,7 @@
   the caller shouldn't be including this partial — but we degrade gracefully
   by emitting nothing.
 */ -}}
-{{- $workshop := partial "workshop-root.html" . -}}
+{{- $workshop := partialCached "workshop-root.html" . .RelPermalink -}}
 {{- if $workshop -}}
 <aside id="workshop-sidebar" class="sidebar" aria-label="Workshop navigation" data-workshop-root="{{ $workshop.RelPermalink }}">
   {{- /* "Back to <category>" link — points at the workshop root's parent

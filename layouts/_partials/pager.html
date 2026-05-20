@@ -27,9 +27,9 @@
        are no neighbours to compute. Without this guard, flat-pages.html
        tries `$node.Pages` on a bool and the build crashes. */ -}}
 {{- if or (not $prev) (not $next) -}}
-  {{- $root := partial "workshop-root.html" . -}}
+  {{- $root := partialCached "workshop-root.html" . .RelPermalink -}}
   {{- if $root -}}
-    {{- $flat := partial "flat-pages.html" $root -}}
+    {{- $flat := partialCached "flat-pages.html" $root $root.RelPermalink -}}
     {{- /* Always include the scope root itself as index 0:
            - On the chapter landing, idx=0 → no Previous, Next = first child.
            - On the first child page, idx=1 → Previous = chapter landing.

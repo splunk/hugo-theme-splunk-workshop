@@ -1,0 +1,24 @@
+{{- /*
+  Inner content for the workshop-mode branch of list.html — section
+  landings under a workshop root. Breadcrumb → section eyebrow → H1 →
+  optional lead → workshop-meta → body OR an auto card-grid fallback
+  when the section's `_index.md` has no body content.
+*/ -}}
+{{ partial "breadcrumb.html" . }}
+
+{{ with .CurrentSection }}{{ if ne .RelPermalink "/" }}
+  <p class="eyebrow">{{ .Title | markdownify }}</p>
+{{ end }}{{ end }}
+<h1>{{ .Title }}</h1>
+
+{{ with .Description }}<p class="lead">{{ . }}</p>{{ end }}
+
+{{ partial "workshop-meta.html" . }}
+
+{{- /* Body content first. If the section has no body, fall back to the
+       card grid of its children so the landing isn't blank. */ -}}
+{{ if .Content }}
+  {{ .Content }}
+{{ else }}
+  {{ partial "cards-auto-grid.html" . }}
+{{ end }}

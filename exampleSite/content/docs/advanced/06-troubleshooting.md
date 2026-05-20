@@ -23,7 +23,7 @@ hugo \
   --baseURL "${{ steps.pages.outputs.base_url }}/"
 ```
 
-The theme's own templates already route every internal href through `layouts/partials/site-href.html`, which strips the leading `/` and pipes the path through Hugo's `relURL` so the baseURL prefix is applied. If your own custom shortcodes or partials emit `href="/foo"` raw, swap to `href="{{ partial "site-href.html" "/foo" }}"`.
+The theme's own templates already route every internal href through `layouts/_partials/site-href.html`, which strips the leading `/` and pipes the path through Hugo's `relURL` so the baseURL prefix is applied. If your own custom shortcodes or partials emit `href="/foo"` raw, swap to `href="{{ partial "site-href.html" "/foo" }}"`.
 
 ## Search shows "No matches" for everything
 
@@ -48,7 +48,7 @@ After a build, `index.json` should exist at the published site root. Hit it dire
 
 **Cause.** The `<script>` that reads the persisted theme preference from localStorage runs too late — after the CSS has already applied the default-light tokens.
 
-**Fix.** The bundled `layouts/partials/head.html` puts the theme-init script *before* the stylesheet `<link>` to avoid this. If you've overridden `head.html` in your own site, replicate that order:
+**Fix.** The bundled `layouts/_partials/head.html` puts the theme-init script *before* the stylesheet `<link>` to avoid this. If you've overridden `head.html` in your own site, replicate that order:
 
 ```html
 <script>

@@ -37,7 +37,7 @@ For Splunk-branded sites, flip a single boolean and point the font params at the
   fontMono    = "'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace"
 ```
 
-When `splunkDataSansPro` is unset (or `false`), the `@font-face` block in [`layouts/partials/theme-vars.html`](https://github.com/splunk/hugo-theme-splunk-workshop/blob/main/layouts/partials/theme-vars.html) is skipped entirely — no Heretto-CDN requests fire. The exampleSite/ demo uses exactly this opt-in.
+When `splunkDataSansPro` is unset (or `false`), the `@font-face` block in [`layouts/_partials/theme-vars.html`](https://github.com/splunk/hugo-theme-splunk-workshop/blob/main/layouts/_partials/theme-vars.html) is skipped entirely — no Heretto-CDN requests fire. The exampleSite/ demo uses exactly this opt-in.
 
 ## Switching to a different stack
 

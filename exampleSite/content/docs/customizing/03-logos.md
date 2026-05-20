@@ -96,7 +96,7 @@ Hugo doesn't validate the URLs — if you ship a typo, the icon still renders bu
 
 ## OG / Twitter card image
 
-The theme auto-emits OpenGraph and Twitter card meta tags using your site title and description. To set a social-share image, drop one at `static/images/og.png` (1200×630 is the canonical size) and override `partials/head.html` to add:
+The theme auto-emits OpenGraph and Twitter card meta tags using your site title and description. To set a social-share image, drop one at `static/images/og.png` (1200×630 is the canonical size) and override `_partials/head.html` to add:
 
 ```html
 <meta property="og:image" content="{{ "images/og.png" | absURL }}">

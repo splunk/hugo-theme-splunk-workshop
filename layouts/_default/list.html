@@ -1,16 +1,13 @@
 {{ define "main" }}
 {{- $p := .Site.Params -}}
-{{- $workshop := partial "workshop-root.html" . -}}
-{{- $hasSidebar := and $p.showSidebar $workshop -}}
-{{- $showToc := cond (isset .Params "showtoc") .Params.showToc $p.showToc -}}
-{{- $hasToc := and $showToc (strings.Contains (printf "%s" .TableOfContents) "<li") -}}
+{{- $workshop := partialCached "workshop-root.html" . .RelPermalink -}}
 
 {{- /* Two rendering modes:
        - Hub mode: the page has no workshop root (language home or category
          hub). Render the hero layout with an auto-card-grid of children.
        - Workshop mode: the page is the workshop landing or a deeper section.
-         Render the three-column shell (sidebar + content + TOC) the same
-         way single.html does. */ -}}
+         Render the three-column shell (sidebar + content + TOC) via the
+         shared `page-shell.html` partial. */ -}}
 
 {{- if not $workshop -}}
 <main>
@@ -41,27 +38,7 @@
       {{ if .Content }}
         {{ .Content }}
       {{ else }}
-        {{ $items := partial "visible-pages.html" .Pages }}
-        {{ if and (eq .Section "workshops") (eq .Kind "section") (.Sections) }}
-          {{ $items = partial "visible-pages.html" .Sections }}
-        {{ end }}
-        {{ if $items }}
-          <div class="cards">
-            {{ range $i, $page := $items }}
-              <a class="card" href="{{ .RelPermalink }}">
-                <span class="card__num">{{ printf "%02d" (add $i 1) }}</span>
-                <h3 class="card__title">{{ .LinkTitle }}</h3>
-                {{ with .Description }}<p class="card__desc">{{ . }}</p>{{ end }}
-                <div class="card__meta">
-                  {{ with .Params.duration }}<span class="card__meta-item">{{ . }}</span>{{ end }}
-                  {{ with .Params.difficulty }}<span class="card__meta-item">{{ . }}</span>{{ end }}
-                  {{- $leaves := where .RegularPagesRecursive "Params.hidden" "!=" true -}}
-                  {{ if gt (len $leaves) 1 }}<span class="card__meta-item">{{ i18n "pagesCount" (dict "Count" (len $leaves)) }}</span>{{ end }}
-                </div>
-              </a>
-            {{ end }}
-          </div>
-        {{ end }}
+        {{ partial "cards-auto-grid.html" . }}
       {{ end }}
     </div>
   </div>
@@ -69,74 +46,7 @@
 
 {{- else -}}
 
-{{- /* Workshop mode — same three-column shell as single.html so a workshop
-       landing or a leaf section page (relearn-style page bundle) renders
-       with the workshop sidebar and a TOC. */ -}}
-<main class="page {{ if not $hasSidebar }}page--narrow{{ else if not $hasToc }}page--with-sidebar-only{{ end }}">
-
-  {{ if $hasSidebar }}{{ partial "sidebar.html" . }}{{ end }}
-
-  <article class="content" id="content">
-    <nav class="breadcrumb" aria-label="Breadcrumb">
-      <a href="{{ partial "site-href.html" "/" }}">{{ i18n "home" }}</a>
-      {{- $pages := .Ancestors.Reverse -}}
-      {{- range $pages -}}
-        {{- if ne .RelPermalink "/" }}
-          <span class="breadcrumb__sep">/</span>
-          <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
-        {{- end -}}
-      {{- end -}}
-      <span class="breadcrumb__sep">/</span>
-      <span aria-current="page">{{ .LinkTitle }}</span>
-    </nav>
-
-    {{ with .CurrentSection }}{{ if ne .RelPermalink "/" }}
-      <p class="eyebrow">{{ .Title | markdownify }}</p>
-    {{ end }}{{ end }}
-    <h1>{{ .Title }}</h1>
-
-    {{ with .Description }}<p class="lead">{{ . }}</p>{{ end }}
-
-    {{ partial "workshop-meta.html" . }}
-
-    {{- /* Body content first. If the section has no body, fall back to the
-       card grid of its children so the landing isn't blank. */ -}}
-    {{ if .Content }}
-      {{ .Content }}
-    {{ else }}
-      {{ $items := partial "visible-pages.html" .Pages }}
-      {{ if $items }}
-        <div class="cards">
-          {{ range $i, $page := $items }}
-            <a class="card" href="{{ .RelPermalink }}">
-              <span class="card__num">{{ printf "%02d" (add $i 1) }}</span>
-              <h3 class="card__title">{{ .LinkTitle }}</h3>
-              {{ with .Description }}<p class="card__desc">{{ . }}</p>{{ end }}
-              <div class="card__meta">
-                {{ with .Params.duration }}<span class="card__meta-item">{{ . }}</span>{{ end }}
-                {{ with .Params.difficulty }}<span class="card__meta-item">{{ . }}</span>{{ end }}
-                {{- $leaves := where .RegularPagesRecursive "Params.hidden" "!=" true -}}
-                {{ if gt (len $leaves) 1 }}<span class="card__meta-item">{{ i18n "pagesCount" (dict "Count" (len $leaves)) }}</span>{{ end }}
-              </div>
-            </a>
-          {{ end }}
-        </div>
-      {{ end }}
-    {{ end }}
-
-    {{ partial "pager.html" . }}
-
-    {{ with .Site.Params.editURL }}{{ if $.File }}
-      <p class="edit-link">
-        <a href="{{ . }}{{ $.File.Path }}" target="_blank" rel="noopener">
-          <span class="edit-link__arrow">&rarr;</span> {{ i18n "editOnGitHub" }}
-        </a>
-      </p>
-    {{ end }}{{ end }}
-  </article>
-
-  {{ if $hasToc }}{{ partial "toc.html" . }}{{ end }}
-</main>
+{{ partial "page-shell.html" (dict "page" . "innerPartial" "page-inner-list-workshop.html") }}
 
 {{- end -}}
 {{ end }}

@@ -24,7 +24,10 @@
   {{- $entry := dict "title" $title "href" $href "icon" $icon "image" $image "color" $color "content" $content -}}
   {{- .Page.Scratch.Add $key (slice $entry) -}}
 {{- else -}}
-  {{- /* Standalone — render inline */ -}}
+  {{- /* Standalone — render inline. Flag the page so layouts (notably
+         index.html) can suppress their auto-card-grid when the body has
+         already authored its own. */ -}}
+  {{- .Page.Store.Set "_has_cards" true -}}
   {{- if $href -}}
   <a class="shortcode-card" href="{{ $href }}"{{ with $color }} style="--card-accent: {{ . | safeCSS }}"{{ end }}>
     {{- if $image }}<div class="shortcode-card__image"><img src="{{ $image | relURL }}" alt="" loading="lazy"></div>{{ end -}}
