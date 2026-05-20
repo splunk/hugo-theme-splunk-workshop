@@ -6,7 +6,6 @@ draft       = true
 weight      = 10
 duration    = '15 min'
 difficulty  = 'beginner'
-nopager     = true
 tags        = []
 +++
 

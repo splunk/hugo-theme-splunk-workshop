@@ -168,7 +168,6 @@ draft       = true
 weight      = 10
 duration    = '15 min'
 difficulty  = 'beginner'
-nopager     = true
 tags        = []
 +++
 
@@ -216,12 +215,13 @@ first before peeking.
 
 A scaffold for hands-on labs that sit alongside reading lessons. Pre-seeds:
 
-- `nopager = true` (exercises are usually launched from a parent lesson, not stepped through linearly)
 - A `lead` summarising the end-state and a `prerequisites` block up top
 - Three `{{</* step */>}}` blocks with `terminal` and `solution` examples
 - A `{{</* checkpoint */>}}` to confirm completion
 
 Use this when the page is a thing the reader *does*, not a thing they read.
+
+If you launch the exercise from a parent lesson and don't want it to appear in the prev/next pager chain, add `nopager = true` to its front matter — see [Pager override demo › nopager](/workshops/pager-demo/06-nopager/). The archetype no longer pre-seeds the flag because most authors write exercises as part of a linear sequence; opt in explicitly when the side-trip model fits.
 
 → See [Exercise archetype](/docs/authoring/archetype-examples/04-exercise/) rendered live.
 
