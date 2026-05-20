@@ -28,18 +28,29 @@
 {{- $prevURL := .Get "prev" -}}
 {{- $nextURL := .Get "next" -}}
 
+{{- /* Resolve an author-supplied path to a real Page when possible: that
+       gives us `.RelPermalink` which already accounts for baseURL subpath
+       AND the active language. Passing the raw author string straight into
+       href="" emits a domain-absolute path that 404s under either of those
+       deployment shapes. External URLs (http/https) and typo'd paths don't
+       resolve, so the raw input is preserved as a fallback. */ -}}
+
 {{- with $prevURL -}}
+  {{- $url   := . -}}
   {{- $label := $.Get "prevLabel" -}}
-  {{- if not $label -}}
-    {{- with $.Site.GetPage . -}}{{- $label = .LinkTitle -}}{{- end -}}
+  {{- with $.Site.GetPage . -}}
+    {{- $url = .RelPermalink -}}
+    {{- if not $label }}{{ $label = .LinkTitle }}{{ end -}}
   {{- end -}}
-  {{- $.Page.Scratch.Set "pager_override_prev" (dict "url" . "title" ($label | default .)) -}}
+  {{- $.Page.Scratch.Set "pager_override_prev" (dict "url" $url "title" ($label | default $url)) -}}
 {{- end -}}
 
 {{- with $nextURL -}}
+  {{- $url   := . -}}
   {{- $label := $.Get "nextLabel" -}}
-  {{- if not $label -}}
-    {{- with $.Site.GetPage . -}}{{- $label = .LinkTitle -}}{{- end -}}
+  {{- with $.Site.GetPage . -}}
+    {{- $url = .RelPermalink -}}
+    {{- if not $label }}{{ $label = .LinkTitle }}{{ end -}}
   {{- end -}}
-  {{- $.Page.Scratch.Set "pager_override_next" (dict "url" . "title" ($label | default .)) -}}
+  {{- $.Page.Scratch.Set "pager_override_next" (dict "url" $url "title" ($label | default $url)) -}}
 {{- end -}}
