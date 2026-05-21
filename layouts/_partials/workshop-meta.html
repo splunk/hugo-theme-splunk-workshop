@@ -8,7 +8,11 @@
          3+        → "Authors" · A, B, & C
     */ -}}
 {{- $params  := .Params -}}
-{{- $time    := $params.time | default $params.duration -}}
+{{- /* Fallback chain: explicit `time` (preferred) → relearn-legacy `duration`
+       → Hugo's built-in `.ReadingTime` (WordCount / 213 wpm, rounded down).
+       Author-provided values always win; the ReadingTime fallback only
+       kicks in for pages that set neither. */ -}}
+{{- $time    := $params.time | default $params.duration | default (printf "%d min" .ReadingTime) -}}
 {{- $rawAuth := $params.authors | default $params.author -}}
 
 {{- /* Normalise authors into a clean string slice. Trims surrounding

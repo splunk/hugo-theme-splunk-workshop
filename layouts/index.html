@@ -67,9 +67,11 @@
                 {{ with .Description }}<p class="card__desc">{{ . }}</p>{{ end }}
                 <div class="card__meta">
                   {{- /* `time` is the relearn-style key; `duration` is the
-                         theme-native alias. Prefer `time` and fall back so
-                         pages that set both don't render duplicate items. */ -}}
-                  {{ with (.Params.time | default .Params.duration) }}<span class="card__meta-item">{{ . }}</span>{{ end }}
+                         theme-native alias. Prefer `time`, fall back to
+                         `duration`, then to Hugo's `.ReadingTime` so empty
+                         meta is rare. Pages that set either explicit key
+                         keep their authored value. */ -}}
+                  {{ with (.Params.time | default .Params.duration | default (printf "%d min" .ReadingTime)) }}<span class="card__meta-item">{{ . }}</span>{{ end }}
                   {{ with .Params.difficulty }}<span class="card__meta-item">{{ . }}</span>{{ end }}
                   {{- /* Recursive count of leaf pages — gives the same number whether
                          the card represents a hub (counts all leaves below) or a

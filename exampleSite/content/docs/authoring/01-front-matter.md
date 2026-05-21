@@ -50,6 +50,16 @@ tagline     = "01 · Foundation"      # extra text in the chapter sidebar
 
 Free-form text shown in the workshop meta row at the top of the page and in workshop cards. Conventionally something like `"20 min"` or `"1 hour"`. `time` is the preferred (relearn-compatible) key; `duration` works as a fallback so legacy front matter keeps rendering.
 
+If neither key is set, the theme falls back to Hugo's built-in `.ReadingTime`, computed as `.WordCount ÷ 213` (Hugo's default words-per-minute) rounded down. Authors who set `time` or `duration` always win — the fallback only fires when both are absent.
+
+Caveats of the auto-estimate:
+
+- Code blocks count words at reading speed, but readers parse code more slowly. Pages with substantial command listings under-estimate.
+- Terminal output counts as words but is usually skimmed. Same direction of error.
+- Very short pages can round to `0 min` — Hugo doesn't apply a floor. Set `time` explicitly for short reference pages where `0 min` would look odd.
+
+Set `time` deliberately for any page where the auto-estimate would mislead. The fallback is a sensible default for prose-heavy lessons, not a substitute for human judgement.
+
 ### `authors` / `author`
 
 `authors` is a list, rendered as `Name1 & Name2 & …` next to a user icon in the workshop meta row. `author` (singular string) is honoured when only one name is set or when migrating legacy content. Use `authors` for new content.
