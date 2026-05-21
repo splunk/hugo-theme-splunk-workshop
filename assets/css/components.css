@@ -904,9 +904,9 @@
 /* The `P P` (presenter toggle) shortcut is internal to facilitators —
    attendees should never see it advertised. Hide the row by default,
    reveal only when presenter mode is currently active (presenter.js
-   sets data-presenter="true" on the root). That way a presenter who
-   already opened presenter mode can see how to toggle it back off
-   from the help dialog, but a regular attendee opening `?` doesn't
-   even know the shortcut exists. */
-.kbd-help__row--presenter { display: none; }
-[data-presenter="true"] .kbd-help__row--presenter { display: grid; }
+   sets data-presenter="true" on the root). The selectors need at
+   least (0,2,0) specificity to beat `.kbd-help__list > div`'s
+   `display: grid` cascade (0,1,1) — without that, the hide rule
+   loses to the parent grid rule and the row stays visible. */
+.kbd-help__list .kbd-help__row--presenter { display: none; }
+[data-presenter="true"] .kbd-help__list .kbd-help__row--presenter { display: grid; }
