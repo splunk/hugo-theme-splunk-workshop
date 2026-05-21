@@ -46,8 +46,9 @@
          on any unrelated `class="cards-…"` substring. */ -}}
       {{ with .Content }}{{ . }}{{ end }}
       {{- $hasOwnCards := .Page.Store.Get "_has_cards" -}}
+      {{- $noAutoCards := eq (.Params.noAutoCards | default false) true -}}
 
-      {{- if not $hasOwnCards -}}
+      {{- if and (not $hasOwnCards) (not $noAutoCards) -}}
         {{ $items := slice }}
         {{ with .Site.Params.homeSections }}
           {{ range . }}

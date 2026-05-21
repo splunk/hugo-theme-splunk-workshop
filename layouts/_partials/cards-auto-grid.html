@@ -21,6 +21,12 @@
   {{- $preferSections = eq ($page.Params.subsections | default false) true -}}
 {{- end -}}
 
+{{- /* `noAutoCards = true` in the page's front matter is an explicit opt-out
+       of the auto-grid. Use it on section landings that should be just title
+       + description, no listing. The sidebar still surfaces the section's
+       children, so navigation isn't lost. */ -}}
+{{- if eq ($page.Params.noAutoCards | default false) true -}}{{- return -}}{{- end -}}
+
 {{- $items := partial "visible-pages.html" $page.Pages -}}
 {{- if and $preferSections $page.Sections -}}
   {{- $items = partial "visible-pages.html" $page.Sections -}}

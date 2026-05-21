@@ -39,6 +39,7 @@ lastmod     = "2026-04-28"           # optional override; otherwise from git
 hidden      = false                  # exclude from sidebar, TOC, search, prev/next
 nopager     = false                  # render the page but suppress prev/next
 showToc     = true                   # override site-wide `showToc` per page
+noAutoCards = false                  # section-only: suppress the auto-card-grid fallback
 subsections = false                  # section-only: list sub-sections instead of pages
 subtitle    = "Chapter · Foo"        # eyebrow text on chapter pages
 tagline     = "01 · Foundation"      # extra text in the chapter sidebar
@@ -107,6 +108,25 @@ showToc = false
 ```
 
 Every descendant inherits unless it sets its own `showToc`. The same mechanism works for any other front-matter key.
+
+### `noAutoCards`
+
+Section-only flag (set on an `_index.md`, not on regular pages). When `true`, the section's auto-card-grid is suppressed even if the section has no body content. Use it for landings that should be just title + description with no listing:
+
+```toml
+# content/resources/_index.md
++++
+title       = "Resources"
+description = "Reference docs, community links, deeper reading."
+noAutoCards = true
++++
+```
+
+By default, an `_index.md` with no body content falls back to an auto-grid of the section's children (or sub-sections, if `subsections = true`). That fallback is a navigational helper for empty section landings; on pages where the title + description are the entire intended payload, the cards are unwelcome.
+
+The sidebar still lists the section's children, so navigation isn't lost — the flag only removes the in-content card grid.
+
+Equivalent to adding any body content (any prose suppresses the auto-grid via the standard `{{ if .Content }}…{{ else }}auto-grid{{ end }}` pattern), but more explicit and doesn't require placeholder text.
 
 ### `subsections`
 
