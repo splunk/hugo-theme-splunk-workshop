@@ -160,7 +160,7 @@
 .hero__inner {
   position: relative;
   z-index: 1;
-  max-width: 50rem;
+  max-width: 60rem;
 }
 .hero .eyebrow { animation: reveal-up 520ms var(--ease) 0ms both; }
 .hero__title {
