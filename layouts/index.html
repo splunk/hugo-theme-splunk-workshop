@@ -73,11 +73,14 @@
                          keep their authored value. */ -}}
                   {{ with (.Params.time | default .Params.duration | default (printf "%d min" .ReadingTime)) }}<span class="card__meta-item">{{ . }}</span>{{ end }}
                   {{ with .Params.difficulty }}<span class="card__meta-item">{{ . }}</span>{{ end }}
-                  {{- /* Recursive count of leaf pages — gives the same number whether
-                         the card represents a hub (counts all leaves below) or a
-                         chapter (counts its direct lessons). */ -}}
-                  {{- $leaves := where .RegularPagesRecursive "Params.hidden" "!=" true -}}
-                  {{ if gt (len $leaves) 1 }}<span class="card__meta-item">{{ i18n "pagesCount" (dict "Count" (len $leaves)) }}</span>{{ end }}
+                  {{- /* Shared `children-count.html` partial: counts every
+                         non-hidden page reachable below this card (leaf
+                         pages AND intermediate section landings). Matches
+                         the meta count rendered by cards-auto-grid and the
+                         `children` shortcode, so the same section always
+                         shows the same number. */ -}}
+                  {{- $count := partial "children-count.html" . -}}
+                  {{ if gt $count 1 }}<span class="card__meta-item">{{ i18n "pagesCount" (dict "Count" $count) }}</span>{{ end }}
                 </div>
               </a>
             {{ end }}
