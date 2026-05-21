@@ -77,6 +77,12 @@ export function initKeyboardNav() {
   const prev = document.querySelector(".pager__btn--prev");
   const next = document.querySelector(".pager__btn--next");
 
+  // Header button — click-discoverable equivalent of the `?` shortcut.
+  // First-time visitors don't know to press a key; the button teaches the
+  // affordance and then the modal itself shows the shortcut alongside.
+  const helpTrigger = document.querySelector("[data-kbd-help-trigger]");
+  if (helpTrigger) helpTrigger.addEventListener("click", openHelp);
+
   document.addEventListener("keydown", (e) => {
     // Esc closes the help overlay even when modals/typing checks would block.
     if (e.key === "Escape" && isHelpOpen()) { closeHelp(); return; }

@@ -20,6 +20,8 @@
   translation: "Press / to search"
 - id: searchEmpty
   translation: "No matches"
+- id: keyboardShortcuts
+  translation: "Keyboard shortcuts"   # header `?` button label + dialog title
 - id: pagesCount
   translation:
     one: "{{ .Count }} page"

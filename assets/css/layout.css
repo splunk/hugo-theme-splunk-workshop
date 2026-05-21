@@ -184,8 +184,11 @@
   pointer-events: none;
 }
 
-/* ---- Theme toggle ---- */
-.theme-toggle {
+/* ---- Theme toggle + keyboard-shortcuts button ----
+   Both render as small icon-only pills in the header. Same dimensions
+   and hover treatment; they share a base ruleset to stay consistent. */
+.theme-toggle,
+.kbd-help-trigger {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -196,11 +199,13 @@
   color: var(--color-ink-muted);
   transition: all var(--t-fast) var(--ease);
 }
-.theme-toggle:hover {
+.theme-toggle:hover,
+.kbd-help-trigger:hover {
   color: var(--color-accent-text);
   border-color: var(--color-accent);
 }
-.theme-toggle svg { width: 1rem; height: 1rem; }
+.theme-toggle svg,
+.kbd-help-trigger svg { width: 1rem; height: 1rem; }
 /* Status-based icons — the icon represents the CURRENT mode, not the
    destination. Click toggles to the opposite (handled in JS). */
 .theme-toggle .icon-sun  { display: block; }
