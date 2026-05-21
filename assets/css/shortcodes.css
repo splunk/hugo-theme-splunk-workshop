@@ -996,17 +996,23 @@ a.shortcode-card:hover .shortcode-card__title { color: var(--color-accent-text);
 .children-list a:hover { color: var(--color-accent); }
 .children-list__desc { color: var(--color-ink-muted); font-size: 0.93em; }
 
-/* Cards grid (the {{< cards >}} container) */
+/* Cards grid (the {{< cards >}} container). Min track width matches the
+   default `.cards` grid (20rem) so in-content cards have the same visual
+   weight as workshop-listing cards. Earlier the shortcode grid used 15rem
+   to allow denser 3-up layouts in narrower content columns, but with the
+   default 720px content width that produced anaemic ~225px cards — too
+   narrow next to the surrounding prose. */
 .cards--shortcode {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
   gap: 1rem;
   margin: 2rem 0;
 }
 /* When cards carry featured images, prefer a wider tile so the banner
-   images get visual weight (3-up at typical desktop widths). */
+   images get visual weight. Keeps the +2rem relative bump over the
+   text-only shortcode grid. */
 .cards--shortcode.cards--with-images {
-  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));
 }
 .cards--shortcode .shortcode-card { margin: 0; height: 100%; }
 
