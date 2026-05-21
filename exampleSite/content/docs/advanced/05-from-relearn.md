@@ -69,7 +69,7 @@ The reason to switch — beyond what relearn already does — is the workshop-pe
 - `{{</* presenter */>}}` — Live-workshop speaker notes with a `P × 2` reveal hotkey
 - `{{</* otel-version */>}}` — Splunk-specific, keeps OTel Collector version current
 
-Plus the hero gradient bloom, the JSON-indexed fuzzy search, keyboard navigation between pages (`←` / `→`), and a presenter mode designed around live workshops rather than self-paced docs.
+Plus the hero gradient bloom, the JSON-indexed fuzzy search, keyboard navigation between pages (`←` / `→`, with `?` for the full shortcut list), and a presenter mode designed around live workshops rather than self-paced docs.
 
 ## Migration steps
 

@@ -826,3 +826,77 @@
   border-radius: var(--radius-md);
   box-shadow: 0 20px 60px rgba(0,0,0,0.5);
 }
+
+/* ---- Keyboard-shortcuts help overlay ---------------------------------------
+   Triggered by the `?` key in keyboard-nav.js. Same backdrop / panel pattern
+   as `.site-search`, just sized for a static dialog. The `[hidden]` attribute
+   is the visibility hook; toggling it open/close is the JS's job. */
+.kbd-help[hidden] { display: none; }
+.kbd-help {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: color-mix(in oklab, var(--color-ink) 60%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: var(--z-modal);
+  animation: fadeIn var(--t-fast) var(--ease);
+}
+.kbd-help__panel {
+  width: 100%;
+  max-width: 32rem;
+  background: var(--color-paper);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  padding: 1.5rem 1.75rem;
+  max-height: calc(100vh - 3rem);
+  overflow-y: auto;
+}
+.kbd-help__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0 0 1rem;
+}
+.kbd-help__list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.6rem 1rem;
+  margin: 0 0 1.25rem;
+}
+.kbd-help__list > div {
+  display: grid;
+  grid-template-columns: minmax(7rem, auto) 1fr;
+  align-items: center;
+  gap: 0.25rem 1rem;
+}
+.kbd-help__list dt {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+.kbd-help__list dd {
+  margin: 0;
+  color: var(--color-ink-muted);
+  font-size: 0.93rem;
+}
+.kbd-help__close {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-ink-muted);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.9rem;
+  cursor: pointer;
+  transition: color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+}
+.kbd-help__close:hover { color: var(--color-ink); border-color: var(--color-border-strong); }
