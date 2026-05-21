@@ -1,0 +1,18 @@
+{{- /*
+  Recursive descendant page counter.
+
+  Counts every non-hidden page reachable below the given section — both
+  section index pages AND regular leaf pages, at any depth. Used by the
+  `children` shortcode to show an "N pages" badge that reflects how many
+  pages a reader will actually navigate through, regardless of whether
+  an author splits a chapter into multiple .md files or keeps it as a
+  single _index.md.
+
+  Returns: int
+*/ -}}
+{{- $count := 0 -}}
+{{- range where .Pages "Params.hidden" "!=" true -}}
+  {{- $count = add $count 1 -}}
+  {{- $count = add $count (partial "children-count.html" .) -}}
+{{- end -}}
+{{- return $count -}}
