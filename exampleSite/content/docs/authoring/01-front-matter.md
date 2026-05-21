@@ -39,7 +39,7 @@ lastmod     = "2026-04-28"           # optional override; otherwise from git
 hidden      = false                  # exclude from sidebar, TOC, search, prev/next
 nopager     = false                  # render the page but suppress prev/next
 showToc     = true                   # override site-wide `showToc` per page
-noAutoCards = false                  # section-only: suppress the auto-card-grid fallback
+noautocards = false                  # section-only: suppress the auto-card-grid fallback
 subsections = false                  # section-only: list sub-sections instead of pages
 subtitle    = "Chapter · Foo"        # eyebrow text on chapter pages
 tagline     = "01 · Foundation"      # extra text in the chapter sidebar
@@ -109,7 +109,7 @@ showToc = false
 
 Every descendant inherits unless it sets its own `showToc`. The same mechanism works for any other front-matter key.
 
-### `noAutoCards`
+### `noautocards`
 
 Section-only flag (set on an `_index.md`, not on regular pages). When `true`, the section's auto-card-grid is suppressed even if the section has no body content. Use it for landings that should be just title + description with no listing:
 
@@ -118,7 +118,7 @@ Section-only flag (set on an `_index.md`, not on regular pages). When `true`, th
 +++
 title       = "Resources"
 description = "Reference docs, community links, deeper reading."
-noAutoCards = true
+noautocards = true
 +++
 ```
 
