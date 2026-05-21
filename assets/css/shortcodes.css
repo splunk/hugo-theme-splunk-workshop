@@ -1012,7 +1012,7 @@ a.shortcode-card:hover .shortcode-card__title { color: var(--color-accent-text);
    images get visual weight. Keeps the +2rem relative bump over the
    text-only shortcode grid. */
 .cards--shortcode.cards--with-images {
-  grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
 }
 .cards--shortcode .shortcode-card { margin: 0; height: 100%; }
 
