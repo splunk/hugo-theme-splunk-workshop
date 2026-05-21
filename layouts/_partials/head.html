@@ -111,3 +111,6 @@
   <script type="module" src="{{ $bundle.RelPermalink }}" defer></script>
 {{ end }}
 
+{{- /* Site extension point — last thing in <head>. See custom-header.html. */ -}}
+{{- partial "custom-header.html" . }}
+

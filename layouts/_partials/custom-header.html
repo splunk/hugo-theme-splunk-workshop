@@ -1,0 +1,14 @@
+{{- /*
+  Extension point: site-injected <head> content.
+
+  Override this partial in your site at:
+    layouts/_partials/custom-header.html
+
+  Use it to inject site-specific RUM / analytics snippets, extra meta
+  tags, custom <link>/<script> tags, etc. Renders at the very end of
+  <head>, after the theme's bundled CSS, pre-paint script, and JS
+  module — so any inline init has access to a built DOM head and your
+  overrides win the cascade.
+
+  Default content: none.
+*/ -}}
