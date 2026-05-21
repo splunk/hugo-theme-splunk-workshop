@@ -18,10 +18,47 @@
 {{- $color   := .Get "color" -}}
 {{- $content := .Inner | .Page.RenderString -}}
 
+{{- /* Final URL for the card image. Resolution order:
+       1. Explicit `image="..."` arg — author-provided, wins. Path piped
+          through `relURL` so baseURL subpath is honoured.
+       2. Auto-pull: if no explicit image AND `href` resolves to a Hugo
+          Page, look up that page's `params.images[0]` and resolve it
+          against the target page's bundle resources. Mirrors the 3-step
+          lookup used by `children type="card" image="true"`.
+       3. Nothing — card renders without an image. Graceful no-op for
+          external hrefs, pages without `params.images`, or unresolvable
+          bundle paths. */ -}}
+{{- $imgURL := "" -}}
+{{- if $image -}}
+  {{- $imgURL = $image | relURL -}}
+{{- else if $hrefRaw -}}
+  {{- with site.GetPage $hrefRaw -}}
+    {{- $tp := . -}}
+    {{- with $tp.Params.images -}}
+      {{- $raw  := index . 0 -}}
+      {{- $base := path.Base $raw -}}
+      {{- with $tp.Resources.GetMatch $raw -}}
+        {{- $imgURL = .RelPermalink -}}
+      {{- else -}}
+        {{- with $tp.Resources.GetMatch (printf "images/%s" $base) -}}
+          {{- $imgURL = .RelPermalink -}}
+        {{- else -}}
+          {{- with $tp.Resources.GetMatch $base -}}
+            {{- $imgURL = .RelPermalink -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
 {{- /* If a parent {{< cards >}} exists, push to its bucket and emit nothing. */ -}}
 {{- if and .Parent (eq (.Parent.Name) "cards") -}}
   {{- $key := printf "_cards_%d" .Parent.Ordinal -}}
-  {{- $entry := dict "title" $title "href" $href "icon" $icon "image" $image "color" $color "content" $content -}}
+  {{- /* Push the RESOLVED url, not the raw `image=` arg, so cards.html can
+         emit it directly and the auto-pull-from-href path also works
+         inside a `<cards>` wrapper. */ -}}
+  {{- $entry := dict "title" $title "href" $href "icon" $icon "image" $imgURL "color" $color "content" $content -}}
   {{- .Page.Scratch.Add $key (slice $entry) -}}
 {{- else -}}
   {{- /* Standalone — render inline. Flag the page so layouts (notably
@@ -30,13 +67,13 @@
   {{- .Page.Store.Set "_has_cards" true -}}
   {{- if $href -}}
   <a class="shortcode-card" href="{{ $href }}"{{ with $color }} style="--card-accent: {{ . | safeCSS }}"{{ end }}>
-    {{- if $image }}<div class="shortcode-card__image"><img src="{{ $image | relURL }}" alt="" loading="lazy"></div>{{ end -}}
+    {{- if $imgURL }}<div class="shortcode-card__image"><img src="{{ $imgURL }}" alt="" loading="lazy"></div>{{ end -}}
     {{ with $title }}<p class="shortcode-card__title">{{ if $icon }}<span class="shortcode-card__icon">{{ partial "icon-svg.html" $icon }}</span>{{ end }}{{ . | markdownify }}</p>{{ end }}
     <div class="shortcode-card__body">{{ $content | safeHTML }}</div>
   </a>
   {{- else -}}
   <div class="shortcode-card"{{ with $color }} style="--card-accent: {{ . | safeCSS }}"{{ end }}>
-    {{- if $image }}<div class="shortcode-card__image"><img src="{{ $image | relURL }}" alt="" loading="lazy"></div>{{ end -}}
+    {{- if $imgURL }}<div class="shortcode-card__image"><img src="{{ $imgURL }}" alt="" loading="lazy"></div>{{ end -}}
     {{ with $title }}<p class="shortcode-card__title">{{ if $icon }}<span class="shortcode-card__icon">{{ partial "icon-svg.html" $icon }}</span>{{ end }}{{ . | markdownify }}</p>{{ end }}
     <div class="shortcode-card__body">{{ $content | safeHTML }}</div>
   </div>

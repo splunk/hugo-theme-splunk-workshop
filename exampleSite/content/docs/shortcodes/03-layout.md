@@ -397,6 +397,42 @@ Rebrand colors, fonts, and logo.
 
 A standalone `card` outside a `cards` container renders as a single full-width content card.
 
+### Card images
+
+Three ways to attach a banner image to a card, in order of preference:
+
+**1. Auto-pull from the linked page (recommended).** When a `card` has an `href` pointing at a Hugo page, the shortcode looks up that page's front matter and pulls `images[0]` automatically. The image file lives in the linked page's bundle (page-bundle resource):
+
+```toml
+# content/resources/_index.md
++++
+title  = "Resources"
+images = ["images/featured-resources.png"]
++++
+```
+
+```markdown
+{{</* cards */>}}
+{{</* card title="Resources" href="/resources/" icon="book" */>}}
+Reference docs, community links, deeper reading.
+{{</* /card */>}}
+{{</* /cards */>}}
+```
+
+No `image=` arg needed on the card itself. The auto-resolution does a 3-step lookup against the linked page's bundle (raw path → `images/<basename>` → bare basename), so most directory shapes work. The card renders without an image if the linked page has no `images` front matter, no matching bundle resource, or is an external URL — graceful no-op.
+
+`images` lives at the **top level** of front matter, not under `[params]`. Hugo treats it as a special key that doubles as the OpenGraph / Twitter-card image source — so you get social-share images as a side effect.
+
+**2. Explicit absolute path.** If the image lives in `static/` or you want to override the auto-pull:
+
+```markdown
+{{</* card title="Resources" href="/resources/" icon="book" image="/images/featured-resources.png" */>}}
+```
+
+Explicit `image=` always wins over the auto-pull. Path is piped through `relURL` so baseURL subpaths (GitHub Pages) work.
+
+**3. Featured image via `children type="card" image="true"`.** Auto-discovered for **every** card in a `children` listing, same `images` front-matter contract. The auto-discovery semantics are identical; the difference is `children` lists every visible sub-page automatically, while hand-written `cards` + `card` blocks let you curate which pages appear and in what order.
+
 ## Indicators
 
 Two inline-pill shortcodes for surfacing workshop metadata anywhere in the body. They render as `<span class="indicator">` so they sit cleanly mid-prose.
