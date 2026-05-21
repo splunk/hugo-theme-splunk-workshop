@@ -175,6 +175,18 @@ title = "Splunk4Rookies *Workshops*"
 
 Plain `single.html` titles are left as literal text. The brand-gradient italic treatment is meant for *display* headings (landing pages); applying it to every workshop step's H1 would over-deploy the brand magenta. If you want italic emphasis in a regular page title, write it in markdown body content as `## **Heading**` or similar — the H1 stays clean.
 
+### Card titles
+
+Card titles ALSO markdownify — anywhere a page appears as a card (the home page's auto-grid, a hub landing's auto-grid, a chapter landing's card-fallback, the `cards` / `card` / `children type="card"` shortcodes), the title goes through `markdownify`. The same `*emphasis*` markdown works:
+
+```toml
++++
+title = "Splunk4Rookies *Workshops*"
++++
+```
+
+…and the card showing that page renders the `*Workshops*` as italic, regardless of which layout drew the card. The em styling on card titles doesn't pick up the brand gradient (cards use a tighter visual register than display heros), so italic emphasis there is plain `<em>` — useful for distinguishing a product name, a UI label, or a key noun without dominating the card.
+
 ## Workshop meta row
 
 The block at the top of a workshop page showing time, difficulty, authors, and tags is composed from these front-matter keys. If you don't set any, the row is suppressed.

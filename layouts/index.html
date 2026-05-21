@@ -62,7 +62,7 @@
             {{ range $i, $page := $items }}
               <a class="card" href="{{ .RelPermalink }}">
                 <span class="card__num">{{ printf "%02d" (add $i 1) }}</span>
-                <h3 class="card__title">{{ .LinkTitle }}</h3>
+                <h3 class="card__title">{{ .LinkTitle | markdownify }}</h3>
                 {{ with .Description }}<p class="card__desc">{{ . }}</p>{{ end }}
                 <div class="card__meta">
                   {{- /* `time` is the relearn-style key; `duration` is the
