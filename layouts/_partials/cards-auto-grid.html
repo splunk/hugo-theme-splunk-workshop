@@ -46,8 +46,8 @@
                the in-page meta strip. */ -}}
         {{ with (.Params.time | default .Params.duration | default (printf "%d min" .ReadingTime)) }}<span class="card__meta-item">{{ . }}</span>{{ end }}
         {{ with .Params.difficulty }}<span class="card__meta-item">{{ . }}</span>{{ end }}
-        {{- $leaves := where .RegularPagesRecursive "Params.hidden" "!=" true -}}
-        {{ if gt (len $leaves) 1 }}<span class="card__meta-item">{{ i18n "pagesCount" (dict "Count" (len $leaves)) }}</span>{{ end }}
+        {{- $count := partial "children-count.html" . -}}
+        {{ if gt $count 1 }}<span class="card__meta-item">{{ i18n "pagesCount" (dict "Count" $count) }}</span>{{ end }}
       </div>
     </a>
   {{ end }}
