@@ -151,6 +151,30 @@ style = "ghost"
 - **`cta`** is a list of buttons. `style` is `primary` (filled, with arrow) or `ghost` (outline). Internal hrefs like `/workshops/` are auto-prefixed for project-pages baseURLs; external (`http*`) hrefs get `target="_blank"` automatically.
 - Any markdown body below the front matter renders below the hero.
 
+## Markdown in titles
+
+The `title` front-matter key is rendered through Hugo's `markdownify` on the three layouts that use a *display-sized* heading:
+
+| Layout | Trigger | H1 class | Markdownified? |
+| --- | --- | --- | --- |
+| Home (`/`) | `content/_index.md` rendered by `index.html` | `.hero__title` | ✅ |
+| Hub landing (e.g. `/splunk4rookies/`) | depth-1 section with sub-sections, rendered by `list.html` in hub-mode | `.hero__title` | ✅ |
+| Chapter landing (`layout = "chapter"`) | rendered by `chapter.html` | `.chapter__title` | ✅ |
+| Regular workshop page | rendered by `single.html` | (plain `h1`) | ❌ |
+| Workshop section landing | rendered by `list.html` in workshop-mode | (plain `h1`) | ❌ |
+
+So you can write:
+
+```toml
++++
+title = "Splunk4Rookies *Workshops*"
++++
+```
+
+…and the `*Workshops*` becomes `<em>Workshops</em>`, picking up the magenta→orange brand gradient defined in `components.css` for `.hero__title em` / `.chapter__title em`. The asterisks render as italic everywhere markdown does — but only the three layouts above also apply the brand gradient.
+
+Plain `single.html` titles are left as literal text. The brand-gradient italic treatment is meant for *display* headings (landing pages); applying it to every workshop step's H1 would over-deploy the brand magenta. If you want italic emphasis in a regular page title, write it in markdown body content as `## **Heading**` or similar — the H1 stays clean.
+
 ## Workshop meta row
 
 The block at the top of a workshop page showing time, difficulty, authors, and tags is composed from these front-matter keys. If you don't set any, the row is suppressed.

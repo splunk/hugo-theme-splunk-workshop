@@ -6,7 +6,7 @@
 <header class="chapter-hero">
   {{ with .Params.weight }}<div class="chapter__weight" aria-hidden="true">{{ . }}</div>{{ end }}
   <p class="eyebrow">{{ with .Params.subtitle }}{{ . }}{{ else }}{{ i18n "chapter" }}{{ end }}</p>
-  <h1 class="chapter__title">{{ .Title }}</h1>
+  <h1 class="chapter__title">{{ .Title | markdownify }}</h1>
   {{ with .Description }}<p class="hero__lead">{{ . }}</p>{{ end }}
 </header>
 

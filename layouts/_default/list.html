@@ -16,7 +16,7 @@
     <div class="page page--narrow page--no-pad-top">
       <div class="hero__inner">
         <p class="eyebrow">{{ if .IsHome }}{{ $p.brandTagline | default "Workshops" }}{{ else }}{{ with .CurrentSection.Parent }}{{ .Title | markdownify }}{{ else }}Section{{ end }}{{ end }}</p>
-        <h1 class="hero__title">{{ .Title }}{{ if .IsHome }}{{ if not .Title }}{{ .Site.Title }}{{ end }}{{ end }}</h1>
+        <h1 class="hero__title">{{ .Title | markdownify }}{{ if .IsHome }}{{ if not .Title }}{{ .Site.Title }}{{ end }}{{ end }}</h1>
         {{ with .Description }}<p class="hero__lead">{{ . }}</p>{{ else }}{{ with .Site.Params.description }}<p class="hero__lead">{{ . }}</p>{{ end }}{{ end }}
 
         {{ if .IsHome }}
