@@ -40,7 +40,7 @@ function buildHelp() {
         <div><dt><kbd>&uarr;</kbd> <kbd>&darr;</kbd></dt><dd>Navigate search results</dd></div>
         <div><dt><kbd>Enter</kbd></dt><dd>Open selected search result</dd></div>
         <div><dt><kbd>Esc</kbd></dt><dd>Close any modal or menu</dd></div>
-        <div><dt><kbd>P</kbd> <kbd>P</kbd></dt><dd>Toggle presenter mode (double-tap)</dd></div>
+        <div class="kbd-help__row--presenter"><dt><kbd>P</kbd> <kbd>P</kbd></dt><dd>Toggle presenter mode (double-tap)</dd></div>
         <div><dt><kbd>?</kbd></dt><dd>Show this dialog</dd></div>
       </dl>
       <button type="button" class="kbd-help__close" aria-label="Close">Close (Esc)</button>

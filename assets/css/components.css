@@ -900,3 +900,13 @@
   transition: color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
 }
 .kbd-help__close:hover { color: var(--color-ink); border-color: var(--color-border-strong); }
+
+/* The `P P` (presenter toggle) shortcut is internal to facilitators —
+   attendees should never see it advertised. Hide the row by default,
+   reveal only when presenter mode is currently active (presenter.js
+   sets data-presenter="true" on the root). That way a presenter who
+   already opened presenter mode can see how to toggle it back off
+   from the help dialog, but a regular attendee opening `?` doesn't
+   even know the shortcut exists. */
+.kbd-help__row--presenter { display: none; }
+[data-presenter="true"] .kbd-help__row--presenter { display: grid; }
