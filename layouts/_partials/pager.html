@@ -61,13 +61,13 @@
   {{ with $prev }}
     <a class="pager__btn pager__btn--prev" href="{{ .url }}" rel="prev">
       <span class="pager__label">{{ i18n "previous" }}</span>
-      <span class="pager__title">{{ .title }}</span>
+      <span class="pager__title">{{ .title | markdownify }}</span>
     </a>
   {{ end }}
   {{ with $next }}
     <a class="pager__btn pager__btn--next" href="{{ .url }}" rel="next">
       <span class="pager__label">{{ i18n "next" }}</span>
-      <span class="pager__title">{{ .title }}</span>
+      <span class="pager__title">{{ .title | markdownify }}</span>
     </a>
   {{ end }}
 </nav>

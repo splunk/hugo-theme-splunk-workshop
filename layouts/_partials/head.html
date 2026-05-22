@@ -3,12 +3,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="generator" content="Hugo {{ hugo.Version }}">
 <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title | markdownify | plainify }} · {{ .Site.Title }}{{ end }}</title>
-<meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ $p.description }}{{ end }}">
+<meta name="description" content="{{ .Description | default $p.description | markdownify | plainify }}">
 <meta name="theme-color" content="{{ $p.colorAccent | default "#FF0F7B" }}">
 
 {{- /* OpenGraph & Twitter */ -}}
 <meta property="og:title" content="{{ (.Title | default .Site.Title) | markdownify | plainify }}">
-<meta property="og:description" content="{{ with .Description }}{{ . }}{{ else }}{{ $p.description }}{{ end }}">
+<meta property="og:description" content="{{ .Description | default $p.description | markdownify | plainify }}">
 <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
 <meta property="og:url" content="{{ .Permalink }}">
 <meta name="twitter:card" content="summary_large_image">

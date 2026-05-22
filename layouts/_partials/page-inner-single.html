@@ -13,7 +13,7 @@
 {{ with .CurrentSection }}{{ if ne .RelPermalink "/" }}
   <p class="eyebrow">{{ .Title | markdownify }}</p>
 {{ end }}{{ end }}
-<h1>{{ .Title }}</h1>
+<h1>{{ .Title | markdownify }}</h1>
 
 {{ with .Description }}<p class="lead">{{ . }}</p>{{ end }}
 

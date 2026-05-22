@@ -10,10 +10,13 @@
 {{- $idx := slice -}}
 {{- range $pages -}}
   {{- $section := "" -}}
-  {{- with .CurrentSection }}{{ $section = .Title }}{{ end -}}
+  {{- with .CurrentSection }}{{ $section = .Title | markdownify | plainify }}{{ end -}}
+  {{- /* Search hits render the index entry as plain text. Pipe titles
+         through `markdownify | plainify` so markdown markers in titles
+         (e.g. `*foo*`) don't show as literal asterisks in results. */ -}}
   {{- $entry := dict
-    "title"       (.Title | default .LinkTitle)
-    "linkTitle"   .LinkTitle
+    "title"       ((.Title | default .LinkTitle) | markdownify | plainify)
+    "linkTitle"   (.LinkTitle | markdownify | plainify)
     "description" .Description
     "section"     $section
     "url"         .RelPermalink
