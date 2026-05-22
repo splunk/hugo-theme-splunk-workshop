@@ -41,6 +41,7 @@ nopager     = false                  # render the page but suppress prev/next
 showToc     = true                   # override site-wide `showToc` per page
 noautocards = false                  # section-only: suppress the auto-card-grid fallback
 subsections = false                  # section-only: list sub-sections instead of pages
+categories  = ["foundations"]        # bucket assignment for cards-by-category (page-level)
 subtitle    = "Chapter · Foo"        # eyebrow text on chapter pages
 tagline     = "01 · Foundation"      # extra text in the chapter sidebar
 +++
@@ -152,6 +153,20 @@ subsections = true                   # show one card per sub-workshop
 ```
 
 Without the flag (default `false`), the auto-grid lists the section's regular `.md` pages. The flag has no effect on sections that have no sub-sections, or on pages that author their own card grid with `{{</* cards */>}}` / `{{</* children type="card" */>}}` (the body wins).
+
+### `categories`
+
+Page-level array used by the `cards-by-category` shortcode to group children of a section into named buckets. Each value is a slug that matches a `params.categories[].slug` entry on the parent section's `_index.md`. Pages can belong to multiple buckets (they'll render once per bucket).
+
+```toml
+# content/ninja-workshops/12-pipeline-management/_index.md
++++
+title      = "Pipeline Management"
+categories = ["advanced", "instrumentation"]
++++
+```
+
+A page with no `categories` value drops into a final "Other" bucket — surfaces taxonomy gaps rather than hiding the page. See [Shortcodes › Categorized card grids](../../shortcodes/03-layout/#categorized-card-grids) for the parent-section `params.categories` setup and a full example.
 
 ## Home page hero
 

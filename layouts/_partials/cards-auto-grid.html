@@ -35,21 +35,7 @@
 {{ if $items }}
 <div class="cards">
   {{ range $i, $card := $items }}
-    <a class="card" href="{{ .RelPermalink }}">
-      <span class="card__num">{{ printf "%02d" (add $i 1) }}</span>
-      <h3 class="card__title">{{ .LinkTitle | markdownify }}</h3>
-      {{ with .Description }}<p class="card__desc">{{ . }}</p>{{ end }}
-      <div class="card__meta">
-        {{- /* `time` is the relearn-style key; `duration` is the theme-native
-               alias. Workshop-meta.html prefers `time` and falls back to
-               .ReadingTime; mirror that here so the card meta agrees with
-               the in-page meta strip. */ -}}
-        {{ with (.Params.time | default .Params.duration | default (printf "%d min" .ReadingTime)) }}<span class="card__meta-item">{{ . }}</span>{{ end }}
-        {{ with .Params.difficulty }}<span class="card__meta-item">{{ . }}</span>{{ end }}
-        {{- $count := partial "children-count.html" . -}}
-        {{ if gt $count 1 }}<span class="card__meta-item">{{ i18n "pagesCount" (dict "Count" $count) }}</span>{{ end }}
-      </div>
-    </a>
+    {{ partial "card-from-page.html" (dict "page" . "index" $i) }}
   {{ end }}
 </div>
 {{ end }}

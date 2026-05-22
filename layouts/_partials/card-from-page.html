@@ -1,0 +1,29 @@
+{{- /*
+  Render one card from a Page, in the theme's auto-grid card style.
+
+  Args (dict):
+    page  - the page to render (required)
+    index - 0-based position; emitted as the "01"-style card number (optional)
+
+  This is the shared card markup used by:
+    - cards-auto-grid.html (one big numbered grid of a section's children)
+    - shortcodes/cards-by-category.html (per-category grids; numbering
+      restarts inside each category)
+
+  Card meta priority (mirrors workshop-meta.html so the in-page meta strip
+  agrees with the card meta strip):
+    time | duration | "{ReadingTime} min"
+*/ -}}
+{{- $page  := .page -}}
+{{- $index := .index | default -1 -}}
+<a class="card" href="{{ $page.RelPermalink }}">
+  {{- if ge $index 0 }}<span class="card__num">{{ printf "%02d" (add $index 1) }}</span>{{ end }}
+  <h3 class="card__title">{{ $page.LinkTitle | markdownify }}</h3>
+  {{ with $page.Description }}<p class="card__desc">{{ . }}</p>{{ end }}
+  <div class="card__meta">
+    {{ with ($page.Params.time | default $page.Params.duration | default (printf "%d min" $page.ReadingTime)) }}<span class="card__meta-item">{{ . }}</span>{{ end }}
+    {{ with $page.Params.difficulty }}<span class="card__meta-item">{{ . }}</span>{{ end }}
+    {{- $count := partial "children-count.html" $page -}}
+    {{ if gt $count 1 }}<span class="card__meta-item">{{ i18n "pagesCount" (dict "Count" $count) }}</span>{{ end }}
+  </div>
+</a>

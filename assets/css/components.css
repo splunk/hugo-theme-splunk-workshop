@@ -198,6 +198,25 @@
   gap: 1.25rem;
   margin: 3rem 0;
 }
+/* ---- Categorized card grids ----
+   Used by the cards-by-category shortcode. Each <section.cards-category>
+   holds an <h2> + optional intro <p> + a .cards grid. Tighten the .cards
+   top/bottom margin when it's nested inside a category section so the
+   heading sits visually attached to its grid. */
+.cards-category {
+  margin-block: 2.5rem;
+}
+.cards-category__title {
+  margin-block: 0 0.25rem;
+}
+.cards-category__desc {
+  margin-block: 0 0;
+  color: var(--color-ink-muted);
+  max-width: 60ch;
+}
+.cards-category .cards {
+  margin: 1.25rem 0 0;
+}
 /* @property registration lets width interpolate via a typed custom
    property — the top-edge gradient sweep on .shortcode-card:hover.
    `inherits: true` so `.shortcode-card::before` can read the live value

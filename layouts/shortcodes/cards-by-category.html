@@ -1,0 +1,87 @@
+{{- /*
+  Group a section's child pages into named categories and render a card
+  grid per category.
+
+  Usage:
+    Place {{< cards-by-category >}} in the section's _index.md body.
+
+  Configuration lives in the calling section's front matter — the theme
+  stays generic, the site owns the taxonomy:
+
+    [[params.categories]]
+      slug = "foundations"
+      title = "Foundations"
+      description = "Baseline workflows and concepts."   # optional
+
+    [[params.categories]]
+      slug = "instrumentation"
+      title = "OpenTelemetry & Instrumentation"
+
+  Each child page picks its bucket with a `categories` array in its own
+  front matter:
+
+    categories: ["foundations"]
+
+  Pages can belong to multiple categories (they'll render once per
+  category). Pages with no `categories` value drop into a final "Other"
+  group that only renders if non-empty. Hidden pages are skipped.
+
+  Card markup is shared with cards-auto-grid via card-from-page.html;
+  numbering restarts inside each category.
+
+  Like cards-auto-grid, this flags the page so list.html suppresses its
+  auto-grid fallback — otherwise the same children would render twice.
+*/ -}}
+
+{{- $page := .Page -}}
+{{- .Page.Store.Set "_has_cards" true -}}
+
+{{- $allChildren := partial "visible-pages.html" $page.Pages -}}
+{{- $categories  := $page.Params.categories -}}
+{{- $seen        := slice -}}
+
+{{- range $categories }}
+  {{- $slug  := .slug -}}
+  {{- $title := .title | default .slug -}}
+  {{- $desc  := .description -}}
+  {{- $items := slice -}}
+  {{- range $allChildren -}}
+    {{- if in (.Params.categories | default slice) $slug -}}
+      {{- $items = $items | append . -}}
+      {{- $seen  = $seen  | append . -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $items = $items.ByWeight }}
+  {{ if $items }}
+<section class="cards-category">
+  <h2 class="cards-category__title">{{ $title }}</h2>
+  {{ with $desc }}<p class="cards-category__desc">{{ . | markdownify }}</p>{{ end }}
+  <div class="cards">
+    {{ range $i, $card := $items }}
+      {{ partial "card-from-page.html" (dict "page" . "index" $i) }}
+    {{ end }}
+  </div>
+</section>
+  {{ end }}
+{{- end }}
+
+{{- /* Anything visible that wasn't claimed by a configured category goes into
+       a fallback "Other" bucket — surfaces gaps in the categorization rather
+       than silently hiding pages from the grid. */ -}}
+{{- $other := slice -}}
+{{- range $allChildren -}}
+  {{- if not (in $seen .) -}}
+    {{- $other = $other | append . -}}
+  {{- end -}}
+{{- end -}}
+{{- $other = $other.ByWeight }}
+{{ if $other }}
+<section class="cards-category">
+  <h2 class="cards-category__title">Other</h2>
+  <div class="cards">
+    {{ range $i, $card := $other }}
+      {{ partial "card-from-page.html" (dict "page" . "index" $i) }}
+    {{ end }}
+  </div>
+</section>
+{{ end }}
