@@ -14,10 +14,13 @@
   agrees with the card meta strip):
     time | duration | "{ReadingTime} min"
 */ -}}
-{{- $page  := .page -}}
-{{- $index := .index | default -1 -}}
+{{- $page := .page -}}
+{{- /* Use `isset` rather than `default` because Go templates treat 0 as
+       falsy, which would turn the first card's "01" badge into a no-op. */ -}}
+{{- $hasIndex := isset . "index" -}}
+{{- $index := .index -}}
 <a class="card" href="{{ $page.RelPermalink }}">
-  {{- if ge $index 0 }}<span class="card__num">{{ printf "%02d" (add $index 1) }}</span>{{ end }}
+  {{- if $hasIndex }}<span class="card__num">{{ printf "%02d" (add $index 1) }}</span>{{ end }}
   <h3 class="card__title">{{ $page.LinkTitle | markdownify }}</h3>
   {{ with $page.Description }}<p class="card__desc">{{ . }}</p>{{ end }}
   <div class="card__meta">
