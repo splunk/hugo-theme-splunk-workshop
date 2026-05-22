@@ -60,29 +60,13 @@
         {{ if $items }}
           <h2 class="home__items-heading">{{ i18n "workshops" }}</h2>
           <div class="cards">
+            {{- /* Per-card render delegates to the shared `card-from-page.html`
+                   partial — same markup, same meta priority chain, same
+                   children-count source as `cards-auto-grid` and
+                   `cards-by-category`. Keeps every card grid in lockstep
+                   so a future meta change only edits one file. */ -}}
             {{ range $i, $page := $items }}
-              <a class="card" href="{{ .RelPermalink }}">
-                <span class="card__num">{{ printf "%02d" (add $i 1) }}</span>
-                <h3 class="card__title">{{ .LinkTitle | markdownify }}</h3>
-                {{ with .Description }}<p class="card__desc">{{ . }}</p>{{ end }}
-                <div class="card__meta">
-                  {{- /* `time` is the relearn-style key; `duration` is the
-                         theme-native alias. Prefer `time`, fall back to
-                         `duration`, then to Hugo's `.ReadingTime` so empty
-                         meta is rare. Pages that set either explicit key
-                         keep their authored value. */ -}}
-                  {{ with (.Params.time | default .Params.duration | default (printf "%d min" .ReadingTime)) }}<span class="card__meta-item">{{ . }}</span>{{ end }}
-                  {{ with .Params.difficulty }}<span class="card__meta-item">{{ . }}</span>{{ end }}
-                  {{- /* Shared `children-count.html` partial: counts every
-                         non-hidden page reachable below this card (leaf
-                         pages AND intermediate section landings). Matches
-                         the meta count rendered by cards-auto-grid and the
-                         `children` shortcode, so the same section always
-                         shows the same number. */ -}}
-                  {{- $count := partial "children-count.html" . -}}
-                  {{ if gt $count 1 }}<span class="card__meta-item">{{ i18n "pagesCount" (dict "Count" $count) }}</span>{{ end }}
-                </div>
-              </a>
+              {{ partial "card-from-page.html" (dict "page" . "index" $i) }}
             {{ end }}
           </div>
         {{ end }}
