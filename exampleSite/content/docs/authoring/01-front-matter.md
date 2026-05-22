@@ -41,6 +41,7 @@ nopager     = false                  # render the page but suppress prev/next
 showToc     = true                   # override site-wide `showToc` per page
 noautocards = false                  # section-only: suppress the auto-card-grid fallback
 subsections = false                  # section-only: list sub-sections instead of pages
+hub         = false                  # section-only: navigation-only landing (no sidebar/pager)
 categories  = ["foundations"]        # bucket assignment for cards-by-category (page-level)
 subtitle    = "Chapter · Foo"        # eyebrow text on chapter pages
 tagline     = "01 · Foundation"      # extra text in the chapter sidebar
@@ -153,6 +154,43 @@ subsections = true                   # show one card per sub-workshop
 ```
 
 Without the flag (default `false`), the auto-grid lists the section's regular `.md` pages. The flag has no effect on sections that have no sub-sections, or on pages that author their own card grid with `{{</* cards */>}}` / `{{</* children type="card" */>}}` (the body wins).
+
+### `hub`
+
+Section-only flag that marks a section as **navigation only** rather than a workshop. Hubs:
+
+- Render with the hero / card-grid layout (no sidebar, no prev/next pager).
+- Are *skipped* when descendant pages compute their workshop root — the sidebar scopes to the first non-hub section below the hub, not to the hub itself.
+
+```toml
+# content/workshops/observability/_index.md
++++
+title = "Observability Workshops"
+hub   = true                  # this is a category, not a workshop
++++
+```
+
+When to set `hub = true`:
+
+- The section's body is a card grid of children (or your `_index.md` is empty and the auto-grid will fill it).
+- The section's children are themselves workshops — and you want each workshop to own its sidebar.
+- The section is in the middle of a chain you want to navigate **through**, not **into**.
+
+When NOT to set it:
+
+- The section IS a workshop. Its `_index.md` has prose, intro content, or numbered steps. Children are pages of THAT workshop. Leave the flag off (the default).
+- A depth-1 section with no direct `.md` children is **auto-detected** as a hub by the structural fallback in `workshop-root.html` — no explicit flag needed at the top level. The explicit flag matters for hubs at depth ≥ 2 (categories within categories).
+
+The workshop root for a deeply nested page is the HIGHEST non-hub section in the ancestor chain. With:
+
+```text
+/workshops/                              hub (auto-detected, depth-1 + no .md children)
+/workshops/observability/                hub = true       ← without the flag, this would be the workshop root
+/workshops/observability/k8s-monitor/    workshop ← actual workshop root
+/workshops/observability/k8s-monitor/01-intro/   page
+```
+
+A page inside `k8s-monitor/` gets a sidebar scoped to `k8s-monitor/` only — not all of observability, not all of workshops. Without `hub = true` on the `observability/` section, the workshop root would jump up one level and the sidebar would mix lessons from every observability workshop in one flat tree.
 
 ### `categories`
 
