@@ -433,6 +433,49 @@ Explicit `image=` always wins over the auto-pull. Path is piped through `relURL`
 
 **3. Featured image via `children type="card" image="true"`.** Auto-discovered for **every** card in a `children` listing, same `images` front-matter contract. The auto-discovery semantics are identical; the difference is `children` lists every visible sub-page automatically, while hand-written `cards` + `card` blocks let you curate which pages appear and in what order.
 
+### Categorized card grids
+
+When a section has too many children for one flat grid to scan, group them. The `cards-by-category` shortcode renders one grid per named category, defined in the section's own `_index.md` front matter.
+
+```toml
+# content/ninja-workshops/_index.md
++++
+title       = "Ninja Workshops"
+description = "Deep-dive workshops grouped by topic."
+
+[[params.categories]]
+  slug        = "foundations"
+  title       = "Foundations"
+  description = "Baseline workflows and concepts."
+
+[[params.categories]]
+  slug  = "instrumentation"
+  title = "OpenTelemetry & Instrumentation"
+
+[[params.categories]]
+  slug  = "advanced"
+  title = "Advanced"
++++
+
+{{< cards-by-category >}}
+```
+
+Each child page declares which bucket it belongs to via its own `categories` front-matter array:
+
+```toml
+# content/ninja-workshops/12-pipeline-management/_index.md
++++
+title      = "Pipeline Management"
+categories = ["advanced", "instrumentation"]
++++
+```
+
+Pages can belong to multiple categories (they appear once per category). Pages with no `categories` value drop into a final **Other** group that only renders when non-empty — surfaces gaps in your taxonomy instead of silently hiding pages.
+
+Card markup is shared with the section's `cards-auto-grid` fallback (same time / difficulty / page-count meta), so a section can switch between flat and categorized renderings without the cards looking different. Numbering (`01`, `02`, …) restarts inside each category.
+
+Like the auto-grid, dropping `cards-by-category` in a section's body suppresses the layout's automatic card-grid fallback so the same children don't render twice.
+
 ## Indicators
 
 Two inline-pill shortcodes for surfacing workshop metadata anywhere in the body. They render as `<span class="indicator">` so they sit cleanly mid-prose.
