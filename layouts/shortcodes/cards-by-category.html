@@ -51,7 +51,7 @@
       {{- $seen  = $seen  | append . -}}
     {{- end -}}
   {{- end -}}
-  {{- $items = $items.ByWeight }}
+  {{- $items = sort $items "Weight" }}
   {{ if $items }}
 <section class="cards-category">
   <h2 class="cards-category__title">{{ $title }}</h2>
@@ -74,7 +74,7 @@
     {{- $other = $other | append . -}}
   {{- end -}}
 {{- end -}}
-{{- $other = $other.ByWeight }}
+{{- $other = sort $other "Weight" }}
 {{ if $other }}
 <section class="cards-category">
   <h2 class="cards-category__title">Other</h2>
