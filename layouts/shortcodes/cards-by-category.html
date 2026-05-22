@@ -33,7 +33,10 @@
   auto-grid fallback — otherwise the same children would render twice.
 */ -}}
 
-{{- $page := .Page -}}
+{{- $page   := .Page -}}
+{{- /* notime="true" suppresses the time pill on every card across every
+       category in this grid. Other meta (difficulty, page count) remains. */ -}}
+{{- $notime := eq (.Get "notime" | default "false") "true" -}}
 {{- .Page.Store.Set "_has_cards" true -}}
 
 {{- $allChildren := partial "visible-pages.html" $page.Pages -}}
@@ -58,7 +61,7 @@
   {{ with $desc }}<p class="cards-category__desc">{{ . | markdownify }}</p>{{ end }}
   <div class="cards">
     {{ range $i, $card := $items }}
-      {{ partial "card-from-page.html" (dict "page" . "index" $i) }}
+      {{ partial "card-from-page.html" (dict "page" . "index" $i "notime" $notime) }}
     {{ end }}
   </div>
 </section>
@@ -80,7 +83,7 @@
   <h2 class="cards-category__title">Other</h2>
   <div class="cards">
     {{ range $i, $card := $other }}
-      {{ partial "card-from-page.html" (dict "page" . "index" $i) }}
+      {{ partial "card-from-page.html" (dict "page" . "index" $i "notime" $notime) }}
     {{ end }}
   </div>
 </section>

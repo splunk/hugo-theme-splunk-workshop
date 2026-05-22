@@ -476,6 +476,17 @@ Card markup is shared with the section's `cards-auto-grid` fallback (same time /
 
 Like the auto-grid, dropping `cards-by-category` in a section's body suppresses the layout's automatic card-grid fallback so the same children don't render twice.
 
+### Suppressing the time pill on a card grid
+
+Both `{{</* children type="card" */>}}` and `{{</* cards-by-category */>}}` accept a `notime="true"` arg that drops the time pill from every card in that listing. Useful for grids of reference pages or short topics where the auto-estimated reading time adds noise without information:
+
+```markdown
+{{</* children type="card" notime="true" */>}}
+{{</* cards-by-category notime="true" */>}}
+```
+
+Other meta items (difficulty, "N pages" count) keep rendering. Scope is per-shortcode-invocation — drop the arg and a sibling card grid on the same page still shows times.
+
 ## Indicators
 
 Two inline-pill shortcodes for surfacing workshop metadata anywhere in the body. They render as `<span class="indicator">` so they sit cleanly mid-prose.

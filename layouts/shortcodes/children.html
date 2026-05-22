@@ -22,6 +22,11 @@
 {{- $img   := eq (.Get "image" | default "false") "true" -}}
 {{- $sort  := .Get "sort" | default "weight" -}}
 {{- $hide  := ne (.Get "showhidden" | default "false") "true" -}}
+{{- /* notime="true" suppresses the time pill on every card in this listing.
+       Useful when the listing groups reference content or short pages where
+       a duration estimate adds noise. Other meta items (difficulty, page
+       count) keep rendering. */ -}}
+{{- $notime := eq (.Get "notime" | default "false") "true" -}}
 
 {{- $start := .Page -}}
 {{- if $page -}}
@@ -68,7 +73,7 @@
     {{- end -}}
   {{- end -}}
 {{- end -}}
-<a class="shortcode-card shortcode-card--children{{ if $imgURL }} shortcode-card--with-image{{ end }}" href="{{ .RelPermalink }}">{{ if $imgURL }}<div class="shortcode-card__media"><img src="{{ $imgURL }}" alt="" loading="lazy"></div>{{ end }}<p class="shortcode-card__title">{{ .LinkTitle | markdownify }}</p>{{ if and $desc .Description }}<div class="shortcode-card__body"><p>{{ .Description }}</p></div>{{ end }}<div class="shortcode-card__meta">{{ with (.Params.time | default .Params.duration | default (printf "%d min" .ReadingTime)) }}<span>{{ . }}</span>{{ end }}{{ with .Params.difficulty }}<span>{{ . }}</span>{{ end }}{{ $count := partial "children-count.html" . }}{{ if gt $count 1 }}<span>{{ i18n "pagesCount" (dict "Count" $count) }}</span>{{ end }}</div></a>
+<a class="shortcode-card shortcode-card--children{{ if $imgURL }} shortcode-card--with-image{{ end }}" href="{{ .RelPermalink }}">{{ if $imgURL }}<div class="shortcode-card__media"><img src="{{ $imgURL }}" alt="" loading="lazy"></div>{{ end }}<p class="shortcode-card__title">{{ .LinkTitle | markdownify }}</p>{{ if and $desc .Description }}<div class="shortcode-card__body"><p>{{ .Description }}</p></div>{{ end }}<div class="shortcode-card__meta">{{ if not $notime }}{{ with (.Params.time | default .Params.duration | default (printf "%d min" .ReadingTime)) }}<span>{{ . }}</span>{{ end }}{{ end }}{{ with .Params.difficulty }}<span>{{ . }}</span>{{ end }}{{ $count := partial "children-count.html" . }}{{ if gt $count 1 }}<span>{{ i18n "pagesCount" (dict "Count" $count) }}</span>{{ end }}</div></a>
 {{- end -}}
 </div>
 {{- else if or (eq $type "h2") (eq $type "h3") (eq $type "h4") -}}
