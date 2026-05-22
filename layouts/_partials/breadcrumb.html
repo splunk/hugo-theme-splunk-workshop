@@ -8,9 +8,9 @@
   {{- range $pages -}}
     {{- if ne .RelPermalink "/" }}
       <span class="breadcrumb__sep">/</span>
-      <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+      <a href="{{ .RelPermalink }}">{{ .LinkTitle | markdownify }}</a>
     {{- end -}}
   {{- end -}}
   <span class="breadcrumb__sep">/</span>
-  <span aria-current="page">{{ .LinkTitle }}</span>
+  <span aria-current="page">{{ .LinkTitle | markdownify }}</span>
 </nav>
