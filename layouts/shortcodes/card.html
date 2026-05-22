@@ -1,5 +1,6 @@
 {{- /*
-  Card — works standalone, OR pushes itself into a parent {{< cards >}} bucket.
+  Card — renders one card. Always inline; if used inside `{{< cards >}}`
+  the parent's CSS grid lays it out, otherwise it stands alone.
 
   Canonical API:
     positional 0 = title
@@ -52,30 +53,20 @@
   {{- end -}}
 {{- end -}}
 
-{{- /* If a parent {{< cards >}} exists, push to its bucket and emit nothing. */ -}}
-{{- if and .Parent (eq (.Parent.Name) "cards") -}}
-  {{- $key := printf "_cards_%d" .Parent.Ordinal -}}
-  {{- /* Push the RESOLVED url, not the raw `image=` arg, so cards.html can
-         emit it directly and the auto-pull-from-href path also works
-         inside a `<cards>` wrapper. */ -}}
-  {{- $entry := dict "title" $title "href" $href "icon" $icon "image" $imgURL "color" $color "content" $content -}}
-  {{- .Page.Scratch.Add $key (slice $entry) -}}
+{{- /* Flag the page so layouts (notably index.html) suppress their
+       auto-card-grid when the body has already authored its own. */ -}}
+{{- .Page.Store.Set "_has_cards" true -}}
+
+{{- if $href -}}
+<a class="shortcode-card" href="{{ $href }}"{{ with $color }} style="--card-accent: {{ . | safeCSS }}"{{ end }}>
+  {{- if $imgURL }}<div class="shortcode-card__image"><img src="{{ $imgURL }}" alt="" loading="lazy"></div>{{ end -}}
+  {{ with $title }}<p class="shortcode-card__title">{{ if $icon }}<span class="shortcode-card__icon">{{ partial "icon-svg.html" $icon }}</span>{{ end }}{{ . | markdownify }}</p>{{ end }}
+  <div class="shortcode-card__body">{{ $content | safeHTML }}</div>
+</a>
 {{- else -}}
-  {{- /* Standalone — render inline. Flag the page so layouts (notably
-         index.html) can suppress their auto-card-grid when the body has
-         already authored its own. */ -}}
-  {{- .Page.Store.Set "_has_cards" true -}}
-  {{- if $href -}}
-  <a class="shortcode-card" href="{{ $href }}"{{ with $color }} style="--card-accent: {{ . | safeCSS }}"{{ end }}>
-    {{- if $imgURL }}<div class="shortcode-card__image"><img src="{{ $imgURL }}" alt="" loading="lazy"></div>{{ end -}}
-    {{ with $title }}<p class="shortcode-card__title">{{ if $icon }}<span class="shortcode-card__icon">{{ partial "icon-svg.html" $icon }}</span>{{ end }}{{ . | markdownify }}</p>{{ end }}
-    <div class="shortcode-card__body">{{ $content | safeHTML }}</div>
-  </a>
-  {{- else -}}
-  <div class="shortcode-card"{{ with $color }} style="--card-accent: {{ . | safeCSS }}"{{ end }}>
-    {{- if $imgURL }}<div class="shortcode-card__image"><img src="{{ $imgURL }}" alt="" loading="lazy"></div>{{ end -}}
-    {{ with $title }}<p class="shortcode-card__title">{{ if $icon }}<span class="shortcode-card__icon">{{ partial "icon-svg.html" $icon }}</span>{{ end }}{{ . | markdownify }}</p>{{ end }}
-    <div class="shortcode-card__body">{{ $content | safeHTML }}</div>
-  </div>
-  {{- end -}}
+<div class="shortcode-card"{{ with $color }} style="--card-accent: {{ . | safeCSS }}"{{ end }}>
+  {{- if $imgURL }}<div class="shortcode-card__image"><img src="{{ $imgURL }}" alt="" loading="lazy"></div>{{ end -}}
+  {{ with $title }}<p class="shortcode-card__title">{{ if $icon }}<span class="shortcode-card__icon">{{ partial "icon-svg.html" $icon }}</span>{{ end }}{{ . | markdownify }}</p>{{ end }}
+  <div class="shortcode-card__body">{{ $content | safeHTML }}</div>
+</div>
 {{- end -}}

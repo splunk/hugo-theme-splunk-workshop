@@ -1,34 +1,18 @@
 {{- /*
   Cards — grid container for nested {{< card >}} children.
+
   Usage:
     {{< cards >}}
       {{< card title="Foo" href="/foo" icon="rocket" >}} ... {{< /card >}}
       {{< card title="Bar" href="/bar" icon="book" >}}   ... {{< /card >}}
     {{< /cards >}}
+
+  Implementation: wraps `.Inner` in a flex/grid container. Each child
+  `card` shortcode emits its own `<a class="shortcode-card">` HTML; this
+  shortcode just provides the layout box. No Scratch state, no per-card
+  bookkeeping — Hugo's normal shortcode evaluator handles every step.
 */ -}}
-{{- $key := printf "_cards_%d" .Ordinal -}}
-{{- /* Force inner to render so children push */ -}}
-{{- $_ := .Inner -}}
-{{- $items := .Page.Scratch.Get $key | default slice -}}
 {{- /* Flag the page so layouts (notably index.html) suppress their
        auto-card-grid when the body has already authored cards. */ -}}
 {{- .Page.Store.Set "_has_cards" true -}}
-<div class="cards cards--shortcode">
-  {{ range $items }}
-    {{ $tag := "div" }}{{ if .href }}{{ $tag = "a" }}{{ end }}
-    {{ $card := . }}
-    {{ if eq $tag "a" }}
-      <a class="shortcode-card" href="{{ $card.href }}"{{ with $card.color }} style="--card-accent: {{ . | safeCSS }}"{{ end }}>
-        {{- with $card.image }}<div class="shortcode-card__image"><img src="{{ . }}" alt="" loading="lazy"></div>{{ end -}}
-        {{ with $card.title }}<p class="shortcode-card__title">{{ with $card.icon }}<span class="shortcode-card__icon">{{ partial "icon-svg.html" . }}</span>{{ end }}{{ . | markdownify }}</p>{{ end }}
-        <div class="shortcode-card__body">{{ $card.content | safeHTML }}</div>
-      </a>
-    {{ else }}
-      <div class="shortcode-card"{{ with $card.color }} style="--card-accent: {{ . | safeCSS }}"{{ end }}>
-        {{- with $card.image }}<div class="shortcode-card__image"><img src="{{ . }}" alt="" loading="lazy"></div>{{ end -}}
-        {{ with $card.title }}<p class="shortcode-card__title">{{ with $card.icon }}<span class="shortcode-card__icon">{{ partial "icon-svg.html" . }}</span>{{ end }}{{ . | markdownify }}</p>{{ end }}
-        <div class="shortcode-card__body">{{ $card.content | safeHTML }}</div>
-      </div>
-    {{ end }}
-  {{ end }}
-</div>
+<div class="cards cards--shortcode">{{ .Inner }}</div>
