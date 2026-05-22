@@ -22,13 +22,13 @@
     {{- if not .IsHome -}}
     <a class="sidebar__back" href="{{ .RelPermalink }}">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
-      {{ .LinkTitle | markdownify }}
+      {{ .LinkTitle }}
     </a>
     {{- end -}}
   {{- end -}}
 
   {{- /* Workshop title — links to the workshop landing. */ -}}
-  <a class="sidebar__title{{ if eq .RelPermalink $workshop.RelPermalink }} is-active{{ end }}" href="{{ $workshop.RelPermalink }}">{{ $workshop.LinkTitle | markdownify }}</a>
+  <a class="sidebar__title{{ if eq .RelPermalink $workshop.RelPermalink }} is-active{{ end }}" href="{{ $workshop.RelPermalink }}">{{ $workshop.LinkTitle }}</a>
   {{- with $workshop.Params.tagline }}<p class="sidebar__sub">{{ . }}</p>{{ end }}
 
   {{ partial "sidebar-tree.html" (dict "section" $workshop "current" . "depth" 0) }}

@@ -272,7 +272,9 @@ title = "Splunk4Rookies *Workshops*"
 
 ### Sidebar entries
 
-Every workshop-sidebar entry — the back-to-parent link, the workshop title at the top, chapter `<summary>` labels, and leaf-page links — also runs `.LinkTitle` through `markdownify`. So the same `*Workshops*` source markdown reads as italic everywhere a page surfaces, including the nav. Plain `<em>` styling at the sidebar's smaller type size; no brand gradient.
+Sidebar `.LinkTitle` values render as **plain text** — no markdownify. The reason is a Hugo quirk: `markdownify` treats a leading `1. Introduction` (any digit + `.` + space at the start) as an ordered-list marker and emits `<ol><li>…</li></ol>` inside the link, doubling the height of every row in numbered workshops. Treating sidebar labels as plain text matches the convention relearn / Docsy / the wider Hugo ecosystem follow.
+
+If a site genuinely needs rich text in a specific sidebar label, the escape hatch is to override the relevant template (`_partials/sidebar.html` for the workshop header, `_partials/sidebar-tree.html` for the tree) and switch the offending `{{ .LinkTitle }}` to `{{ .LinkTitle | safeHTML }}` — explicit per-site opt-in, no theme-wide breakage.
 
 ## Workshop meta row
 
