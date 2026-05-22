@@ -39,7 +39,7 @@
   {{- if $hasChildren -}}
 <li class="sidebar-tree__group{{ if $isOnPath }} is-open{{ end }}">
 <details{{ if $isOnPath }} open{{ end }} data-section-url="{{ .RelPermalink }}">
-<summary class="sidebar-tree__summary"><span class="sidebar-tree__chev" aria-hidden="true"></span><span class="sidebar-tree__chapter">{{ .LinkTitle }}</span></summary>
+<summary class="sidebar-tree__summary"><span class="sidebar-tree__chev" aria-hidden="true"></span><span class="sidebar-tree__chapter">{{ .LinkTitle | markdownify }}</span></summary>
 {{- /* Self-link: clicking the chapter title navigates to the chapter landing,
        not just toggling. We surface this as the first item INSIDE the open
        <details> so the summary keeps its disclosure semantics. */ -}}
@@ -49,7 +49,7 @@
 </li>
   {{- else -}}
 <li class="sidebar-tree__leaf">
-<a class="sidebar-tree__link{{ if $isCurrent }} is-active{{ end }}" href="{{ .RelPermalink }}" data-page-url="{{ .RelPermalink }}"{{ if $isCurrent }} aria-current="page"{{ end }}>{{ .LinkTitle }}</a>
+<a class="sidebar-tree__link{{ if $isCurrent }} is-active{{ end }}" href="{{ .RelPermalink }}" data-page-url="{{ .RelPermalink }}"{{ if $isCurrent }} aria-current="page"{{ end }}>{{ .LinkTitle | markdownify }}</a>
 </li>
   {{- end -}}
 {{- end -}}

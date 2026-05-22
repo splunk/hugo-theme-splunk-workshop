@@ -232,6 +232,10 @@ title = "Splunk4Rookies *Workshops*"
 
 …and the card showing that page renders the `*Workshops*` as italic, regardless of which layout drew the card. The em styling on card titles doesn't pick up the brand gradient (cards use a tighter visual register than display heros), so italic emphasis there is plain `<em>` — useful for distinguishing a product name, a UI label, or a key noun without dominating the card.
 
+### Sidebar entries
+
+Every workshop-sidebar entry — the back-to-parent link, the workshop title at the top, chapter `<summary>` labels, and leaf-page links — also runs `.LinkTitle` through `markdownify`. So the same `*Workshops*` source markdown reads as italic everywhere a page surfaces, including the nav. Plain `<em>` styling at the sidebar's smaller type size; no brand gradient.
+
 ## Workshop meta row
 
 The block at the top of a workshop page showing time, difficulty, authors, and tags is composed from these front-matter keys. If you don't set any, the row is suppressed.
