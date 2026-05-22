@@ -45,18 +45,36 @@
       {{- /* Skip the language home itself — `.Ancestors` includes it, but
              a language home is never a workshop root. */ -}}
       {{- if not $cand.IsHome -}}
-        {{- $isHub := eq ($cand.Params.hub | default false) true -}}
+        {{- $isHubExplicit := eq ($cand.Params.hub | default false) true -}}
+        {{- $isHub         := $isHubExplicit -}}
+        {{- $isDepthOne    := and $cand.Parent $cand.Parent.IsHome -}}
 
-        {{- if and (not $isHub) $cand.Parent $cand.Parent.IsHome -}}
-          {{- /* Depth-1 structural hub: parent is language home AND no
-                 direct .md page children. */ -}}
+        {{- /* Compute direct .md children when needed:
+                 - depth-1 structural fallback (no explicit flag)
+                 - explicit-hub config-trap warning (any depth) */ -}}
+        {{- if or $isHubExplicit $isDepthOne -}}
           {{- $hasDirectPages := false -}}
           {{- range where $cand.Pages "Kind" "page" -}}
             {{- if eq .Parent.RelPermalink $cand.RelPermalink -}}
               {{- $hasDirectPages = true -}}
             {{- end -}}
           {{- end -}}
-          {{- if not $hasDirectPages -}}{{- $isHub = true -}}{{- end -}}
+
+          {{- /* Structural fallback: depth-1 + no explicit flag + no
+                 direct .md children. */ -}}
+          {{- if and (not $isHubExplicit) $isDepthOne (not $hasDirectPages) -}}
+            {{- $isHub = true -}}
+          {{- end -}}
+
+          {{- /* Config-trap warning: author marked the section `hub: true`
+                 but it also has direct .md page children. Those pages
+                 render at their URLs but become invisible in workshop nav
+                 (sidebar scopes past the hub, pager skips them). Dedupe
+                 via warnidf so the warning fires once per offending
+                 section across the whole build, not once per page render. */ -}}
+          {{- if and $isHubExplicit $hasDirectPages -}}
+            {{- warnidf (printf "workshop-root-hub-trap-%s" $cand.RelPermalink) "workshop-root: section %q has `hub: true` AND direct .md page children — those pages are unreachable in workshop navigation. Either remove `hub: true` from the section's front matter, or move the pages into a sub-section." $cand.RelPermalink -}}
+          {{- end -}}
         {{- end -}}
 
         {{- if not $isHub -}}
