@@ -4,64 +4,59 @@
   root's descendants, so prev/next flow across chapters within the workshop
   rather than dead-ending at chapter boundaries.
 
-  Definitions (depth = path segments below the language home):
-    - Language home (depth 0): /en/
-    - Depth-1 section: /en/<top>/
-        - Pure hub: only sub-section children. No workshop root applies
-          when this is the page being viewed; workshop root for descendants
-          is the depth-2 ancestor.
-        - Flat workshop: has direct .md page children. Workshop root = self.
-    - Depth-2 section: /en/<top>/<workshop>/ — typical workshop root.
-    - Depth ≥ 2: walk up to find the depth-2 ancestor (or depth-1 flat
-      workshop) and return it.
+  Hub vs. workshop:
+    - A "hub" is a section that exists for navigation only — its body is a
+      card grid of children, not workshop content. Hubs do NOT render the
+      sidebar shell; their layout is the same hero used on the language
+      home. A page underneath a hub looks past it to find its workshop.
+    - A "workshop" is a section whose own pages are content to be walked.
+      It IS the workshop root: the sidebar tree is scoped to it, and the
+      prev/next pager walks its descendants.
 
-  Returns the workshop root section, or `false` when the current page is a
-  pure hub / the language home / the site home — the caller treats that as
-  "render a hero layout, no sidebar".
+  How hubs are detected (top-down through the ancestor chain):
+    1. Explicit: front matter `hub: true` on the section.
+    2. Structural, depth-1 only: a section whose parent is the language
+       home and which has no direct .md page children. This auto-detects
+       the canonical `/en/ninja-workshops/` style top-level hub without
+       requiring a marker on every existing site.
+
+  The workshop root is the lowest non-hub section in the chain from the
+  language home down to the current page (inclusive). If every candidate
+  is a hub — i.e. the current page is itself a hub — return `false`, and
+  the caller renders the hero layout with no sidebar.
 */ -}}
 {{- $page := . -}}
 {{- $root := false -}}
 
 {{- if and (not $page.IsHome) (ne $page.Kind "404") (ne $page.Kind "taxonomy") -}}
 
-  {{- /* Candidate list = the page itself plus every ancestor up to (but not
-         including) the language home. Hugo's .Ancestors gives us the parent
-         chain ending at the language home; prepending $page lets us treat
-         "the page IS the depth-1 section" as a candidate too. */ -}}
+  {{- /* Candidate chain — bottom-up: page first, then each ancestor.
+         `.Ancestors` stops at the language home (which we don't include). */ -}}
   {{- $candidates := slice $page | append $page.Ancestors -}}
 
-  {{- /* Find the depth-1 candidate: the one whose parent IS the language
-         home. There's only one match in the chain. */ -}}
-  {{- $depthOne := false -}}
-  {{- range $candidates -}}
-    {{- if and .Parent .Parent.IsHome -}}{{- $depthOne = . -}}{{- end -}}
-  {{- end -}}
+  {{- /* Walk top-down (closest to language home first); the first non-hub
+         is the workshop root. */ -}}
+  {{- $found := false -}}
+  {{- range $candidates | collections.Reverse -}}
+    {{- if not $found -}}
+      {{- $cand   := . -}}
+      {{- $isHub  := eq ($cand.Params.hub | default false) true -}}
 
-  {{- if $depthOne -}}
-    {{- /* Does $depthOne contain direct .md page children?
-           Hugo 0.155+ made .Pages recursive, so we filter the returned
-           regular pages to those whose .Parent is $depthOne itself. */ -}}
-    {{- $depthOneHasDirectPages := false -}}
-    {{- range where $depthOne.Pages "Kind" "page" -}}
-      {{- if eq .Parent.RelPermalink $depthOne.RelPermalink -}}
-        {{- $depthOneHasDirectPages = true -}}
-      {{- end -}}
-    {{- end -}}
-
-    {{- if eq $depthOne $page -}}
-      {{- /* Page is at depth 1 itself. Flat workshop iff it has direct
-             page children; otherwise it's a hub (no sidebar). */ -}}
-      {{- if $depthOneHasDirectPages -}}{{- $root = $page -}}{{- end -}}
-    {{- else if $depthOneHasDirectPages -}}
-      {{- /* Page is deeper, and $depthOne is a flat workshop — use it. */ -}}
-      {{- $root = $depthOne -}}
-    {{- else -}}
-      {{- /* Page is deeper, $depthOne is a hub — workshop root is the
-             depth-2 ancestor: the candidate whose parent is $depthOne. */ -}}
-      {{- range $candidates -}}
-        {{- if and .Parent (eq .Parent.RelPermalink $depthOne.RelPermalink) -}}
-          {{- $root = . -}}
+      {{- if and (not $isHub) $cand.Parent $cand.Parent.IsHome -}}
+        {{- /* Depth-1 structural hub: parent is language home AND no
+               direct .md page children. */ -}}
+        {{- $hasDirectPages := false -}}
+        {{- range where $cand.Pages "Kind" "page" -}}
+          {{- if eq .Parent.RelPermalink $cand.RelPermalink -}}
+            {{- $hasDirectPages = true -}}
+          {{- end -}}
         {{- end -}}
+        {{- if not $hasDirectPages -}}{{- $isHub = true -}}{{- end -}}
+      {{- end -}}
+
+      {{- if not $isHub -}}
+        {{- $root  = $cand -}}
+        {{- $found = true -}}
       {{- end -}}
     {{- end -}}
   {{- end -}}
