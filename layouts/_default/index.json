@@ -5,6 +5,15 @@
   The summary field uses .Content piped through plainify rather than
   .Plain so that text emitted by shortcodes (tabs, cards, exercise,
   terminal, …) is searchable. .Plain only covers raw markdown.
+
+  Performance: we truncate `.Content` (still HTML) to a generous
+  10000-char window BEFORE plainify so `plainify` only processes the
+  head of each page instead of the full rendered content. The
+  outer `truncate 4000 ""` then trims to the target plain-text size.
+  Trade-off: content past ~6KB of plain text isn't searchable. For
+  typical workshop pages (≤ 5KB prose) this matches the previous
+  output exactly; for very long pages it bounds the build cost
+  rather than scaling linearly with page length.
 */ -}}
 {{- $pages := where .Site.RegularPages "Params.hidden" "!=" true -}}
 {{- $idx := slice -}}
@@ -21,7 +30,7 @@
     "section"     $section
     "url"         .RelPermalink
     "tags"        (.Params.tags | default slice)
-    "summary"     (.Content | plainify | truncate 4000 "")
+    "summary"     (.Content | truncate 10000 "" | plainify | truncate 4000 "")
   -}}
   {{- $idx = $idx | append $entry -}}
 {{- end -}}

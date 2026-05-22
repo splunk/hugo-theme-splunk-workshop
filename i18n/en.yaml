@@ -22,6 +22,8 @@
   translation: "No matches"
 - id: keyboardShortcuts
   translation: "Keyboard shortcuts"   # header `?` button label + dialog title
+- id: categoryOther
+  translation: "Other"                # cards-by-category fallback bucket title
 - id: pagesCount
   translation:
     one: "{{ .Count }} page"

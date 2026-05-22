@@ -15,7 +15,7 @@
         {{- if $p.logoLight -}}
           {{- /* In the dark footer, prefer the dark-mode logo if available. */ -}}
           {{- $logo := $p.logoDark | default $p.logoLight -}}
-          <img class="brand__logo" src="{{ $logo | relURL }}" alt="{{ .Site.Title }}">
+          <img class="brand__logo" src="{{ $logo | relURL }}" alt="{{ .Site.Title | markdownify | plainify }}">
         {{- else -}}
           <span class="brand__mark">{{ $p.brandName | default "splunk>" }}</span>
         {{- end -}}

@@ -1,10 +1,14 @@
 {{- $p := .Site.Params -}}
 <header class="site-header">
   <div class="site-header__inner">
-    <a href="{{ partial "site-href.html" "/" }}" class="brand" aria-label="{{ .Site.Title }} — home">
+    {{- /* aria-label and alt are plain-text contexts; strip any markdown
+           markers from `.Site.Title` so screen readers don't announce
+           literal asterisks if a site sets a markdown-styled title. */ -}}
+    {{- $brandText := .Site.Title | markdownify | plainify -}}
+    <a href="{{ partial "site-href.html" "/" }}" class="brand" aria-label="{{ $brandText }} — home">
       {{- if $p.logoLight -}}
-        <img class="brand__logo brand__logo--light" src="{{ $p.logoLight | relURL }}" alt="{{ .Site.Title }}">
-        {{ with $p.logoDark }}<img class="brand__logo brand__logo--dark" src="{{ . | relURL }}" alt="{{ $.Site.Title }}">{{ end }}
+        <img class="brand__logo brand__logo--light" src="{{ $p.logoLight | relURL }}" alt="{{ $brandText }}">
+        {{ with $p.logoDark }}<img class="brand__logo brand__logo--dark" src="{{ . | relURL }}" alt="{{ $brandText }}">{{ end }}
       {{- else -}}
         <span class="brand__mark">{{ $p.brandName | default "splunk>" }}</span>
       {{- end -}}
