@@ -17,13 +17,13 @@
     1. Explicit: front matter `hub: true` on the section.
     2. Structural, depth-1 only: a section whose parent is the language
        home and which has no direct .md page children. This auto-detects
-       the canonical `/en/ninja-workshops/` style top-level hub without
-       requiring a marker on every existing site.
+       the canonical top-level landing-page hub (one whose children are
+       all sub-sections) without requiring a marker on existing sites.
 
-  The workshop root is the lowest non-hub section in the chain from the
-  language home down to the current page (inclusive). If every candidate
-  is a hub — i.e. the current page is itself a hub — return `false`, and
-  the caller renders the hero layout with no sidebar.
+  The workshop root is the HIGHEST (closest to the language home) section
+  in the chain that is NOT a hub. We walk the chain top-down and return
+  the first non-hub. If everything in the chain is a hub — i.e. the page
+  is itself a hub — return false and the caller renders the hero layout.
 */ -}}
 {{- $page := . -}}
 {{- $root := false -}}
@@ -33,30 +33,36 @@
   {{- /* Candidate chain — bottom-up: page first, then each ancestor.
          `.Ancestors` stops at the language home (which we don't include). */ -}}
   {{- $candidates := slice $page | append $page.Ancestors -}}
+  {{- $n := len $candidates -}}
 
-  {{- /* Walk top-down (closest to language home first); the first non-hub
-         is the workshop root. */ -}}
+  {{- /* Walk top-down by index — closest to the language home first. */ -}}
   {{- $found := false -}}
-  {{- range $candidates | collections.Reverse -}}
+  {{- range seq $n -}}
     {{- if not $found -}}
-      {{- $cand   := . -}}
-      {{- $isHub  := eq ($cand.Params.hub | default false) true -}}
+      {{- /* seq is 1..n; we want indices n-1 down to 0. */ -}}
+      {{- $cand := index $candidates (sub $n .) -}}
 
-      {{- if and (not $isHub) $cand.Parent $cand.Parent.IsHome -}}
-        {{- /* Depth-1 structural hub: parent is language home AND no
-               direct .md page children. */ -}}
-        {{- $hasDirectPages := false -}}
-        {{- range where $cand.Pages "Kind" "page" -}}
-          {{- if eq .Parent.RelPermalink $cand.RelPermalink -}}
-            {{- $hasDirectPages = true -}}
+      {{- /* Skip the language home itself — `.Ancestors` includes it, but
+             a language home is never a workshop root. */ -}}
+      {{- if not $cand.IsHome -}}
+        {{- $isHub := eq ($cand.Params.hub | default false) true -}}
+
+        {{- if and (not $isHub) $cand.Parent $cand.Parent.IsHome -}}
+          {{- /* Depth-1 structural hub: parent is language home AND no
+                 direct .md page children. */ -}}
+          {{- $hasDirectPages := false -}}
+          {{- range where $cand.Pages "Kind" "page" -}}
+            {{- if eq .Parent.RelPermalink $cand.RelPermalink -}}
+              {{- $hasDirectPages = true -}}
+            {{- end -}}
           {{- end -}}
+          {{- if not $hasDirectPages -}}{{- $isHub = true -}}{{- end -}}
         {{- end -}}
-        {{- if not $hasDirectPages -}}{{- $isHub = true -}}{{- end -}}
-      {{- end -}}
 
-      {{- if not $isHub -}}
-        {{- $root  = $cand -}}
-        {{- $found = true -}}
+        {{- if not $isHub -}}
+          {{- $root  = $cand -}}
+          {{- $found = true -}}
+        {{- end -}}
       {{- end -}}
     {{- end -}}
   {{- end -}}
