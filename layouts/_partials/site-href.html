@@ -1,11 +1,16 @@
 {{- /*
-  Resolve an href against the site baseURL.
+  Resolve an href against the site baseURL, language-aware.
 
   Hugo's relURL preserves a leading "/" (treats it as domain-rooted), which
   breaks project pages where baseURL has a path prefix (e.g. GitHub Pages at
   https://owner.github.io/repo/). This helper strips the leading slash before
-  piping through relURL so internal paths get the prefix, while passing
-  external (http*) and anchor (#) hrefs through unchanged.
+  piping through relLangURL so internal paths get the path prefix AND the
+  current language prefix on multilingual sites with
+  `defaultContentLanguageInSubdir = true`. External (http*) and anchor (#)
+  hrefs pass through unchanged.
+
+  relLangURL degrades to relURL on single-language sites, so this is safe
+  regardless of whether multilingual mode is configured.
 
   Usage:  href="{{ partial "site-href.html" $someHref }}"
 */ -}}
@@ -13,7 +18,7 @@
 {{- $out := $raw -}}
 {{- if $raw -}}
   {{- if not (or (hasPrefix $raw "http") (hasPrefix $raw "#")) -}}
-    {{- $out = (strings.TrimPrefix "/" $raw) | relURL -}}
+    {{- $out = (strings.TrimPrefix "/" $raw) | relLangURL -}}
   {{- end -}}
 {{- end -}}
 {{- return $out -}}
