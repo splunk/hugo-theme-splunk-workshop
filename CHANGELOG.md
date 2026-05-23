@@ -5,6 +5,12 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.9.1] - 2026-05-23
+
+### Fixed
+
+- **Callout titles now honour inline markdown.** `{{< notice title="**Foo**" >}}` etc. render the `**` / `*` / backticks / links as Goldmark would; previously they were emitted as literal characters. The leading digit-dot-space (`1. Foo`) ordered-list trap still applies — avoid it in titles.
+
 ## [0.9.0] - 2026-05-23
 
 ### Changed (breaking)

@@ -35,7 +35,12 @@
 -}}
 {{- $iconSVG := index $icons $type | default (index $icons "note") -}}
 {{- $stroke := cond (eq $type "success") "2.5" "2" -}}
-{{- $resolvedTitle := $title | default (i18n $type) | default (humanize $type) -}}
+{{- /* Author-supplied callout titles support inline markdown (`**bold**`,
+       `*italic*`, `` `code` ``, links). Hugo's markdownify only wraps in
+       <p> for block-level content, so short single-line titles render
+       inline-safe. Avoid leading "1. " in titles — Goldmark will treat
+       it as an ordered-list start and emit <ol><li>...</li></ol>. */ -}}
+{{- $resolvedTitle := $title | default (i18n $type) | default (humanize $type) | markdownify -}}
 {{- /* expanded mode: render as <details> only when explicitly set. */ -}}
 {{- $useDetails := false -}}
 {{- $detailsOpen := false -}}
