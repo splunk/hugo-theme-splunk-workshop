@@ -5,6 +5,12 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.10.2] - 2026-05-23
+
+### Fixed
+
+- **`.Site.Data` deprecation warning** on Hugo v0.156.0+. The icon data-file reads in `_partials/icon-svg.html` and `shortcodes/icon-gallery.html` were going through `site.Data.icons`, which Hugo flagged as deprecated. Both now use `hugo.Data.icons`. No behavioural change; build is quiet again.
+
 ## [0.10.1] - 2026-05-23
 
 ### Documented
