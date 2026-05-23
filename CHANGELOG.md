@@ -5,11 +5,17 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
-## [0.9.1] - 2026-05-23
+## [0.9.2] - 2026-05-23
+
+Re-tag of v0.9.1 to escape a checksum-mismatch problem: v0.9.1 was force-republished shortly after its initial tag, which violates Go's tag-immutability assumption and poisons the proxy/`go.sum` hash for anyone who fetched the first v0.9.1. v0.9.2 contains the same code v0.9.1 was supposed to ship. Skip v0.9.1.
 
 ### Fixed
 
 - **Callout titles now honour inline markdown.** `{{< notice title="**Foo**" >}}` etc. render the `**` / `*` / backticks / links as Goldmark would; previously they were emitted as literal characters. The leading digit-dot-space (`1. Foo`) ordered-list trap still applies — avoid it in titles.
+
+## [0.9.1] - 2026-05-23 [BROKEN — do not use]
+
+Tag was force-rewritten shortly after publish; subsequent fetches fail Go's checksum check. Use v0.9.2 instead.
 
 ## [0.9.0] - 2026-05-23
 
