@@ -3,7 +3,7 @@
   Icons reference page; reflects any add/remove in the data file with no
   further edits. Aliases appear in a separate list below the main grid.
 */ -}}
-{{- $i := site.Data.icons -}}
+{{- $i := hugo.Data.icons -}}
 <div class="icon-gallery">
 {{- range $name, $_ := $i.icons }}
   <figure class="icon-gallery__item">

@@ -4,7 +4,7 @@
   of truth for the whole theme.
 */ -}}
 {{- $name := . -}}
-{{- $i := site.Data.icons -}}
+{{- $i := hugo.Data.icons -}}
 {{- $svg := index $i.icons $name -}}
 {{- if not $svg }}{{ with index $i.aliases $name }}{{ $svg = index $i.icons . }}{{ end }}{{ end -}}
 {{- if not $svg }}{{ $svg = $i.meta.fallback }}{{ end -}}
