@@ -16,9 +16,9 @@
     linkedin
     linkedin name="My Course" certUrl="https://example.com/cert.png"
 */ -}}
-{{- $name   := .Get "name"           | default $.Site.Params.linkedinCertName | default "Splunk Workshop" -}}
-{{- $org    := .Get "organizationId" | default $.Site.Params.linkedinOrgId    | default "20226" -}}
-{{- $url    := .Get "certUrl"        | default $.Site.Params.linkedinCertUrl  | default "" -}}
+{{- $name   := .Get "name"           | default site.Params.linkedinCertName | default "Splunk Workshop" -}}
+{{- $org    := .Get "organizationId" | default site.Params.linkedinOrgId    | default "20226" -}}
+{{- $url    := .Get "certUrl"        | default site.Params.linkedinCertUrl  | default "" -}}
 {{- $text   := .Get "text"           | default "LinkedIn" -}}
 {{- $color  := .Get "color"          | default "#ffffff" -}}
 {{- $year   := now.Format "2006" -}}

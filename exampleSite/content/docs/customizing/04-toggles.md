@@ -15,7 +15,7 @@ Six boolean params and one width param control the major layout decisions. Flip 
   defaultMode     = "auto"     # "light" | "dark" | "auto"
   showThemeToggle = true       # sun/moon button in the header
   showSidebar     = true       # left workshop nav on workshop pages
-  showToc         = true       # right-rail "On this page"
+  show_toc         = true       # right-rail "On this page"
   showProgress    = true       # gradient reading-progress bar
   showLightTrails = true       # decorative gradient streaks in hero/footer
   contentMaxWidth = "720px"    # prose column width on workshop pages
@@ -35,9 +35,9 @@ Hide the sun/moon button when you've decided your site is one-mode-only. Combine
 
 Defaults to `true`. Hide it for sites where every page is a top-level resource (more like a blog than a multi-chapter workshop). When the page has no siblings, the sidebar is automatically suppressed even with this `true`.
 
-### `showToc`
+### `show_toc`
 
-Right-rail "On this page" auto-generated from H2/H3 headings. Hide for landing pages or pages with little structure. Auto-suppresses when the page has no headings. Override per-page with `showToc = false` (or `true`) in front matter — see [Front matter » `showToc`](/docs/authoring/01-front-matter/#showtoc).
+Right-rail "On this page" auto-generated from H2/H3 headings. Hide for landing pages or pages with little structure. Auto-suppresses when the page has no headings. Override per-page with `show_toc = false` (or `true`) in front matter — see [Front matter » `show_toc`](/docs/authoring/01-front-matter/#showtoc).
 
 ### `showProgress`
 
@@ -114,19 +114,32 @@ Some toggles can be overridden per-page in front matter:
 title   = "..."
 hidden  = true        # exclude from sidebar, TOC, search, prev/next
 nopager = true        # render the page but suppress the prev/next pager
-showToc = false       # hide the right-rail TOC on this page only
+show_toc = false       # hide the right-rail TOC on this page only
 +++
 ```
 
-`hidden: true` is the canonical way to draft pages that should ship invisibly. `nopager: true` is for special pages (intro, outro, glossary) where prev/next doesn't make sense. `showToc: false` widens the content column on dashboard-style or landing pages.
+`hidden: true` is the canonical way to draft pages that should ship invisibly. `nopager: true` is for special pages (intro, outro, glossary) where prev/next doesn't make sense. `show_toc: false` widens the content column on dashboard-style or landing pages.
 
 ## Picking which sections appear on the home
 
+Two equivalent forms — pick whichever fits where you'd rather edit:
+
 ```toml
+# hugo.toml — site-wide param
 [params]
-  homeSections = ["workshops", "guides", "reference"]
+  home_sections = ["workshops", "guides", "reference"]
 ```
 
-Without this, the home page lists all top-level sections by weight (filtering out anything with `hidden: true`). Set `homeSections` to lock the order or hide specific sections from the home without hiding them everywhere.
+```toml
+# content/_index.md — page front matter (takes precedence)
++++
+title        = "..."
+home_sections = ["workshops", "guides", "reference"]
++++
+```
+
+Without either, the home page lists all top-level sections by weight (filtering out anything with `hidden: true`). Set `home_sections` to lock the order or hide specific sections from the home without hiding them everywhere. The page-front-matter form wins when both are set — handy if you want a different home selection per language without forking site params.
+
+Misspelled paths get a build warning naming the missing section (e.g. `home_sections references "workshop" but no such section exists`), so typos surface as `WARN` lines rather than silent gaps.
 
 {{< checkpoint "You can rebrand and reshape the theme without writing CSS" >}}

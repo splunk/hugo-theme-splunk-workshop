@@ -1,6 +1,6 @@
 {{- /*
-  Relearn-compatible siteparam — echo a value from .Site.Params.
+  Relearn-compatible siteparam — echo a value from site.Params.
   {{% siteparam "brandName" %}} → "splunk>"
 */ -}}
 {{- $name := .Get "name" | default (.Get 0) -}}
-{{- with $.Site.Params }}{{ index . $name | default "" }}{{ end -}}
+{{- with site.Params }}{{ index . $name | default "" }}{{ end -}}

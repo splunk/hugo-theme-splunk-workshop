@@ -39,7 +39,7 @@
 {{- $notime := eq (.Get "notime" | default "false") "true" -}}
 {{- .Page.Store.Set "_has_cards" true -}}
 
-{{- $allChildren := partial "visible-pages.html" $page.Pages -}}
+{{- $allChildren := partial "workshop/visible-pages.html" $page.Pages -}}
 {{- $categories  := $page.Params.categories -}}
 {{- $seen        := slice -}}
 
@@ -57,11 +57,11 @@
   {{- $items = sort $items "Weight" }}
   {{ if $items }}
 <section class="cards-category">
-  <h2 class="cards-category__title">{{ $title | markdownify }}</h2>
+  <h2 class="cards-category__title">{{ $title }}</h2>
   {{ with $desc }}<p class="cards-category__desc">{{ . | markdownify }}</p>{{ end }}
   <div class="cards">
     {{ range $i, $card := $items }}
-      {{ partial "card-from-page.html" (dict "page" . "index" $i "notime" $notime) }}
+      {{ partial "cards/card-from-page.html" (dict "page" . "index" $i "notime" $notime) }}
     {{ end }}
   </div>
 </section>
@@ -83,7 +83,7 @@
   <h2 class="cards-category__title">{{ i18n "categoryOther" | default "Other" }}</h2>
   <div class="cards">
     {{ range $i, $card := $other }}
-      {{ partial "card-from-page.html" (dict "page" . "index" $i "notime" $notime) }}
+      {{ partial "cards/card-from-page.html" (dict "page" . "index" $i "notime" $notime) }}
     {{ end }}
   </div>
 </section>

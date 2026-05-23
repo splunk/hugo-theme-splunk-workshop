@@ -7,7 +7,7 @@
   earlier on the same page.
 */ -}}
 {{- $title := .Get "title" | default (.Get 0) | default (i18n "exerciseDefault") -}}
-{{- .Page.Scratch.Set "step_counter" 0 -}}
+{{- .Page.Store.Set "step_counter" 0 -}}
 <section class="exercise">
   <p class="exercise__label">{{ i18n "exercise" }}</p>
   {{- /* Rendered as <p>, not <h3>, on purpose: exercises don't claim a

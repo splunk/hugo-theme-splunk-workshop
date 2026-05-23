@@ -1,0 +1,91 @@
+{{- /*
+  Hero layout body. Called from `index.html` (site home) and
+  `_default/hero.html` (sections with `layout = "hero"`).
+
+  Front-matter contract: docs/authoring/01-front-matter#page-layouts.
+
+  Two non-obvious bits:
+    - On nested heroes the eyebrow slot IS the breadcrumb (no other way
+      back to ancestor pages). Home keeps its eyebrow/brandTagline.
+    - Body and the auto card-grid both render — the home page wants an
+      intro paragraph above its grid. `noautocards` suppresses the grid;
+      `_has_cards` (set by the cards/card/children shortcodes) suppresses
+      it when the body already authored its own.
+*/ -}}
+{{- $p := site.Params -}}
+{{- $isHome := .IsHome -}}
+{{- $eyebrow := "" -}}
+{{- if $isHome -}}{{- $eyebrow = .Params.eyebrow | default $p.brandTagline -}}{{- end -}}
+{{- $plainTitle := .Title -}}
+{{- if and (not $plainTitle) $isHome -}}{{- $plainTitle = site.Title -}}{{- end -}}
+{{- $lead := .Description -}}
+{{- if and (not $lead) $isHome -}}{{- $lead = $p.description -}}{{- end -}}
+
+<main>
+  <section class="hero">
+    {{ if $p.showLightTrails }}<div class="light-trails light-trails--hero" aria-hidden="true"></div>{{ end }}
+    <div class="page page--narrow page--small-pad-top">
+      <div class="hero__inner">
+        {{- if $isHome }}
+          {{- with $eyebrow }}<p class="eyebrow">{{ . }}</p>{{- end }}
+        {{- else }}
+          {{ partial "nav/breadcrumb.html" . }}
+        {{- end }}
+        {{- with .Params.hero_title }}
+        <h1 class="hero__title">{{ . | markdownify }}</h1>
+        {{- else }}{{ with $plainTitle }}
+        <h1 class="hero__title">{{ . }}</h1>
+        {{- end }}{{ end }}
+        {{- with $lead }}
+        <p class="hero__lead">{{ . }}</p>
+        {{- end }}
+        {{- with .Params.cta }}
+        <div class="hero-cta-row">
+          {{- range . }}
+          {{- $external := strings.HasPrefix .href "http" }}
+          {{- $style := .style | default "primary" }}
+          {{- $cls := cond (eq $style "ghost") "btn btn--ghost" "btn btn--primary" }}
+          <a href="{{ partial "site-href.html" .href }}" class="{{ $cls }}"{{ if $external }} target="_blank" rel="noopener"{{ end }}>{{ .label }}{{ if eq $style "primary" }} <span class="btn__arrow">&rarr;</span>{{ end }}</a>
+          {{- end }}
+        </div>
+        {{- end }}
+      </div>
+    </div>
+  </section>
+
+  <div class="page page--narrow page--no-pad-top">
+    <div class="content content--full" id="content">
+      {{ with .Content }}{{ . }}{{ end }}
+
+      {{- $hasOwnCards := .Page.Store.Get "_has_cards" -}}
+      {{- $noautocards := eq (.Params.noautocards | default false) true -}}
+
+      {{- if and (not $hasOwnCards) (not $noautocards) -}}
+        {{- /* Home picks specific sections via `home_sections` (page front matter
+               wins, site params fall back); other heroes auto-grid their children. */ -}}
+        {{- $home_sections := .Params.home_sections | default $p.home_sections -}}
+        {{- if and $isHome $home_sections -}}
+          {{ $items := slice }}
+          {{ range $home_sections }}
+            {{- $path := . -}}
+            {{ with site.GetPage (printf "/%s" $path) }}
+              {{ if ne (.Params.hidden | default false) true }}{{ $items = $items | append . }}{{ end }}
+            {{ else }}
+              {{ warnidf (printf "hero-home_sections-missing-%s" $path) "hero layout: `home_sections` references %q but no such section exists." $path }}
+            {{ end }}
+          {{ end }}
+          {{ if $items }}
+          <h2 class="home__items-heading">{{ i18n "workshops" }}</h2>
+          <div class="cards">
+            {{ range $i, $page := $items }}
+              {{ partial "cards/card-from-page.html" (dict "page" . "index" $i) }}
+            {{ end }}
+          </div>
+          {{ end }}
+        {{- else -}}
+          {{ partial "cards/cards-auto-grid.html" . }}
+        {{- end -}}
+      {{- end -}}
+    </div>
+  </div>
+</main>

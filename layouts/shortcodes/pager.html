@@ -3,7 +3,7 @@
 
   Replaces the default auto-pager's prev/next destinations on this page.
   Authors specify URLs and (optionally) labels in the markdown body; the
-  bottom pager partial reads these from .Page.Scratch and renders them
+  bottom pager partial reads these from .Page.Store and renders them
   in place of the DFS-computed neighbours.
 
   Args (any combination of; everything optional):
@@ -20,7 +20,7 @@
   can place the shortcode anywhere in the body; the visual pager
   always renders at the bottom of the page.
 
-  The shortcode itself emits no output; it only writes to Scratch.
+  The shortcode itself emits no output; it only writes to Store.
 
   Honored after `nopager: true` — a page with `nopager: true` in front
   matter still renders no pager even if this shortcode is present.
@@ -38,19 +38,19 @@
 {{- with $prevURL -}}
   {{- $url   := . -}}
   {{- $label := $.Get "prevLabel" -}}
-  {{- with $.Site.GetPage . -}}
+  {{- with site.GetPage . -}}
     {{- $url = .RelPermalink -}}
     {{- if not $label }}{{ $label = .LinkTitle }}{{ end -}}
   {{- end -}}
-  {{- $.Page.Scratch.Set "pager_override_prev" (dict "url" $url "title" ($label | default $url)) -}}
+  {{- $.Page.Store.Set "pager_override_prev" (dict "url" $url "title" ($label | default $url)) -}}
 {{- end -}}
 
 {{- with $nextURL -}}
   {{- $url   := . -}}
   {{- $label := $.Get "nextLabel" -}}
-  {{- with $.Site.GetPage . -}}
+  {{- with site.GetPage . -}}
     {{- $url = .RelPermalink -}}
     {{- if not $label }}{{ $label = .LinkTitle }}{{ end -}}
   {{- end -}}
-  {{- $.Page.Scratch.Set "pager_override_next" (dict "url" $url "title" ($label | default $url)) -}}
+  {{- $.Page.Store.Set "pager_override_next" (dict "url" $url "title" ($label | default $url)) -}}
 {{- end -}}

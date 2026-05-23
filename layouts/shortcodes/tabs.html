@@ -17,7 +17,7 @@
 {{- $style   := .Get "style" -}}
 {{- /* Force inner so children push */ -}}
 {{- $_ := .Inner -}}
-{{- $tabs := .Page.Scratch.Get $key | default slice -}}
+{{- $tabs := .Page.Store.Get $key | default slice -}}
 <div class="tabs{{ with $style }} tabs--{{ . }}{{ end }}" data-tabs{{ with $groupid }} data-tabs-group="{{ . }}"{{ end }}>
 <div class="tabs__list" role="tablist">
 {{- range $i, $t := $tabs -}}

@@ -1,0 +1,34 @@
+{{- /*
+  Auto card-grid for sections without body content.
+
+  Calling modes:
+    - Page:   `partial "cards/cards-auto-grid.html" .`
+              `.Params.subsections` decides pages vs sub-sections.
+    - Dict:   `partial "cards/cards-auto-grid.html" (dict "page" . "preferSections" true)`
+              `preferSections` overrides — used by the chapter layout.
+
+  No-ops when there are no visible items, or when `noautocards = true`.
+*/ -}}
+{{- $page := . -}}
+{{- $preferSections := false -}}
+{{- if reflect.IsMap . -}}
+  {{- $page = .page -}}
+  {{- $preferSections = .preferSections -}}
+{{- else -}}
+  {{- $preferSections = eq ($page.Params.subsections | default false) true -}}
+{{- end -}}
+
+{{- if eq ($page.Params.noautocards | default false) true -}}{{- return -}}{{- end -}}
+
+{{- $items := partial "workshop/visible-pages.html" $page.Pages -}}
+{{- if and $preferSections $page.Sections -}}
+  {{- $items = partial "workshop/visible-pages.html" $page.Sections -}}
+{{- end -}}
+
+{{ if $items }}
+<div class="cards">
+  {{ range $i, $card := $items }}
+    {{ partial "cards/card-from-page.html" (dict "page" . "index" $i) }}
+  {{ end }}
+</div>
+{{ end }}

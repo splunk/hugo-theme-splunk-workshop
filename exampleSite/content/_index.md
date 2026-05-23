@@ -1,8 +1,9 @@
 +++
-title        = "Learn by *building*."
-eyebrow      = "Workshops · Hands-on, opinionated"
-description  = "A modern Hugo theme for technical workshops — branded for Splunk, configurable for anyone. Three-column layout, light/dark/auto, 50+ shortcodes, built-in search, accessible by default."
-homeSections = ["docs", "workshops"]
+title         = "Learn by building."
+hero_title    = "Learn by *building*."
+eyebrow       = "Workshops · Hands-on, opinionated"
+description   = "A modern Hugo theme for technical workshops — branded for Splunk, configurable for anyone. Three-column layout, light/dark/auto, 50+ shortcodes, built-in search, accessible by default."
+home_sections = ["docs", "workshops"]
 
 [[cta]]
 label = "Browse workshops"

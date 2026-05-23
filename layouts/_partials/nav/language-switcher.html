@@ -18,7 +18,7 @@
     {{- range hugo.Sites -}}
     {{- $code := .Language.Lang -}}
     {{- $name := .Language.Params.label | default .Language.Label | default .Language.Lang -}}
-    {{- $isActive := eq $code $page.Site.Language.Lang -}}
+    {{- $isActive := eq $code site.Language.Lang -}}
     {{- /* Pick the matching translation if it exists, else fall back to the
            language's home page so the user lands somewhere sensible. */ -}}
     {{- $href := "" -}}

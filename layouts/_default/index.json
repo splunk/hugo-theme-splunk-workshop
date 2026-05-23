@@ -15,7 +15,7 @@
   output exactly; for very long pages it bounds the build cost
   rather than scaling linearly with page length.
 */ -}}
-{{- $pages := where .Site.RegularPages "Params.hidden" "!=" true -}}
+{{- $pages := where site.RegularPages "Params.hidden" "!=" true -}}
 {{- $idx := slice -}}
 {{- range $pages -}}
   {{- $section := "" -}}

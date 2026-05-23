@@ -1,3 +1,6 @@
 {{ define "main" }}
-{{ partial "page-shell.html" (dict "page" . "innerPartial" "page-inner-single.html" "showMetaFooter" true) }}
+{{ partial "shell/three-column.html" (dict
+  "page"           .
+  "innerPartial"   "page/default.html"
+  "showMetaFooter" true) }}
 {{ end }}

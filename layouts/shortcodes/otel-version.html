@@ -1,10 +1,6 @@
 {{- /*
   Outputs the configured OpenTelemetry version from site params.
-  Set `stableOtelVersion` in your hugo.toml [params] block.
-  Example: invoke as `otel-version` — outputs e.g. "1.32.0".
-
-  Accepts the legacy snake_case `stable_otel_version` key for back-compat
-  with existing sites; that fallback can be dropped once downstream sites
-  have migrated to the canonical camelCase form.
+  Set `stable_otel_version` in your hugo.toml [params] block.
+  Legacy camelCase `stableOtelVersion` is accepted as a fallback.
 */ -}}
-{{- $.Site.Params.stableOtelVersion | default $.Site.Params.stable_otel_version | default "" -}}
+{{- site.Params.stable_otel_version | default site.Params.stableOtelVersion | default "" -}}

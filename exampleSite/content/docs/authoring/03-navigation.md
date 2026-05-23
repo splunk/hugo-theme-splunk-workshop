@@ -46,14 +46,22 @@ This means your chapter `_index.md` content matters — it's the first thing rea
 
 ## Rule 5 — The home picks top-level sections
 
-`/` (the home page) lists every top-level section in the site, sorted by weight, hidden filtered. Override the order or pick specific sections:
+`/` (the home page) lists every top-level section in the site, sorted by weight, hidden filtered. Override the order or pick specific sections by setting `home_sections` — either in your site config OR directly on the home page's `_index.md` front matter (the page form wins when both are set):
 
 ```toml
+# hugo.toml
 [params]
-  homeSections = ["workshops", "guides", "reference"]
+  home_sections = ["workshops", "guides", "reference"]
 ```
 
-Without this param, the home shows all top-level sections in weight order.
+```toml
+# content/_index.md
++++
+home_sections = ["workshops", "guides", "reference"]
++++
+```
+
+Without either, the home shows all top-level sections in weight order. See [Customizing › home sections](../../customizing/04-toggles/#picking-which-sections-appear-on-the-home) for the full contract (typo warnings, hidden filtering).
 
 ## Worked example
 

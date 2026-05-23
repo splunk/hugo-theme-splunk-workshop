@@ -1,23 +1,11 @@
-{{- /* Workshop meta row: time / authors / difficulty / tags.
-       Accepts both the relearn keys (time, authors plural array) and the
-       theme's own keys (duration, author singular) so existing workshop
-       content migrates without rewriting. Authors formatted with the
-       same grammar as the live splunk.github.io/observability-workshop:
-         1 author  → "Author"  · Name
-         2 authors → "Authors" · A & B
-         3+        → "Authors" · A, B, & C
-    */ -}}
+{{- /* Workshop meta row: time / authors / difficulty / tags. Accepts both
+       the canonical keys (`time`, `authors`) and relearn-legacy aliases
+       (`duration`, `author`). Time falls back to .ReadingTime. */ -}}
 {{- $params  := .Params -}}
-{{- /* Fallback chain: explicit `time` (preferred) → relearn-legacy `duration`
-       → Hugo's built-in `.ReadingTime` (WordCount / 213 wpm, rounded down).
-       Author-provided values always win; the ReadingTime fallback only
-       kicks in for pages that set neither. */ -}}
 {{- $time    := $params.time | default $params.duration | default (printf "%d min" .ReadingTime) -}}
 {{- $rawAuth := $params.authors | default $params.author -}}
 
-{{- /* Normalise authors into a clean string slice. Trims surrounding
-       punctuation, drops empties, and accepts a single string (legacy
-       singular `author` key) as a list of one. */ -}}
+{{- /* Normalise authors: accepts list or singular string, drops empties. */ -}}
 {{- $authors := slice -}}
 {{- if $rawAuth -}}
   {{- $list := $rawAuth -}}

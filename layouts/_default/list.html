@@ -1,52 +1,7 @@
+{{- /* Section landings without a `layout` key. Sections with
+       `layout = "hero"` or `"chapter"` hit those templates first. */ -}}
 {{ define "main" }}
-{{- $p := .Site.Params -}}
-{{- $workshop := partialCached "workshop-root.html" . .RelPermalink -}}
-
-{{- /* Two rendering modes:
-       - Hub mode: the page has no workshop root (language home or category
-         hub). Render the hero layout with an auto-card-grid of children.
-       - Workshop mode: the page is the workshop landing or a deeper section.
-         Render the three-column shell (sidebar + content + TOC) via the
-         shared `page-shell.html` partial. */ -}}
-
-{{- if not $workshop -}}
-<main>
-  <section class="hero">
-    {{ if $p.showLightTrails }}<div class="light-trails light-trails--hero" aria-hidden="true"></div>{{ end }}
-    <div class="page page--narrow page--no-pad-top">
-      <div class="hero__inner">
-        <p class="eyebrow">{{ if .IsHome }}{{ $p.brandTagline | default "Workshops" }}{{ else }}{{ with .CurrentSection.Parent }}{{ .Title | markdownify }}{{ else }}Section{{ end }}{{ end }}</p>
-        <h1 class="hero__title">{{ .Title | markdownify }}{{ if .IsHome }}{{ if not .Title }}{{ .Site.Title }}{{ end }}{{ end }}</h1>
-        {{ with .Description }}<p class="hero__lead">{{ . }}</p>{{ else }}{{ with .Site.Params.description }}<p class="hero__lead">{{ . }}</p>{{ end }}{{ end }}
-
-        {{ if .IsHome }}
-        <div class="hero-cta-row">
-          <a href="{{ partial "site-href.html" "/workshops/" }}" class="btn btn--primary">{{ i18n "browseWorkshops" }} <span class="btn__arrow">&rarr;</span></a>
-          {{ with $p.repoURL }}<a href="{{ . }}" class="btn btn--ghost" target="_blank" rel="noopener">{{ i18n "viewOnGitHub" }}</a>{{ end }}
-        </div>
-        {{ end }}
-      </div>
-    </div>
-  </section>
-
-  <div class="page page--narrow page--no-pad-top">
-    <div class="content content--full" id="content">
-      {{- /* Render the section's own content. If the page uses {{< children >}}
-         in its Markdown, that's the only listing the reader sees. If the page
-         has no Content at all, fall back to an automatic card grid so empty
-         section indexes aren't blank. */ -}}
-      {{ if .Content }}
-        {{ .Content }}
-      {{ else }}
-        {{ partial "cards-auto-grid.html" . }}
-      {{ end }}
-    </div>
-  </div>
-</main>
-
-{{- else -}}
-
-{{ partial "page-shell.html" (dict "page" . "innerPartial" "page-inner-list-workshop.html") }}
-
-{{- end -}}
+{{ partial "shell/three-column.html" (dict
+  "page"         .
+  "innerPartial" "page/default.html") }}
 {{ end }}

@@ -32,7 +32,7 @@ For inline math, use raw `$ … $` (KaTeX's `auto-render` extension picks both u
 The complexity is $O(n \log n)$ — see the proof below.
 ```
 
-The CDN URL is pinned in `layouts/_partials/footer.html` with an SRI hash. Bump the version there when KaTeX releases an update.
+The CDN URL is pinned in `layouts/_partials/chrome/footer.html` with an SRI hash. Bump the version there when KaTeX releases an update.
 
 ## Diagrams (Mermaid)
 

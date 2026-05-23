@@ -3,7 +3,7 @@ title  = "SPL Cheat Sheet"
 hidden = true
 +++
 
-# SPL Cheat Sheet
+## SPL Cheat Sheet
 
 A short reference of the most-used SPL commands. Embedded into other pages via the `include` shortcode.
 

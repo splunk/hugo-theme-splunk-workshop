@@ -1,0 +1,8 @@
+{{- /* Recursive count of non-hidden descendants (section index pages and
+       leaf pages, any depth). Used for the "N pages" card badge. */ -}}
+{{- $count := 0 -}}
+{{- range where .Pages "Params.hidden" "!=" true -}}
+  {{- $count = add $count 1 -}}
+  {{- $count = add $count (partial "workshop/children-count.html" .) -}}
+{{- end -}}
+{{- return $count -}}

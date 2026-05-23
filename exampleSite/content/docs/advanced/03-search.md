@@ -105,7 +105,7 @@ To change the index shape:
 
 If your workshop site grows past **~500 pages** or you need fuzzy matching, typo tolerance, or facets, consider:
 
-- **[Pagefind](https://pagefind.app/)** — drop-in static-site search, runs at build time, very capable. Works alongside this theme — just override `_partials/head.html` and `layouts/_partials/footer.html` to load Pagefind.
+- **[Pagefind](https://pagefind.app/)** — drop-in static-site search, runs at build time, very capable. Works alongside this theme — just override `_partials/chrome/head.html` and `_partials/chrome/footer.html` to load Pagefind.
 - **Algolia DocSearch** — free for OSS docs, hosted, blazing fast.
 
 Both replace the bundled search, not augment it. Until you hit those scale points, the bundled search is enough.

@@ -1,0 +1,24 @@
+{{- /*
+  DFS-walk a section, returning every descendant page weight-sorted in
+  reading order. Section index pages are included as nav stops (section
+  landing first, then its children). Honours `hidden` and `nopager`.
+
+  Note: .Pages on a section already includes sub-section index pages — do
+  NOT union with .Sections (would duplicate them in the flat list).
+*/ -}}
+{{- $node := . -}}
+{{- $out  := slice -}}
+{{- $items := $node.Pages -}}
+{{- $items = where $items "Params.hidden" "!=" true -}}
+{{- $items = where $items "Params.nopager" "!=" true -}}
+{{- $items = sort $items "Weight" -}}
+
+{{- range $items -}}
+  {{- $out = $out | append . -}}
+  {{- if ne .Kind "page" -}}
+    {{- $sub := partialCached "workshop/flat-pages.html" . .RelPermalink -}}
+    {{- if $sub }}{{ $out = $out | append $sub }}{{ end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $out -}}

@@ -1,21 +1,14 @@
-{{- $p := .Site.Params -}}
-{{- /* Two-tier dark footer in the Material-for-MkDocs style.
-
-       Top tier ("meta")  : brand wordmark + tagline + social icon row.
-       Bottom tier ("legal"): copyright + "Built with Hugo" attribution.
-
-       The footer is always dark regardless of the active theme — gives every
-       page a consistent grounding zone. The brand bloom (light-trails) sits
-       behind it, mirrored to anchor on the left. */ -}}
+{{- $p := site.Params -}}
+{{- /* Always-dark footer (regardless of theme) — a consistent grounding
+       zone at the bottom of every page. */ -}}
 <footer class="site-footer">
   {{ if $p.showLightTrails }}<div class="light-trails light-trails--footer" aria-hidden="true"></div>{{ end }}
   <div class="site-footer__meta">
     <div class="site-footer__brand">
       <a href="{{ partial "site-href.html" "/" }}" class="brand brand--block brand--footer">
         {{- if $p.logoLight -}}
-          {{- /* In the dark footer, prefer the dark-mode logo if available. */ -}}
           {{- $logo := $p.logoDark | default $p.logoLight -}}
-          <img class="brand__logo" src="{{ $logo | relURL }}" alt="{{ .Site.Title | markdownify | plainify }}">
+          <img class="brand__logo" src="{{ $logo | relURL }}" alt="{{ site.Title | markdownify | plainify }}">
         {{- else -}}
           <span class="brand__mark">{{ $p.brandName | default "splunk>" }}</span>
         {{- end -}}
@@ -42,11 +35,11 @@
 
   <div class="site-footer__legal">
     <span class="site-footer__copyright">
-      {{- /* Override via [params] copyright in hugo.toml. Falls back to "© <year> <title>". */ -}}
+      {{- /* `copyright` in [params] supports `{year}` substitution. */ -}}
       {{- with $p.copyright -}}
         {{ . | replaceRE "\\{year\\}" (printf "%d" now.Year) | safeHTML }}
       {{- else -}}
-        &copy; {{ now.Year }} {{ .Site.Title }}
+        &copy; {{ now.Year }} {{ site.Title }}
       {{- end -}}
     </span>
     {{- with $p.versionBadgeRepo }}
@@ -60,14 +53,11 @@
   </div>
 </footer>
 
-{{- /* Lazy-load KaTeX / Mermaid only when a page needs them.
-       Placed in footer so content has rendered and Store flags are set.
-       SRI hashes pinned to versions below — bump them together. */ -}}
+{{- /* Lazy-load KaTeX / Mermaid only when a page needs them. Placed in
+       footer so `_needs_*` Store flags are set by then. */ -}}
 {{ if .Store.Get "_needs_katex" }}
-  {{- /* SRI hashes verified against the CDN at build time. To bump KaTeX:
-         1. Update the version triple below.
-         2. Recompute hashes:
-              curl -sL <url> | openssl dgst -sha384 -binary | openssl base64 -A */ -}}
+  {{- /* To bump KaTeX: update the version triple and recompute SRI hashes:
+           curl -sL <url> | openssl dgst -sha384 -binary | openssl base64 -A */ -}}
   <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"
         integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+"

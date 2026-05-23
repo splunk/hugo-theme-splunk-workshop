@@ -1,13 +1,13 @@
-{{- $p := .Site.Params -}}
+{{- $p := site.Params -}}
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="generator" content="Hugo {{ hugo.Version }}">
-<title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title | markdownify | plainify }} · {{ .Site.Title }}{{ end }}</title>
+<title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title | markdownify | plainify }} · {{ site.Title }}{{ end }}</title>
 <meta name="description" content="{{ .Description | default $p.description | markdownify | plainify }}">
 <meta name="theme-color" content="{{ $p.colorAccent | default "#FF0F7B" }}">
 
 {{- /* OpenGraph & Twitter */ -}}
-<meta property="og:title" content="{{ (.Title | default .Site.Title) | markdownify | plainify }}">
+<meta property="og:title" content="{{ (.Title | default site.Title) | markdownify | plainify }}">
 <meta property="og:description" content="{{ .Description | default $p.description | markdownify | plainify }}">
 <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
 <meta property="og:url" content="{{ .Permalink }}">
@@ -18,45 +18,29 @@
 <link rel="icon" href="{{ . | relURL }}" type="image/svg+xml">
 {{- end }}
 
-{{- /* Search index URL — emit via meta so search.js works under both:
-         1. a baseURL with a subpath (e.g. GitHub Pages `owner.github.io/repo/`)
-         2. multilingual + `defaultContentLanguageInSubdir = true`, where the
-            JSON lives at `/<lang>/index.json` not the site root.
-       Reading the JSON output's RelPermalink off `site.Home` gives us both
-       for free — Home is language-aware and Hugo handles the subpath. */ -}}
+{{- /* search.js reads this; Home.OutputFormats handles both subpath and
+       per-language-subdir baseURLs without special-casing. */ -}}
 {{- with site.Home.OutputFormats.Get "json" }}
 <meta name="search-index-url" content="{{ .RelPermalink }}">
 {{- end }}
 
-{{- /* Fonts (loaded from URL param so users can swap) */ -}}
 {{- with $p.fontUrl }}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="{{ . | safeURL }}">
 {{- end }}
 
-{{- /* LCP-font preloads. The hero h1 is the largest contentful element on
-       every page; paint-blocking on Bold-weight font fetch is the single
-       biggest opportunity to clean up first-paint. Two paths gated by the
-       same params that activate the underlying @font-face / @import. */ -}}
-
-{{- /* Path 1: Google Fonts (Inter Bold, latin subset). URL is versioned
-       by Google (/s/inter/v{N}/...). When Google rotates the version the
-       file still serves but the @font-face fetch inside the Google Fonts
-       stylesheet will request a different URL and this preload becomes a
-       cache miss. Refresh by fetching the live stylesheet at $p.fontUrl
-       and copying the woff2 URL whose unicode-range covers U+0000-00FF. */ -}}
+{{- /* LCP preload for the hero H1 font. Inter URL is versioned by
+       Google — refresh by copying the latest woff2 URL (the one whose
+       unicode-range covers U+0000-00FF) from the live stylesheet. */ -}}
 {{- if and $p.fontUrl (in $p.fontUrl "Inter") }}
 <link rel="preload"
       href="https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff2"
       as="font" type="font/woff2" crossorigin>
 {{- end }}
 
-{{- /* Path 2: Splunk's Heretto CDN (Splunk Data Sans Pro Bold TTF). No
-       preconnect today, no shared-CDN cache benefit, and TTF is ~30%
-       heavier than woff2 — biggest preload ROI in the theme. URL must
-       stay in sync with the Bold weight @font-face in theme-vars.html
-       (search SplunkDataSansPro_Bd). */ -}}
+{{- /* Same LCP preload for Splunk Data Sans Pro Bold. URL must stay in
+       sync with theme-vars.html (search SplunkDataSansPro_Bd). */ -}}
 {{- if $p.splunkDataSansPro }}
 <link rel="preconnect" href="https://assets.portal.heretto.com" crossorigin>
 <link rel="preload"
@@ -65,7 +49,7 @@
 {{- end }}
 
 {{- /* Theme tokens (Hugo params → CSS custom properties) */ -}}
-{{ partial "theme-vars.html" . }}
+{{ partial "chrome/theme-vars.html" . }}
 
 {{- /* Bundle CSS — concat in load order, no PostCSS dependency. */ -}}
 {{ $files := slice
@@ -112,5 +96,5 @@
 {{ end }}
 
 {{- /* Site extension point — last thing in <head>. See custom-header.html. */ -}}
-{{- partial "custom-header.html" . }}
+{{- partial "chrome/custom-header.html" . }}
 

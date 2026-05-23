@@ -5,6 +5,42 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.9.0] - 2026-05-23
+
+### Changed (breaking)
+
+- **Hero opt-in is now explicit via `layout = "hero"`.** The depth-1 auto-detect (sections with no direct `.md` children) is gone. Replace `hub = true` with `layout = "hero"`; `hub` still works for one release with a build warning, removal in v0.10.0.
+- **Visible-label text is plain everywhere.** Breadcrumb, sidebar, pager, card titles, chapter H1, default H1: no `markdownify`. Fixes the `<ol><li>...</li></ol>` DOM injection that ran on numbered titles like `1. Verify Agent`. Use `hero_title` (below) for the gradient italic.
+- **Partial reorg under `_partials/`.** Grouped into `chrome/`, `nav/`, `workshop/`, `cards/`, `shell/`, `page/`. Old `_partials/page-shell.html` and `page-inner-*.html` are gone — see the mapping in step 4 below.
+- **Three theme front-matter keys renamed to snake_case** to follow Hugo's best-practice for custom keys (Hugo lowercases all keys internally; mixed-case names cause subtle `isset` bugs):
+  - `heroTitle` → `hero_title`
+  - `homeSections` → `home_sections` (page front matter and `[params]`)
+  - `showToc` → `show_toc` (page front matter and `[params]`)
+
+### Added
+
+- **`hero_title` front-matter key.** Hero-only override; renders the H1 through `markdownify`. Only surface where markdown emphasis works inside a heading.
+- **`_default/hero.html` template.** Fires when `layout = "hero"` is set; delegates to `_partials/page/hero.html`.
+- **Three documented page layouts**: `hero`, `chapter`, default. See [Authoring › Front matter › Page layouts](docs/authoring/01-front-matter/#page-layouts). Not the same as Hugo [archetypes](docs/authoring/02-archetypes/) — the `chapter` archetype sets `layout = "chapter"` for you.
+
+### Migration
+
+1. **Replace `hub = true` with `layout = "hero"`** in every section that used it. Re-run `hugo`; the build prints one deprecation warning per affected section.
+2. **Add `layout = "hero"` to category landings that previously auto-detected.** Any depth-1 `_index.md` with sub-sections only (no direct `.md` children) needs it. **The build does not warn for this case** — audit with `find content -mindepth 2 -maxdepth 3 -name '_index.md'`. Symptom of a miss: a category landing rendering as the 3-column shell.
+3. **Use `hero_title` for italic-gradient hero H1s.** Move `*emphasis*` out of `title` into `hero_title`; keep `title` as the plain fallback for nav/cards/browser-tab.
+4. **Rename camelCase keys to snake_case** in your content and config — `sed -i '' -e 's/heroTitle/hero_title/g' -e 's/homeSections/home_sections/g' -e 's/showToc/show_toc/g'` over your content tree and `hugo.toml`. The old camelCase names *work* (Hugo case-folds reads) but trip on `isset` in custom templates; standardising on snake_case removes the foot-gun.
+5. **Update partial overrides** if you have any. The theme can't warn about moved partials — your override at the old path will be silently ignored. Mapping:
+
+   | Old path | New path |
+   | --- | --- |
+   | `_partials/page-shell.html` | `_partials/shell/three-column.html` |
+   | `_partials/page-inner-{single,list-workshop,chapter}.html` | replaced by `_partials/page/{default,chapter}.html` (different shape; see file for new args) |
+   | `_partials/{head,header,footer,custom-header,theme-vars}.html` | `_partials/chrome/<name>.html` |
+   | `_partials/{sidebar,sidebar-tree,breadcrumb,pager,toc,language-switcher}.html` | `_partials/nav/<name>.html` |
+   | `_partials/{workshop-root,workshop-meta,page-meta-footer,flat-pages,visible-pages,children-count}.html` | `_partials/workshop/<name>.html` |
+   | `_partials/{card-from-page,cards-auto-grid}.html` | `_partials/cards/<name>.html` |
+   | `_partials/{callout-render,resource-list,icon-svg,site-href}.html` | unchanged (still flat at `_partials/`) |
+
 ## [0.2.0] - 2026-05-13
 
 ### Changed

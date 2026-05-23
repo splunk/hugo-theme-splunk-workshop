@@ -8,6 +8,22 @@ weight      = 10
 The theme respects all of Hugo's standard front-matter keys plus a handful of theme-specific ones. Here's the complete list.
 {{< /lead >}}
 
+## Page layouts
+
+Hugo's `layout` front-matter key picks one of three layouts:
+
+| Layout | Opt-in | Renders | Use for |
+| --- | --- | --- | --- |
+| **`hero`** | `layout = "hero"` (auto for the site/language home) | Centered hero (breadcrumb-or-eyebrow + H1 + lead + CTAs) → body + auto card-grid. No sidebar, no TOC. | Landing pages: home, category hubs. |
+| **`chapter`** | `layout = "chapter"` | Gradient weight-number hero → workshop-meta → body OR auto card-grid of sub-sections. Sidebar + TOC. | Chapter intros inside a workshop. |
+| default | no `layout` key | Breadcrumb → section eyebrow → H1 → lead → workshop-meta → body. Sidebar + TOC. | Workshop content pages and section landings. |
+
+Hero is automatic only for the language home; every other landing (category hubs etc.) needs explicit `layout = "hero"`. The earlier depth-1 auto-detect was removed in v0.9 — see [`hub` (deprecated)](#hub-deprecated) for migration.
+
+`hero_title` is the only front-matter key that renders markdown in a heading; everything else renders plain. See [Markdown in titles](#markdown-in-titles).
+
+> Don't confuse these page layouts with Hugo [archetypes](../02-archetypes/) — those are `hugo new` content scaffolds. They compose: the `chapter` archetype sets `layout = "chapter"` for you.
+
 ## Standard Hugo keys
 
 ```yaml
@@ -19,7 +35,8 @@ date        = "2026-01-15"                 # publication date
 weight      = 30                           # controls order in lists and pager
 draft       = false                        # exclude from production builds
 tags        = ["spl", "search"]            # added to /tags/ taxonomy
-layout      = "chapter"                    # use a non-default layout
+layout      = "chapter"                    # pick a page layout
+                                            # ("chapter" | "hero" | unset for default)
 +++
 ```
 
@@ -38,10 +55,13 @@ author      = "Pieter Hagen"         # alias of authors[0] (legacy singular)
 lastmod     = "2026-04-28"           # optional override; otherwise from git
 hidden      = false                  # exclude from sidebar, TOC, search, prev/next
 nopager     = false                  # render the page but suppress prev/next
-showToc     = true                   # override site-wide `showToc` per page
+show_toc     = true                   # override site-wide `show_toc` per page
 noautocards = false                  # section-only: suppress the auto-card-grid fallback
 subsections = false                  # section-only: list sub-sections instead of pages
-hub         = false                  # section-only: navigation-only landing (no sidebar/pager)
+hero_title   = "Splunk4*Ninjas*."     # hero-only: H1 text rendered through markdownify
+                                      #            (the only surface where `*emphasis*` works)
+# hub       = true                   # DEPRECATED — use `layout = "hero"` instead.
+                                      # Recognised for one release; removal in v0.10.0.
 categories  = ["foundations"]        # bucket assignment for cards-by-category (page-level)
 subtitle    = "Chapter · Foo"        # eyebrow text on chapter pages
 tagline     = "01 · Foundation"      # extra text in the chapter sidebar
@@ -81,6 +101,7 @@ Free-form text. Common values: `beginner`, `intermediate`, `advanced`. Renders i
 ### `hidden`
 
 When `true`:
+
 - Page is excluded from sidebar listings
 - Page is excluded from the prev/next pager
 - Page is excluded from search index
@@ -92,34 +113,35 @@ Use `hidden: true` for draft pages, internal references, or "Easter egg" content
 ### `nopager`
 
 When `true`, suppresses the prev/next pager on this specific page. Useful for:
+
 - Index/landing pages where prev/next is meaningless
 - Q&A or FAQ pages where the linear flow doesn't apply
 - Special pages (404, search results, glossary)
 
 The page still appears in the sidebar and search; only the pager block is hidden.
 
-### `showToc`
+### `show_toc`
 
-Per-page override of the site-wide `showToc` param. When `false`, the right-rail "On this page" TOC is hidden on this page and the content column expands into the freed space. When `true`, the TOC is shown even if disabled site-wide. When omitted, the site param wins.
+Per-page override of the site-wide `show_toc` param. When `false`, the right-rail "On this page" TOC is hidden on this page and the content column expands into the freed space. When `true`, the TOC is shown even if disabled site-wide. When omitted, the site param wins.
 
 Useful for dashboard pages, very wide diagrams, or landing-style indexes where the TOC adds little but takes width.
 
 ```yaml
 +++
 title   = "Dashboard"
-showToc = false
+show_toc = false
 +++
 ```
 
-**Cascading to a whole section.** Plain `showToc = false` in a section's `_index.md` only affects that one index page — Hugo's `.Params` are per-page. To hide the TOC across a whole subtree, use Hugo's built-in `[cascade]` block:
+**Cascading to a whole section.** Plain `show_toc = false` in a section's `_index.md` only affects that one index page — Hugo's `.Params` are per-page. To hide the TOC across a whole subtree, use Hugo's built-in `[cascade]` block:
 
 ```toml
 # in some-section/_index.md
 [cascade]
-  showToc = false
+  show_toc = false
 ```
 
-Every descendant inherits unless it sets its own `showToc`. The same mechanism works for any other front-matter key.
+Every descendant inherits unless it sets its own `show_toc`. The same mechanism works for any other front-matter key.
 
 ### `noautocards`
 
@@ -134,11 +156,13 @@ noautocards = true
 +++
 ```
 
-By default, an `_index.md` with no body content falls back to an auto-grid of the section's children (or sub-sections, if `subsections = true`). That fallback is a navigational helper for empty section landings; on pages where the title + description are the entire intended payload, the cards are unwelcome.
+By layout:
 
-The sidebar still lists the section's children, so navigation isn't lost — the flag only removes the in-content card grid.
+- **chapter** — body and cards are mutually exclusive. Any prose suppresses cards; `noautocards = true` is the explicit form.
+- **hero** — body AND cards both render (body first, cards under). `noautocards = true` is the only way to suppress the grid when prose is present.
+- **default** — no auto-cards fallback; the flag is a no-op.
 
-Equivalent to adding any body content (any prose suppresses the auto-grid via the standard `{{ if .Content }}…{{ else }}auto-grid{{ end }}` pattern), but more explicit and doesn't require placeholder text.
+The sidebar still lists children regardless — the flag only removes the in-content grid.
 
 ### `subsections`
 
@@ -155,42 +179,40 @@ subsections = true                   # show one card per sub-workshop
 
 Without the flag (default `false`), the auto-grid lists the section's regular `.md` pages. The flag has no effect on sections that have no sub-sections, or on pages that author their own card grid with `{{</* cards */>}}` / `{{</* children type="card" */>}}` (the body wins).
 
-### `hub`
+### `hero_title`
 
-Section-only flag that marks a section as **navigation only** rather than a workshop. Hubs:
-
-- Render with the hero / card-grid layout (no sidebar, no prev/next pager).
-- Are *skipped* when descendant pages compute their workshop root — the sidebar scopes to the first non-hub section below the hub, not to the hub itself.
+Hero-only override for the H1, rendered through `markdownify`. `*asterisks*` become `<em>` with the brand gradient. The only key that does this — every other heading renders `title` plain.
 
 ```toml
-# content/workshops/observability/_index.md
 +++
-title = "Observability Workshops"
-hub   = true                  # this is a category, not a workshop
+title     = "Splunk4Ninjas"      # plain fallback (browser tab, search, cards)
+hero_title = "Splunk4*Ninjas*."   # rendered H1 — "Ninjas" gets the gradient
+layout    = "hero"
 +++
 ```
 
-When to set `hub = true`:
+**Eyebrow on nested heroes.** The site home shows `eyebrow` (or `params.brandTagline`). Nested hero sections show the **breadcrumb** in that slot instead — there's no other way back to ancestor pages. `eyebrow` is ignored on nested heroes; use `description` for a subtitle.
 
-- The section's body is a card grid of children (or your `_index.md` is empty and the auto-grid will fill it).
-- The section's children are themselves workshops — and you want each workshop to own its sidebar.
-- The section is in the middle of a chain you want to navigate **through**, not **into**.
+### `hub` (deprecated)
 
-When NOT to set it:
+Replaced by `layout = "hero"`. Recognised for one release with a build warning; removal in v0.10.0.
 
-- The section IS a workshop. Its `_index.md` has prose, intro content, or numbered steps. Children are pages of THAT workshop. Leave the flag off (the default).
-- A depth-1 section with no direct `.md` children is **auto-detected** as a hub by the structural fallback in `workshop-root.html` — no explicit flag needed at the top level. The explicit flag matters for hubs at depth ≥ 2 (categories within categories).
+```toml
+# OLD: hub = true
+# NEW:
+layout = "hero"
+```
 
-The workshop root for a deeply nested page is the HIGHEST non-hub section in the ancestor chain. With:
+Works at any depth. The workshop root for a nested page is the highest non-hero ancestor:
 
 ```text
-/workshops/                              hub (auto-detected, depth-1 + no .md children)
-/workshops/observability/                hub = true       ← without the flag, this would be the workshop root
-/workshops/observability/k8s-monitor/    workshop ← actual workshop root
+/workshops/                            layout = "hero"   (was: auto-detected at depth-1)
+/workshops/observability/              layout = "hero"   (was: hub = true)
+/workshops/observability/k8s-monitor/  workshop          ← workshop root
 /workshops/observability/k8s-monitor/01-intro/   page
 ```
 
-A page inside `k8s-monitor/` gets a sidebar scoped to `k8s-monitor/` only — not all of observability, not all of workshops. Without `hub = true` on the `observability/` section, the workshop root would jump up one level and the sidebar would mix lessons from every observability workshop in one flat tree.
+The depth-1 auto-detect was removed too — every hero section now needs the explicit key. Re-run `hugo` after upgrading; deprecation warnings list each section to migrate. A separate `hero-trap` warning fires when a hero section has direct `.md` page children (they'd be unreachable in workshop nav).
 
 ### `categories`
 
@@ -208,11 +230,12 @@ A page with no `categories` value drops into a final "Other" bucket — surfaces
 
 ## Home page hero
 
-The hero block on the site root (rendered from `content/_index.md`) is fully driven by front matter — no template editing required:
+`content/_index.md` front matter drives the home page hero — no template editing needed:
 
 ```toml
 +++
-title       = "Learn by *building*."
+title       = "Learn by building."
+hero_title   = "Learn by *building*."
 eyebrow     = "Workshops · Hands-on, opinionated"
 description = "..."
 
@@ -228,53 +251,39 @@ style = "ghost"
 +++
 ```
 
-- **`title`** is markdownified — wrap a word in `*asterisks*` to render it as `<em>` (the brand-gradient italic).
-- **`eyebrow`** is the kicker line above the title. Falls back to `params.brandTagline` if unset.
-- **`description`** is the lead paragraph. Falls back to `params.description` if unset.
-- **`cta`** is a list of buttons. `style` is `primary` (filled, with arrow) or `ghost` (outline). Internal hrefs like `/workshops/` are auto-prefixed for project-pages baseURLs; external (`http*`) hrefs get `target="_blank"` automatically.
-- Any markdown body below the front matter renders below the hero.
+- **`title`** — plain text. Used for browser tab, search index, social cards.
+- **`hero_title`** — optional markdown-rendered H1 override; `*asterisks*` get the brand gradient italic. Falls back to `title`.
+- **`eyebrow`** — kicker above the title. Falls back to `params.brandTagline`.
+- **`description`** — lead paragraph. Falls back to `params.description`.
+- **`cta`** — list of `{label, href, style}`. `style: ghost` makes a secondary button; `primary` is the default. Internal hrefs are baseURL-prefixed; external (`http*`) hrefs get `target="_blank"`.
+- Markdown body renders below the hero; the auto card-grid renders under that. Use [`noautocards`](#noautocards) to suppress the grid; [`home_sections`](../../customizing/04-toggles/#picking-which-sections-appear-on-the-home) to curate which sections appear.
+
+`hero_title` works on any section with `layout = "hero"`, not just the home.
 
 ## Markdown in titles
 
-The `title` front-matter key is rendered through Hugo's `markdownify` on the three layouts that use a *display-sized* heading:
+One rule: **only `hero_title` renders markdown.** `title` and `linkTitle` are plain text everywhere they surface.
 
-| Layout | Trigger | H1 class | Markdownified? |
-| --- | --- | --- | --- |
-| Home (`/`) | `content/_index.md` rendered by `index.html` | `.hero__title` | ✅ |
-| Hub landing (e.g. `/splunk4rookies/`) | depth-1 section with sub-sections, rendered by `list.html` in hub-mode | `.hero__title` | ✅ |
-| Chapter landing (`layout = "chapter"`) | rendered by `chapter.html` | `.chapter__title` | ✅ |
-| Regular workshop page | rendered by `single.html` | (plain `h1`) | ❌ |
-| Workshop section landing | rendered by `list.html` in workshop-mode | (plain `h1`) | ❌ |
+| Surface | Source | Rendering |
+| --- | --- | --- |
+| Hero H1 | `hero_title` → `title` | markdown → `<em>` with brand gradient |
+| Chapter H1, default H1 | `title` | plain |
+| Sidebar, breadcrumb, pager, card titles | `linkTitle` / `title` | plain |
+| `<title>` tag, OpenGraph, search index | `title` → `markdownify \| plainify` | stripped to plain |
 
-So you can write:
+Why so strict? `markdownify` treats a leading digit-dot-space (`1. Foo`) as an ordered-list marker and emits `<ol><li>…</li></ol>` inside the heading, breaking every inline DOM context that contains it. Plain text everywhere removes the bug class.
 
-```toml
-+++
-title = "Splunk4Rookies *Workshops*"
-+++
-```
-
-…and the `*Workshops*` becomes `<em>Workshops</em>`, picking up the magenta→orange brand gradient defined in `components.css` for `.hero__title em` / `.chapter__title em`. The asterisks render as italic everywhere markdown does — but only the three layouts above also apply the brand gradient.
-
-Plain `single.html` titles are left as literal text. The brand-gradient italic treatment is meant for *display* headings (landing pages); applying it to every workshop step's H1 would over-deploy the brand magenta. If you want italic emphasis in a regular page title, write it in markdown body content as `## **Heading**` or similar — the H1 stays clean.
-
-### Card titles
-
-Card titles ALSO markdownify — anywhere a page appears as a card (the home page's auto-grid, a hub landing's auto-grid, a chapter landing's card-fallback, the `cards` / `card` / `children type="card"` shortcodes), the title goes through `markdownify`. The same `*emphasis*` markdown works:
+Trade-off: `*emphasis*` in `title` shows literal asterisks. Use `hero_title` for the one surface that needs the italic gradient:
 
 ```toml
 +++
-title = "Splunk4Rookies *Workshops*"
+title       = "Splunk4Rookies Workshops"      # plain everywhere else
+hero_title   = "Splunk4Rookies *Workshops*"    # only used by the hero layout's H1
+layout      = "hero"
 +++
 ```
 
-…and the card showing that page renders the `*Workshops*` as italic, regardless of which layout drew the card. The em styling on card titles doesn't pick up the brand gradient (cards use a tighter visual register than display heros), so italic emphasis there is plain `<em>` — useful for distinguishing a product name, a UI label, or a key noun without dominating the card.
-
-### Sidebar entries
-
-Sidebar `.LinkTitle` values render as **plain text** — no markdownify. The reason is a Hugo quirk: `markdownify` treats a leading `1. Introduction` (any digit + `.` + space at the start) as an ordered-list marker and emits `<ol><li>…</li></ol>` inside the link, doubling the height of every row in numbered workshops. Treating sidebar labels as plain text matches the convention relearn / Docsy / the wider Hugo ecosystem follow.
-
-If a site genuinely needs rich text in a specific sidebar label, the escape hatch is to override the relevant template (`_partials/sidebar.html` for the workshop header, `_partials/sidebar-tree.html` for the tree) and switch the offending `{{ .LinkTitle }}` to `{{ .LinkTitle | safeHTML }}` — explicit per-site opt-in, no theme-wide breakage.
+If a site genuinely needs rich text in a different surface (a specific sidebar label, say), the escape hatch is to override the relevant template and switch `{{ .LinkTitle }}` to `{{ .LinkTitle | safeHTML }}` — explicit per-site opt-in, no theme-wide breakage.
 
 ## Workshop meta row
 

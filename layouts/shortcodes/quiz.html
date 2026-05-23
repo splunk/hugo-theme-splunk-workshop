@@ -12,8 +12,8 @@
 {{- $fbKey   := printf "_quiz_fb_%d"   .Ordinal -}}
 {{- /* let children run */ -}}
 {{- $_ := .Inner -}}
-{{- $opts := .Page.Scratch.Get $optsKey | default slice -}}
-{{- $fb   := .Page.Scratch.Get $fbKey -}}
+{{- $opts := .Page.Store.Get $optsKey | default slice -}}
+{{- $fb   := .Page.Store.Get $fbKey -}}
 <section class="quiz" data-quiz>
   <p class="quiz__label">{{ i18n "quickCheck" }}</p>
   <p class="quiz__question">{{ $q }}</p>

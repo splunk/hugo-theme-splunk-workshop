@@ -7,7 +7,7 @@ difficulty  = "beginner"
 tags        = ["sample", "archetype"]
 +++
 
-This page was generated from the `workshop` archetype. The chips at the top — `15 min`, `Beginner`, the two tag badges — come from the front matter below; the icons and styling come from the [`workshop-meta`](https://github.com/splunk/hugo-theme-splunk-workshop/blob/main/layouts/_partials/workshop-meta.html) partial reading those keys.
+This page was generated from the `workshop` archetype. The chips at the top — `15 min`, `Beginner`, the two tag badges — come from the front matter below; the icons and styling come from the [`workshop-meta`](https://github.com/splunk/hugo-theme-splunk-workshop/blob/main/layouts/_partials/workshop/workshop-meta.html) partial reading those keys.
 
 Workshop is the lean starting point. `lesson` and `exercise` (next pages) inherit the same front-matter shape but pre-seed more body structure.
 

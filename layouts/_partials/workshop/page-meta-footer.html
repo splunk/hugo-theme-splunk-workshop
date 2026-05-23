@@ -1,7 +1,5 @@
-{{- /* Last Modified line shown above the pager on every content page.
-       Sources .Lastmod, which Hugo populates from the page's most recent
-       git commit when enableGitInfo = true (root hugo.toml). A page-level
-       `lastmod:` front-matter key overrides the git value. */ -}}
+{{- /* Last-modified pill. .Lastmod comes from `enableGitInfo` or a
+       `lastmod:` front-matter override. */ -}}
 {{- if not .Lastmod.IsZero -}}
 <footer class="page-meta-footer">
   <span class="page-meta-footer__label">{{ i18n "lastModified" | default "Last Modified" }}</span>

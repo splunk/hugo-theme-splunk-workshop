@@ -18,8 +18,8 @@
 {{- $num   := .Get "n"     | default (.Get 1) -}}
 {{- $time  := .Get "time"  | default (.Get 2) -}}
 {{- if not $num -}}
-  {{- .Page.Scratch.Add "step_counter" 1 -}}
-  {{- $num = .Page.Scratch.Get "step_counter" -}}
+  {{- .Page.Store.Add "step_counter" 1 -}}
+  {{- $num = .Page.Store.Get "step_counter" -}}
 {{- end -}}
 {{- $body := .Inner | .Page.RenderString -}}
 <section class="step">

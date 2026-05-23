@@ -60,13 +60,13 @@
 {{- if $href -}}
 <a class="shortcode-card" href="{{ $href }}"{{ with $color }} style="--card-accent: {{ . | safeCSS }}"{{ end }}>
   {{- if $imgURL }}<div class="shortcode-card__image"><img src="{{ $imgURL }}" alt="" loading="lazy"></div>{{ end -}}
-  {{ with $title }}<p class="shortcode-card__title">{{ if $icon }}<span class="shortcode-card__icon">{{ partial "icon-svg.html" $icon }}</span>{{ end }}{{ . | markdownify }}</p>{{ end }}
+  {{ with $title }}<p class="shortcode-card__title">{{ if $icon }}<span class="shortcode-card__icon">{{ partial "icon-svg.html" $icon }}</span>{{ end }}{{ . }}</p>{{ end }}
   <div class="shortcode-card__body">{{ $content | safeHTML }}</div>
 </a>
 {{- else -}}
 <div class="shortcode-card"{{ with $color }} style="--card-accent: {{ . | safeCSS }}"{{ end }}>
   {{- if $imgURL }}<div class="shortcode-card__image"><img src="{{ $imgURL }}" alt="" loading="lazy"></div>{{ end -}}
-  {{ with $title }}<p class="shortcode-card__title">{{ if $icon }}<span class="shortcode-card__icon">{{ partial "icon-svg.html" $icon }}</span>{{ end }}{{ . | markdownify }}</p>{{ end }}
+  {{ with $title }}<p class="shortcode-card__title">{{ if $icon }}<span class="shortcode-card__icon">{{ partial "icon-svg.html" $icon }}</span>{{ end }}{{ . }}</p>{{ end }}
   <div class="shortcode-card__body">{{ $content | safeHTML }}</div>
 </div>
 {{- end -}}

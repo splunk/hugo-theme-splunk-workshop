@@ -1,0 +1,19 @@
+{{- /*
+  Chapter layout body — `layout = "chapter"` opt-in. Gradient-weight hero
+  + workshop-meta + body OR auto card-grid of sub-sections when empty.
+  Front-matter contract: docs/authoring/01-front-matter#page-layouts.
+*/ -}}
+<header class="chapter-hero">
+  {{ with .Params.weight }}<div class="chapter__weight" aria-hidden="true">{{ . }}</div>{{ end }}
+  <p class="eyebrow">{{ with .Params.subtitle }}{{ . }}{{ else }}{{ i18n "chapter" }}{{ end }}</p>
+  <h1 class="chapter__title">{{ .Title }}</h1>
+  {{ with .Description }}<p class="hero__lead">{{ . }}</p>{{ end }}
+</header>
+
+{{ partial "workshop/workshop-meta.html" . }}
+
+{{ if .Content }}
+  {{ .Content }}
+{{ else }}
+  {{ partial "cards/cards-auto-grid.html" (dict "page" . "preferSections" true) }}
+{{ end }}

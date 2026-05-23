@@ -1,0 +1,24 @@
+{{- /*
+  Render one card from a Page. Shared by cards-auto-grid and the
+  cards-by-category shortcode. Meta priority mirrors workshop-meta:
+  `time` → `duration` → `.ReadingTime`.
+
+  Args (dict): page (required), index (0-based, for the "01" badge),
+  notime (suppress the time pill).
+*/ -}}
+{{- $page := .page -}}
+{{- /* `isset` not `default`: 0 is falsy and would drop the first card's badge. */ -}}
+{{- $hasIndex := isset . "index" -}}
+{{- $index    := .index -}}
+{{- $notime   := .notime | default false -}}
+<a class="card" href="{{ $page.RelPermalink }}">
+  {{- if $hasIndex }}<span class="card__num">{{ printf "%02d" (add $index 1) }}</span>{{ end }}
+  <h3 class="card__title">{{ $page.LinkTitle }}</h3>
+  {{ with $page.Description }}<p class="card__desc">{{ . }}</p>{{ end }}
+  <div class="card__meta">
+    {{ if not $notime }}{{ with ($page.Params.time | default $page.Params.duration | default (printf "%d min" $page.ReadingTime)) }}<span class="card__meta-item">{{ . }}</span>{{ end }}{{ end }}
+    {{ with $page.Params.difficulty }}<span class="card__meta-item">{{ . }}</span>{{ end }}
+    {{- $count := partial "workshop/children-count.html" $page -}}
+    {{ if gt $count 1 }}<span class="card__meta-item">{{ i18n "pagesCount" (dict "Count" $count) }}</span>{{ end }}
+  </div>
+</a>

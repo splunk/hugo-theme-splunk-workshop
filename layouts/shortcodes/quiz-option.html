@@ -4,4 +4,4 @@
 {{- $key     := printf "_quiz_opts_%d" .Parent.Ordinal -}}
 {{- $correct := eq (.Get "correct" | default (.Get 0) | default "false" | string) "true" -}}
 {{- $entry   := dict "text" (.Inner | .Page.RenderString | string) "correct" $correct -}}
-{{- .Page.Scratch.Add $key (slice $entry) -}}
+{{- .Page.Store.Add $key (slice $entry) -}}

@@ -2,7 +2,7 @@
   Bridges Hugo `params` to CSS custom properties.
   Override any param in your site's hugo.toml to rebrand the theme.
 */ -}}
-{{- $p := .Site.Params -}}
+{{- $p := site.Params -}}
 {{- if $p.splunkDataSansPro -}}
 <style>
   /* Splunk Data Sans Pro — the official Splunk brand typeface, loaded from

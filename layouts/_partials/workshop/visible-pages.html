@@ -1,0 +1,3 @@
+{{- /* Pages by weight, `hidden` filtered. Single chokepoint for whatever
+       other site-wide filters get added (draft, locale, etc.). */ -}}
+{{- return where .ByWeight "Params.hidden" "!=" true -}}

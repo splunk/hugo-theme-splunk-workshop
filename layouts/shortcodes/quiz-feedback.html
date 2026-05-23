@@ -2,4 +2,4 @@
   {{- errorf "{{< quiz-feedback >}} must be used inside {{< quiz >}}" -}}
 {{- end -}}
 {{- $key := printf "_quiz_fb_%d" .Parent.Ordinal -}}
-{{- .Page.Scratch.Set $key (.Inner | .Page.RenderString | string) -}}
+{{- .Page.Store.Set $key (.Inner | .Page.RenderString | string) -}}

@@ -1,14 +1,18 @@
 +++
 title       = "Archetypes"
-description = "`hugo new` templates that pre-fill front matter so you stay consistent."
+description = "`hugo new` content scaffolds that pre-fill front matter so you stay consistent."
 weight      = 20
 +++
 
 {{< lead >}}
-Archetypes are templates that Hugo uses when you run `hugo new`. The theme ships five: `default`, `chapter`, `workshop`, `lesson`, and `exercise`. Pick the one that matches the shape of the page you're creating.
+Hugo archetypes are the templates `hugo new` reads when creating a new page — front matter and body skeleton pre-filled. The theme ships five: `default`, `chapter`, `workshop`, `lesson`, `exercise`.
 {{< /lead >}}
 
-Each archetype is wired up to a live demo page in this site — open [Archetype examples](/docs/authoring/archetype-examples/) to see them rendered side-by-side with their source.
+{{< notice info "Not the same as page layouts" >}}
+Hugo "archetypes" (this page) are `hugo new` content scaffolds. [Page layouts](../01-front-matter/#page-layouts) are rendering variants the `layout` key picks at build time. They compose — the `chapter` archetype below pre-fills `layout = "chapter"`.
+{{< /notice >}}
+
+Each archetype has a live demo at [Archetype examples](/docs/authoring/archetype-examples/).
 
 ## The five archetypes
 

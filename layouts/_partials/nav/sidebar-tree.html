@@ -1,0 +1,40 @@
+{{- /*
+  Recursive renderer for the workshop sidebar tree.
+
+  Args (dict):
+    section  — section whose children to render at this level.
+    current  — the page being viewed (drives is-active + auto-expand).
+    depth    — recursion depth, for the indentation class.
+
+  Sub-sections with children render as <details> (open on the active
+  branch); leaves render as <li><a>. The "Overview" self-link inside an
+  open <details> lets the chapter title navigate without toggling.
+*/ -}}
+{{- $section := .section -}}
+{{- $current := .current -}}
+{{- $depth   := .depth | default 0 -}}
+
+{{- /* .Pages already includes sub-section index pages; no need to union .Sections. */ -}}
+{{- $items := partial "workshop/visible-pages.html" $section.Pages -}}
+{{- $items = sort $items "Weight" -}}
+
+<ol class="sidebar-tree sidebar-tree--depth-{{ $depth }}">
+{{- range $items -}}
+  {{- $isCurrent := eq .RelPermalink $current.RelPermalink -}}
+  {{- $hasChildren := and (eq .Kind "section") (gt (len .Pages) 0) -}}
+  {{- $isOnPath := or $isCurrent (and (ne .RelPermalink "/") (hasPrefix $current.RelPermalink .RelPermalink)) -}}
+  {{- if $hasChildren -}}
+<li class="sidebar-tree__group{{ if $isOnPath }} is-open{{ end }}">
+<details{{ if $isOnPath }} open{{ end }} data-section-url="{{ .RelPermalink }}">
+<summary class="sidebar-tree__summary"><span class="sidebar-tree__chev" aria-hidden="true"></span><span class="sidebar-tree__chapter">{{ .LinkTitle }}</span></summary>
+<a class="sidebar-tree__self{{ if $isCurrent }} is-active{{ end }}" href="{{ .RelPermalink }}" data-page-url="{{ .RelPermalink }}"{{ if $isCurrent }} aria-current="page"{{ end }}>{{ i18n "overview" | default "Overview" }}</a>
+{{ partial "nav/sidebar-tree.html" (dict "section" . "current" $current "depth" (add $depth 1)) }}
+</details>
+</li>
+  {{- else -}}
+<li class="sidebar-tree__leaf">
+<a class="sidebar-tree__link{{ if $isCurrent }} is-active{{ end }}" href="{{ .RelPermalink }}" data-page-url="{{ .RelPermalink }}"{{ if $isCurrent }} aria-current="page"{{ end }}>{{ .LinkTitle }}</a>
+</li>
+  {{- end -}}
+{{- end -}}
+</ol>

@@ -1,0 +1,39 @@
+{{- /*
+  Three-column shell (sidebar + article + TOC). Used by single.html,
+  list.html, and chapter.html.
+
+  Args:
+    page            — the Page.
+    innerPartial    — partial path to render inside <article>
+                      (e.g. "page/default.html", "page/chapter.html").
+    showMetaFooter  — render the last-modified pill below the body.
+*/ -}}
+{{- $page  := .page -}}
+{{- $p := site.Params -}}
+{{- $workshop := partialCached "workshop/workshop-root.html" $page $page.RelPermalink -}}
+{{- $hasSidebar := and $p.showSidebar $workshop -}}
+{{- $showToc := cond (isset $page.Params "show_toc") $page.Params.show_toc $p.show_toc -}}
+{{- $hasToc := and $showToc (strings.Contains (printf "%s" $page.TableOfContents) "<li") -}}
+
+<main class="page {{ if not $hasSidebar }}page--narrow{{ else if not $hasToc }}page--with-sidebar-only{{ end }}">
+
+  {{ if $hasSidebar }}{{ partial "nav/sidebar.html" $page }}{{ end }}
+
+  <article class="content" id="content">
+    {{ partial .innerPartial $page }}
+
+    {{ partial "nav/pager.html" $page }}
+
+    {{ if .showMetaFooter }}{{ partial "workshop/page-meta-footer.html" $page }}{{ end }}
+
+    {{ with site.Params.editURL }}{{ if $page.File }}
+      <p class="edit-link">
+        <a href="{{ . }}{{ $page.File.Path }}" target="_blank" rel="noopener">
+          <span class="edit-link__arrow">&rarr;</span> {{ i18n "editOnGitHub" }}
+        </a>
+      </p>
+    {{ end }}{{ end }}
+  </article>
+
+  {{ if $hasToc }}{{ partial "nav/toc.html" $page }}{{ end }}
+</main>

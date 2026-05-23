@@ -1,0 +1,61 @@
+{{- /*
+  Returns the section that scopes the workshop sidebar and pager — the
+  highest non-hero ancestor of the given page. Walks ancestors top-down
+  (closest to language home first) and returns the first non-hero. If
+  every ancestor is a hero (or the page itself is one), returns false
+  and the caller renders the hero layout.
+
+  Hero detection: `layout = "hero"` (canonical) OR `hub = true` (legacy,
+  deprecated; removal in v0.10.0).
+*/ -}}
+{{- $page := . -}}
+{{- $root := false -}}
+
+{{- if and (not $page.IsHome) (ne $page.Kind "404") (ne $page.Kind "taxonomy") (ne $page.Kind "term") -}}
+
+  {{- /* Language-home filter: in multilingual configs with per-language
+         `contentDir`, the language home shows up in `.Ancestors` with
+         Kind="section" and IsHome=false. Iterate `hugo.Sites` for a
+         filter that works in single- and multi-language configs. */ -}}
+  {{- $langHomes := slice -}}
+  {{- range hugo.Sites -}}{{- $langHomes = $langHomes | append .Home.RelPermalink -}}{{- end -}}
+
+  {{- $candidates := slice $page | append $page.Ancestors -}}
+  {{- $n := len $candidates -}}
+  {{- $found := false -}}
+  {{- range seq $n -}}
+    {{- if not $found -}}
+      {{- $cand := index $candidates (sub $n .) -}}
+      {{- if and (not $cand.IsHome) (not (in $langHomes $cand.RelPermalink)) -}}
+        {{- $isHeroExplicit := eq $cand.Layout "hero" -}}
+        {{- $isHubLegacy    := eq ($cand.Params.hub | default false) true -}}
+        {{- $isHero         := or $isHeroExplicit $isHubLegacy -}}
+
+        {{- if $isHubLegacy -}}
+          {{- warnidf (printf "workshop-root-hub-deprecated-%s" $cand.RelPermalink) "workshop-root: section %q uses deprecated `hub: true` — replace with `layout = \"hero\"`. Removal in v0.10.0." $cand.RelPermalink -}}
+        {{- end -}}
+
+        {{- /* Trap: hero section also has direct .md page children. Those
+               pages render at their URLs but become invisible in workshop
+               navigation (sidebar scopes past the hero, pager skips them). */ -}}
+        {{- if $isHero -}}
+          {{- $hasDirectPages := false -}}
+          {{- range where $cand.Pages "Kind" "page" -}}
+            {{- if eq .Parent.RelPermalink $cand.RelPermalink -}}{{- $hasDirectPages = true -}}{{- end -}}
+          {{- end -}}
+          {{- if $hasDirectPages -}}
+            {{- warnidf (printf "workshop-root-hero-trap-%s" $cand.RelPermalink) "workshop-root: section %q is a hero AND has direct .md page children — those pages are unreachable in workshop navigation. Move them into a sub-section, or drop the hero layout." $cand.RelPermalink -}}
+          {{- end -}}
+        {{- end -}}
+
+        {{- if not $isHero -}}
+          {{- $root  = $cand -}}
+          {{- $found = true -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+
+{{- end -}}
+
+{{- return $root -}}

@@ -1,0 +1,60 @@
+{{- /*
+  Workshop prev/next pager. Walks a DFS list of pages within the workshop
+  root (computed by `workshop/workshop-root.html`) and links neighbours.
+  The `pager` shortcode can override either side by writing {url, title}
+  dicts to .Store; the auto-DFS only runs for non-overridden sides.
+
+  Skipped on the home page, when `nopager: true` is set, and when the
+  page sits outside any workshop root (hero layout / 404 / taxonomy /
+  term — guarded so flat-pages.html doesn't try .Pages on a bool).
+*/ -}}
+{{- if .IsHome -}}{{- return -}}{{- end -}}
+{{- if eq (.Params.nopager | default false) true -}}{{- return -}}{{- end -}}
+
+{{- $prev := false -}}{{- $next := false -}}
+{{- with .Page.Store.Get "pager_override_prev" -}}{{- $prev = . -}}{{- end -}}
+{{- with .Page.Store.Get "pager_override_next" -}}{{- $next = . -}}{{- end -}}
+
+{{- if or (not $prev) (not $next) -}}
+  {{- $root := partialCached "workshop/workshop-root.html" . .RelPermalink -}}
+  {{- if $root -}}
+    {{- /* Include the scope root itself as index 0 so chapter landings get
+           Next = first child, and first children get Previous = landing. */ -}}
+    {{- $flat := partialCached "workshop/flat-pages.html" $root $root.RelPermalink -}}
+    {{- $flat = (slice $root) | append $flat -}}
+    {{- $idx := -1 -}}
+    {{- range $i, $p := $flat -}}
+      {{- if and (eq $idx -1) (eq $p.RelPermalink $.RelPermalink) -}}{{- $idx = $i -}}{{- end -}}
+    {{- end -}}
+    {{- if and (not $prev) (gt $idx 0) -}}
+      {{- $p := index $flat (sub $idx 1) -}}
+      {{- $prev = dict "url" $p.RelPermalink "title" $p.LinkTitle -}}
+    {{- end -}}
+    {{- if and (not $next) (ge $idx 0) (lt $idx (sub (len $flat) 1)) -}}
+      {{- $p := index $flat (add $idx 1) -}}
+      {{- $next = dict "url" $p.RelPermalink "title" $p.LinkTitle -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if or $prev $next -}}
+{{- /* Class collapses the grid to one column when only one side is set,
+       so the remaining button hugs the correct edge. */ -}}
+{{- $cls := "pager" -}}
+{{- if and $prev (not $next) }}{{ $cls = "pager pager--end" }}{{ end -}}
+{{- if and $next (not $prev) }}{{ $cls = "pager pager--start" }}{{ end -}}
+<nav class="{{ $cls }}" aria-label="Workshop navigation">
+  {{ with $prev }}
+    <a class="pager__btn pager__btn--prev" href="{{ .url }}" rel="prev">
+      <span class="pager__label">{{ i18n "previous" }}</span>
+      <span class="pager__title">{{ .title }}</span>
+    </a>
+  {{ end }}
+  {{ with $next }}
+    <a class="pager__btn pager__btn--next" href="{{ .url }}" rel="next">
+      <span class="pager__label">{{ i18n "next" }}</span>
+      <span class="pager__title">{{ .title }}</span>
+    </a>
+  {{ end }}
+</nav>
+{{- end -}}
