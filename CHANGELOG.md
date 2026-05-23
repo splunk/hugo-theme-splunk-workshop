@@ -5,13 +5,19 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.9.3] - 2026-05-23
+
+### Fixed
+
+- **Callout titles via GitHub-Alert blockquotes (`> [!TIP]`, etc.) no longer crash the build.** v0.9.2's markdown-in-titles fix called `markdownify` on the value Hugo's render-blockquote hook forwards as the title — but `.AlertTitle` is already-rendered `template.HTML`, and markdownify refuses already-rendered input. Added a `| string` cast so both code paths (string from `{{< notice >}}`, template.HTML from the render hook) flow through cleanly.
+
 ## [0.9.2] - 2026-05-23
 
 Re-tag of v0.9.1 to escape a checksum-mismatch problem: v0.9.1 was force-republished shortly after its initial tag, which violates Go's tag-immutability assumption and poisons the proxy/`go.sum` hash for anyone who fetched the first v0.9.1. v0.9.2 contains the same code v0.9.1 was supposed to ship. Skip v0.9.1.
 
 ### Fixed
 
-- **Callout titles now honour inline markdown.** `{{< notice title="**Foo**" >}}` etc. render the `**` / `*` / backticks / links as Goldmark would; previously they were emitted as literal characters. The leading digit-dot-space (`1. Foo`) ordered-list trap still applies — avoid it in titles.
+- **Callout titles now honour inline markdown** in `{{< notice >}}` calls (e.g. `title="**Foo**"`). Previously rendered as literal asterisks. **Broken on pages that use `> [!TIP]`-style GitHub Alert blockquotes — see v0.9.3.**
 
 ## [0.9.1] - 2026-05-23 [BROKEN — do not use]
 
