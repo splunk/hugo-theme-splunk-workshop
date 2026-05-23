@@ -166,6 +166,18 @@ By layout:
 
 The sidebar still lists children regardless — the flag only removes the in-content grid.
 
+**Gotcha: HTML-commented shortcodes still run.** The auto-grid is suppressed when a `cards`, `card`, or `children type="card"` shortcode appears in the body (they set a `_has_cards` flag on the page). Hugo evaluates shortcodes **before** markdown rendering, so wrapping them in `<!-- … -->` hides the output from the browser but still fires the flag — which silently suppresses your `home_sections` grid or any other auto-cards path. To genuinely disable a shortcode in source, escape it with `/* */`:
+
+```markdown
+<!--
+{{</* cards */>}}
+{{</* card title="Resources" href="/resources/" */>}}…{{</* /card */>}}
+{{</* /cards */>}}
+-->
+```
+
+The `/* */` tells Hugo to render the shortcode as literal text instead of running it; HTML comments then hide the literal text from readers.
+
 ### `subsections`
 
 Section-only flag (set on an `_index.md`, not on regular pages). When `true` and the section has child sub-sections, the section's auto-card-grid lists those sub-sections instead of its regular pages. Use it on **hub-of-workshops landings** where each child is itself a section bundle:

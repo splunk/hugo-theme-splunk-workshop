@@ -5,6 +5,17 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.10.1] - 2026-05-23
+
+### Documented
+
+- **HTML-commented shortcodes still run.** Added a "Gotcha" callout under [Front matter › `noautocards`](docs/authoring/01-front-matter/#noautocards) explaining why wrapping `{{< cards >}}` in `<!-- … -->` silently suppresses the `home_sections` grid — Hugo evaluates shortcodes before markdown rendering, so `_has_cards` fires even when the output is hidden. Workaround: escape with `{{</* … */>}}`.
+
+### Tweaked
+
+- `.section-divider` height/margin tightened (80→60 px, 4rem→2rem margin) so the divider sits closer to surrounding content.
+- `.shortcode-card__image img` gains a 5px padding + rounded corners to match the surrounding card radius.
+
 ## [0.10.0] - 2026-05-23
 
 ### Added

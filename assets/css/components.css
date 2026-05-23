@@ -592,11 +592,11 @@
 /* ---- Section divider with light trails ---- */
 .section-divider {
   position: relative;
-  height: 80px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 4rem 0;
+  margin: 2rem 0;
 }
 .section-divider svg {
   width: 100%;
