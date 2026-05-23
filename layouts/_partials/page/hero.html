@@ -63,7 +63,8 @@
       {{- if and (not $hasOwnCards) (not $noautocards) -}}
         {{- /* Home picks specific sections via `home_sections` (page front matter
                wins, site params fall back); other heroes auto-grid their children. */ -}}
-        {{- $home_sections := .Params.home_sections | default $p.home_sections -}}
+        {{- /* Page front matter snake_case; site params camelCase. */ -}}
+        {{- $home_sections := .Params.home_sections | default $p.homeSections -}}
         {{- if and $isHome $home_sections -}}
           {{ $items := slice }}
           {{ range $home_sections }}

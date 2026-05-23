@@ -12,7 +12,12 @@
 {{- $p := site.Params -}}
 {{- $workshop := partialCached "workshop/workshop-root.html" $page $page.RelPermalink -}}
 {{- $hasSidebar := and $p.showSidebar $workshop -}}
-{{- $showToc := cond (isset $page.Params "show_toc") $page.Params.show_toc $p.show_toc -}}
+{{- /* Page front matter uses snake_case (`show_toc`) — required because
+       `isset` is case-sensitive on the lowercased internal key. Site
+       params (`hugo.toml [params]`) stay camelCase (`showToc`) — accessed
+       via case-insensitive `.Site.Params.X`, matching the theme's
+       longstanding convention for config keys. */ -}}
+{{- $showToc := cond (isset $page.Params "show_toc") $page.Params.show_toc $p.showToc -}}
 {{- $hasToc := and $showToc (strings.Contains (printf "%s" $page.TableOfContents) "<li") -}}
 
 <main class="page {{ if not $hasSidebar }}page--narrow{{ else if not $hasToc }}page--with-sidebar-only{{ end }}">

@@ -44,7 +44,7 @@
             {{- if eq .Parent.RelPermalink $cand.RelPermalink -}}{{- $hasDirectPages = true -}}{{- end -}}
           {{- end -}}
           {{- if $hasDirectPages -}}
-            {{- warnidf (printf "workshop-root-hero-trap-%s" $cand.RelPermalink) "workshop-root: section %q is a hero AND has direct .md page children — those pages are unreachable in workshop navigation. Move them into a sub-section, or drop the hero layout." $cand.RelPermalink -}}
+            {{- warnidf (printf "workshop-root-hero-trap-%s" $cand.RelPermalink) "workshop-root: section %q has `layout = \"hero\"` AND direct .md page children. The children render fine (as cards on the hero and at their own URLs) but get no sidebar or prev/next pager — heroes don't open a workshop scope. If the hero-with-cards landing is intentional, ignore this. To give the children sidebar+pager navigation, nest them in a sub-section." $cand.RelPermalink -}}
           {{- end -}}
         {{- end -}}
 

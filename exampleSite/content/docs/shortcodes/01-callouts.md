@@ -85,12 +85,12 @@ Style values are case-insensitive — `style="Info"` and `style="info"` resolve 
 Override the default icon with any [Lucide name](https://lucide.dev/) the theme ships (`rocket`, `shield`, `download`, etc.).
 
 {{% notice style="tip" title="Lift off" icon="rocket" %}}
-The `icon` param accepts any name from `layouts/_partials/icon-svg.html`.
+The `icon` param accepts any name from the [Icons](../07-icons/) catalog.
 {{% /notice %}}
 
 ```markdown
 {{%/* notice style="tip" title="Lift off" icon="rocket" */%}}
-The `icon` param accepts any name from `layouts/_partials/icon-svg.html`.
+The `icon` param accepts any name from the [Icons](../07-icons/) catalog.
 {{%/* /notice */%}}
 ```
 

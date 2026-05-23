@@ -5,6 +5,22 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.10.0] - 2026-05-23
+
+### Added
+
+- **Icon catalog at `/docs/shortcodes/icons/`.** New auto-generated reference page that renders every bundled icon with its name underneath. Single source of truth: icon SVG path data extracted from `_partials/icon-svg.html` into `data/icons.toml`, which both the partial and the new `icon-gallery` shortcode read. Adding an icon is now a one-entry edit to the data file — the gallery updates on next build.
+- **Site-level icon extension.** Authors can extend or override the bundled icon set without forking the theme by creating `data/icons.toml` in their own site; Hugo's data-file precedence puts site overrides ahead of the theme.
+
+### Fixed
+
+- **Site-config `[params]` lookups reverted to camelCase.** v0.9.0's snake_case rename was over-applied — the case-sensitivity foot-gun is real for **page front-matter `isset` checks** but `.Site.Params.X` reads are case-insensitive and have always been camelCase in this theme. As a result, sites that kept their existing `showToc = true` (or `homeSections = [...]`) in `hugo.toml` saw the lookup return nil after upgrading to 0.9.x, silently suppressing the TOC on every page. Code now reads `$p.showToc` / `$p.homeSections` / `site.Params.stableOtelVersion`. **Page front matter stays snake_case** (`show_toc`, `hero_title`, `home_sections`) — that part of the v0.9.0 migration was correct.
+- **`hero-trap` warning message rewritten.** The previous wording ("those pages are unreachable in workshop navigation") implied a broken state; the actual behaviour is "children render fine but get no sidebar/pager". New text labels the intentional hero-with-cards pattern explicitly and tells the author when to ignore the warning.
+
+### Notes for v0.9.x upgraders
+
+If you ran the v0.9.0 sed migration over `hugo.toml`, revert the `[params]` changes — those keys can stay camelCase (`showToc`, `homeSections`, etc.). The sed should only have touched **content `.md` files** (front matter `hero_title` / `home_sections` / `show_toc`). The two-tier convention is now documented in [Authoring › Front matter › Page layouts](docs/authoring/01-front-matter/#page-layouts).
+
 ## [0.9.3] - 2026-05-23
 
 ### Fixed

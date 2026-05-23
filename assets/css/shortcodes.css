@@ -1026,3 +1026,51 @@ a.shortcode-card:hover .shortcode-card__title { color: var(--color-accent-text);
   margin: 1.5rem 0 2.5rem;
   max-width: 42ch;
 }
+
+/* Icon gallery — auto-rendered grid of every icon in data/icons.toml
+   (used by the Icons reference page). */
+.icon-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin: 1.5rem 0 2rem;
+}
+.icon-gallery__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+.icon-gallery__svg svg {
+  width: 28px;
+  height: 28px;
+  color: var(--color-ink);
+}
+.icon-gallery__item code {
+  font-size: 0.75rem;
+  color: var(--color-ink-muted);
+  text-align: center;
+  word-break: break-word;
+  background: none;
+  padding: 0;
+}
+.icon-gallery__aliases-label {
+  font-weight: 600;
+  margin: 2rem 0 0.5rem;
+}
+.icon-gallery__aliases {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0.5rem 1rem;
+  font-size: 0.9rem;
+  color: var(--color-ink-muted);
+}
+.icon-gallery__aliases code {
+  font-size: 0.85rem;
+}

@@ -1,0 +1,22 @@
+{{- /*
+  Auto-generated gallery of every icon in `data/icons.toml`. Used by the
+  Icons reference page; reflects any add/remove in the data file with no
+  further edits. Aliases appear in a separate list below the main grid.
+*/ -}}
+{{- $i := site.Data.icons -}}
+<div class="icon-gallery">
+{{- range $name, $_ := $i.icons }}
+  <figure class="icon-gallery__item">
+    <span class="icon-gallery__svg">{{ partial "icon-svg.html" $name }}</span>
+    <figcaption><code>{{ $name }}</code></figcaption>
+  </figure>
+{{- end }}
+</div>
+{{- with $i.aliases }}
+<p class="icon-gallery__aliases-label">Aliases (legacy / relearn-compat names)</p>
+<ul class="icon-gallery__aliases">
+{{- range $alias, $target := . }}
+  <li><code>{{ $alias }}</code> → <code>{{ $target }}</code></li>
+{{- end }}
+</ul>
+{{- end }}

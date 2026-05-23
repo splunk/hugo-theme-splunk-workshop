@@ -24,6 +24,8 @@ Hero is automatic only for the language home; every other landing (category hubs
 
 > Don't confuse these page layouts with Hugo [archetypes](../02-archetypes/) — those are `hugo new` content scaffolds. They compose: the `chapter` archetype sets `layout = "chapter"` for you.
 
+**Key-casing convention:** front-matter keys use **snake_case** (`hero_title`, `home_sections`, `show_toc`). Hugo's `isset` is case-sensitive on the lowercased internal key, so mixed-case names like `heroTitle` trip subtle bugs. Site-config `[params]` keys in `hugo.toml` use the existing **camelCase** convention (`brandTagline`, `colorAccent`, `showToc`, `homeSections`) — those are read via case-insensitive accessor and don't have the same foot-gun.
+
 ## Standard Hugo keys
 
 ```yaml
