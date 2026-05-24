@@ -1,0 +1,34 @@
+{{- /*
+  Webex message — child of {{< webex >}}. Pushes one entry onto the
+  parent's message bucket; the parent renders the full message row.
+
+  Args:
+    from   - initials shown in the avatar disc (ignored when me=true,
+             since the "You" avatar is a chat-bubble glyph)
+    name   - sender's full name shown above the body. Defaults to "You"
+             when me=true.
+    time   - timestamp string (e.g. "09:42" or "Thursday, 15:35");
+             free-form, no parsing.
+    color  - avatar background colour (CSS colour or hex);
+             default Webex green (#1d8b54). Per-sender override
+             distinguishes multiple voices in the same chat.
+    me     - boolean (true/false); true = the current user's message
+             (gray chat-bubble avatar, name defaults to "You")
+*/ -}}
+{{- $me      := eq (lower (.Get "me" | default "" | string)) "true" -}}
+{{- $from    := .Get "from"  | default "" -}}
+{{- $name    := .Get "name"  | default (cond $me "You" "") -}}
+{{- $time    := .Get "time"  | default "" -}}
+{{- $color   := .Get "color" | default "#1d8b54" -}}
+{{- $content := .Inner | .Page.RenderString -}}
+{{- if and .Parent (eq .Parent.Name "webex") -}}
+  {{- $key := printf "_webex_%d" .Parent.Ordinal -}}
+  {{- $entry := dict
+        "from"    $from
+        "name"    $name
+        "time"    $time
+        "me"      $me
+        "color"   $color
+        "content" $content -}}
+  {{- .Page.Store.Add $key (slice $entry) -}}
+{{- end -}}

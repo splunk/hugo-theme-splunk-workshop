@@ -160,6 +160,28 @@ GitHub's five types map onto the theme's six like this:
 
 GitHub doesn't have a `success` equivalent — use `{{</* notice success */>}}` for that.
 
+## Nested callouts
+
+A callout inside a callout sheds its box and gets a coloured vertical strip on the left edge — like a margin mark. The inner keeps its own type color so the reader still sees whether it's a tip, an info, a warning, etc.; the type icon sits at the top of the strip as the visual anchor. Works for any combination of types, on either authoring path (`{{%/* notice */%}}` or `> [!TYPE]` blockquote), and cascades to arbitrary nesting depth.
+
+{{% notice icon="user" style="orange" title="Persona" %}}
+Putting your SRE hat back on, you'd love to spot these database issues without having to log in and poke around.
+
+> [!IMPORTANT]
+> Wouldn't it be great if we could have 24/7 monitoring of every database query — and be alerted the moment something starts drifting?
+{{% /notice %}}
+
+```markdown
+{{%/* notice icon="user" style="orange" title="Persona" */%}}
+Putting your SRE hat back on...
+
+> [!IMPORTANT]
+> Wouldn't it be great if we could have 24/7 monitoring...
+{{%/* /notice */%}}
+```
+
+Purely a visual treatment — no shortcode change. The CSS picks it up because the inner `.callout` literally lives inside the outer's `.callout__body`; the descendant selector handles it. Deep nesting (3+ levels) keeps cascading.
+
 ## When to use which
 
 | Situation | Use |
@@ -173,6 +195,6 @@ GitHub doesn't have a `success` equivalent — use `{{</* notice success */>}}` 
 
 Callouts are noisy. Use them sparingly — three per page is the sweet spot, six is too many. If you find yourself reaching for a callout to highlight every paragraph, your prose is doing the wrong job.
 
-{{< notice warning "Don't nest callouts" >}}
-Visually noisy and ARIA-unfriendly. If you need a callout inside a callout, you almost always want a list or a `step` instead.
+{{< notice warning "Nest sparingly" >}}
+Even with the strip-mark styling, a callout-inside-a-callout signals "this is a special aside on a special aside" — usually you want a list or a `step` instead. Save nesting for the cases where the inner content is genuinely a different *kind* of thing (a `Persona` framing wrapping an `Important` question, for example).
 {{< /notice >}}

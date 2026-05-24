@@ -90,3 +90,72 @@ The state persists in `localStorage`, so once you toggle presenter mode it stays
 {{< notice tip "Don't put answers in presenter notes" >}}
 The markup is in the page source. Attendees who view-source can see them. Use presenter notes for delivery cues and timing only — not for hidden answers to exercises.
 {{< /notice >}}
+
+## Webex chat simulation
+
+Simulate a Cisco Webex conversation as the narrative device that opens an exercise — "your manager just pinged you about a customer complaint, here's what you'd see". Renders the full Webex chat UI (header, tabs, stacked message stream, "Seen by" indicator, composer footer) as decorative chrome around a sequence of messages you author yourself. Matches the real Webex desktop client's layout — all messages are left-aligned with avatar + name + time + body; the current-user case (`me=true`) swaps the initials disc for a chat-bubble glyph and defaults the name to "You". The chat surface follows the page's light/dark theme — flip the site theme and the chat flips with it, just like the real Webex client.
+
+{{< webex chat="Bill Grant" date="Today • 28/01/2026" seenby="BG" >}}
+{{< webex-msg from="BG" name="Bill Grant" time="09:42" >}}
+Hey! We're getting reports of a potential customer satisfaction issue with the Online Boutique application. Can you do the first triage and see what's going on?
+{{< /webex-msg >}}
+
+{{< webex-msg me=true time="09:43" >}}
+Sure, I'll start by checking RUM in Splunk Observability to see what the users are experiencing. 👍
+{{< /webex-msg >}}
+{{< /webex >}}
+
+```markdown
+{{</* webex chat="Bill Grant" date="Today • 28/01/2026" seenby="BG" */>}}
+{{</* webex-msg from="BG" name="Bill Grant" time="09:42" */>}}
+Hey! We're getting reports of a potential customer satisfaction issue
+with the Online Boutique application. Can you do the first triage?
+{{</* /webex-msg */>}}
+
+{{</* webex-msg me=true time="09:43" */>}}
+Sure, I'll start by checking RUM in Splunk Observability. 👍
+{{</* /webex-msg */>}}
+{{</* /webex */>}}
+```
+
+### Multi-turn conversation with multiple senders
+
+Each ``{{</* webex-msg */>}}`` is independent, so you can interleave senders freely. Use the `color` param to give each person their own avatar tint.
+
+{{< webex chat="Pieter Hagen" date="Today • 28/01/2026" seenby="PH" >}}
+{{< webex-msg from="PH" name="Pieter Hagen" time="09:42" color="#0d9488" >}}
+Hey! I've triaged a customer satisfaction issue with Online Boutique. RUM shows poor page load times. I traced a user session to the backend using Related Content — the latency is coming from the **paymentservice**.
+{{< /webex-msg >}}
+
+{{< webex-msg from="PH" name="Pieter Hagen" time="09:43" color="#0d9488" >}}
+Can you dig into the back-end and find the root cause? I'll send you a link to the trace.
+{{< /webex-msg >}}
+
+{{< webex-msg me=true time="09:43" >}}
+On it. I'll check APM and the service map. 👍
+{{< /webex-msg >}}
+{{< /webex >}}
+
+### Parameters
+
+**``{{</* webex */>}}``** (parent — chat container):
+
+| Param | Default | Notes |
+| --- | --- | --- |
+| `chat` | `Chat` | Name in the header bar (also used as the input placeholder). |
+| `status` | `Available` | Status text under the name. |
+| `date` | `Today` | Centred date divider. Free-form — `Today • 28/01/2026`, `Yesterday`, `Last Tuesday`. |
+| `seenby` | — | Initials of the avatar shown under "Seen by". Omit to hide the indicator. |
+| `seenby-color` | Webex green | CSS colour for the seen-by avatar. |
+
+**``{{</* webex-msg */>}}``** (child — one message):
+
+| Param | Default | Notes |
+| --- | --- | --- |
+| `from` | — | Initials shown in the avatar disc. Ignored when `me=true` (the chat-bubble glyph replaces it). |
+| `name` | — / `You` | Sender's full name (above the body). Defaults to `You` when `me=true`. |
+| `time` | — | Timestamp string (e.g. `09:42`, `Thursday, 15:35`). Free-form, no parsing. |
+| `color` | Webex green | Avatar disc background colour. Override per-sender to distinguish multiple voices. Ignored when `me=true`. |
+| `me` | `false` | When `true`, the message uses the gray chat-bubble avatar and defaults the name to `You` — matching how Webex renders the current user's own messages. |
+
+Message bodies support full markdown — `**bold**`, `*italic*`, `` `code` ``, links, emoji.

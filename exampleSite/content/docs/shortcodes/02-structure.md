@@ -213,6 +213,16 @@ Nested notices, terminals, code blocks, trees, and solutions all carry over verb
 
 A milestone marker. Use these at the end of a logical chunk so the reader gets a small dopamine hit and a clear "I'm on track" signal.
 
+The title supports inline markdown — `**bold**`, `*italic*`, `` `code` ``, and `[links](…)` all render. The title itself isn't bold by default, so author emphasis carries its own weight:
+
+{{< checkpoint "Workshop complete — **nice work!**" >}}
+
+```markdown
+{{</* checkpoint "Workshop complete — **nice work!**" */>}}
+```
+
+The shortcode is self-closing only — to attach follow-up prose, put it as regular markdown directly under the call.
+
 ## Objectives & Prerequisites
 
 {{< objectives >}}

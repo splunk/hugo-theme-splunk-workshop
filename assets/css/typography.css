@@ -87,7 +87,7 @@ h5, h6 {
 
 /* ---- Body prose ---- */
 p, ul, ol, blockquote, dl, table, pre {
-  margin-block: 1.1em;
+  margin-block: 0.2em;
 }
 
 ul, ol { padding-inline-start: 1.5em; }

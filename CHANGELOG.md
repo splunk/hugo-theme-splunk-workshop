@@ -5,6 +5,25 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.10.3] - 2026-05-24
+
+### Added
+
+- **`webex` + `webex-msg` shortcodes** — simulated Cisco Webex chat as a narrative device for workshop exercises ("your manager just pinged you about a customer complaint, here's what you'd see"). Light-theme styling that matches the real Webex desktop client: white surface, soft gray borders, all messages stacked left with avatar + name + time + body (no left/right bubble split). Parent supplies the chat partner (`chat=`), status, date divider, and optional "Seen by" indicator; each child message takes `from=` (initials), `name`, `time`, `color` (per-sender avatar tint), and `me=true` for the current user — which swaps the initials disc for a chat-bubble glyph and defaults the name to "You". Message bodies support full markdown. Documented in [docs/shortcodes/heavyweights › Webex chat simulation](docs/shortcodes/05-heavyweights/#webex-chat-simulation).
+- **Image `align="center"`** — centred via `margin: auto`, capped at `--content-max` (720 px). Joins the existing `left` / `right` / `bleed` / `none` set.
+- **Image `height=` param** — clamps the image vertically (any CSS length). Pair with `width=` to pin the picture into a fixed box; the browser preserves the intrinsic aspect ratio when only one dimension is set.
+- **`raw` utility shortcode** ships and is then removed in the same release — Hugo's shortcode preprocessor parses every `{{< … >}}` pair regardless of context, so a `raw` wrapper can't hide nested shortcode delimiters from it. The native escape `{{</* … */>}}` (and `{{%/* … */%}}` for the percent form) is the right tool; it works inline, in tables, and in fenced code blocks.
+
+### Changed
+
+- **Nested callouts now use a strip-mark layout** instead of the box-in-box rendering. A callout inside another callout sheds its container and gets a 3 px coloured strip on its left edge; the type icon sits at the top of the strip as the visual anchor, the title stays in the type's colour, and the body flows underneath. Reads as a margin mark, not as a second box fighting the first. CSS-only — applies on every author path (`{{%/* notice */%}}` nested in `{{%/* notice */%}}`, `> [!TYPE]` blockquote nested in either, etc.) and cascades to arbitrary nesting depth.
+- **`exercise` header is now an inline chip.** The `EXERCISE` label and the exercise title sit on a single baseline, separated by a soft bullet (`◆ EXERCISE • Retail Therapy`). Previously the title rendered as a large display heading below the label. The label and title now share the same mono-uppercase-magenta style — the exercise header reads as one continuous chip rather than a label-plus-heading stack. New `<header class="exercise__head">` wraps both nodes; the underlying `<p class="exercise__label">` / `<p class="exercise__title">` elements are unchanged for existing override hooks.
+- **`checkpoint` title supports inline markdown.** Pass `**bold**`, `*italic*`, `` `code` ``, or `[links](…)` in the title and they render. The title isn't bold by default, so author emphasis carries its own weight.
+
+### Visual change (mind on upgrade)
+
+- **Prose block spacing tightened.** The global `p, ul, ol, blockquote, dl, table, pre { margin-block }` dropped from `1.1em` to `0.2em`. Every prose block on every consumer site becomes ~5× closer to its neighbours. If your workshop content was tuned around the old breathing room — particularly long pages with many lists or paragraphs — add a site-level CSS override to restore the previous value: `.content p, .content ul, .content ol, .content blockquote, .content dl, .content table, .content pre { margin-block: 1.1em; }`.
+
 ## [0.10.2] - 2026-05-23
 
 ### Fixed

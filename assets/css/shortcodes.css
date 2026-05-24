@@ -102,6 +102,57 @@ details.callout > .callout__body {
 }
 details.callout:not([open]) > .callout__body { display: none; }
 
+/* ---------- Nested callouts (strip-mark) ---------------------------------
+   When a callout appears inside another callout's body — e.g. a
+   `> [!IMPORTANT]` blockquote nested in a {{% notice %}}, or any
+   callout-in-callout combination — strip the inner box and accent it
+   with a coloured vertical strip on the left edge. The inner keeps its
+   own --callout-color so the type (info / tip / etc.) stays legible;
+   the type icon at the top of the strip acts as the "mark". The
+   box-in-box visual is gone.
+
+   Descendant selector handles arbitrary nesting depth (each level gets
+   its own coloured strip in its own type's colour) and every author
+   path (shortcode OR GitHub Alert blockquote). */
+.callout .callout {
+  position: relative;
+  background: transparent;
+  border-radius: 0;
+  border-left: 3px solid var(--callout-color);
+  padding: 0.1rem 0 0.1rem 0.85rem;
+  margin: 1.25rem 0 0.5rem 0;
+  gap: 0.4rem 0.6rem;
+  font-size: 0.95rem;
+  max-width: 800px;
+}
+/* Shrink the icon and drop the coloured disc — the strip + small flat
+   icon + coloured title reads cleanly without the disc competing with
+   the outer's chrome. The icon sits as the "mark" at the top of the
+   strip. */
+.callout .callout > .callout__icon {
+  width: 0.95rem;
+  height: 0.95rem;
+  background: transparent;
+  color: var(--callout-color);
+  margin-top: 0.15rem;
+}
+.callout .callout > .callout__icon svg { width: 0.95rem; height: 0.95rem; }
+/* Tight title→body gap. Body content is almost always a <p>, whose
+   inherited block margin would otherwise dominate via margin-collapse
+   and push the body too far below the title. */
+.callout .callout > .callout__body > .callout__title { margin-bottom: 0; }
+.callout .callout > .callout__body > .callout__title + * { margin-top: 0.15rem; }
+
+/* Collapsible nested variant — same chrome strip applied to <details>. */
+.callout details.callout > .callout__summary { padding: 0; }
+.callout details.callout > .callout__body { padding: 0; border-top: none; }
+.callout details.callout > .callout__summary > .callout__icon {
+  width: 0.95rem; height: 0.95rem;
+  background: transparent;
+  color: var(--callout-color);
+}
+.callout details.callout > .callout__summary > .callout__icon svg { width: 0.95rem; height: 0.95rem; }
+
 /* ---------- Step --------------------------------------------------------- */
 .step {
   display: grid;
@@ -173,6 +224,13 @@ details.callout:not([open]) > .callout__body { display: none; }
   border-radius: var(--radius-lg);
   border-left: 4px solid var(--color-accent);
 }
+.exercise__head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  column-gap: 0.55rem;
+  margin-bottom: 0.75rem;
+}
 .exercise__label {
   display: inline-flex;
   align-items: center;
@@ -183,16 +241,34 @@ details.callout:not([open]) > .callout__body { display: none; }
   text-transform: uppercase;
   letter-spacing: 0.14em;
   color: var(--color-accent-text);
-  margin-bottom: 0.5rem;
+  margin: 0;
 }
 .exercise__label::before { content: "\25C8"; font-size: 0.85rem; }
 .exercise__title {
-  font-family: var(--font-display);
-  font-size: var(--fs-lg);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: -0.02em;
-  margin: 0 0 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-accent-text);
+  margin: 0;
   line-height: 1.25;
+}
+/* Separator dot rendered as a ::before on the title rather than ::after on
+   the label — this way both sides of the dot are sized by the same token
+   (label↔title spacing = the flex column-gap on .exercise__head; dot↔title
+   text = the margin-right below), keeping the dot visually centred. */
+.exercise__title::before {
+  content: "|";
+  display: inline-block;
+  margin-right: 0.55rem;
+  font-size: 0.85rem;
+  vertical-align: middle;
+  color: var(--color-accent-text);
+  opacity: 0.55;
+  font-weight: 400;
+  letter-spacing: 0;
+  transform: translateY(-1px);
 }
 .exercise__body > :first-child { margin-top: 0; }
 .exercise__body > :last-child  { margin-bottom: 0; }
@@ -289,7 +365,6 @@ details.callout:not([open]) > .callout__body { display: none; }
 .checkpoint__title {
   font-family: var(--font-display);
   font-size: var(--fs-md);
-  font-weight: 600;
   margin: 0;
   letter-spacing: -0.015em;
 }
@@ -539,8 +614,9 @@ pre.file-tree .file-tree__dir-line {
 .figure { counter-increment: figure-counter; }
 
 .figure--bleed { margin-left: -2rem; margin-right: -2rem; max-width: none; }
-.figure--align-left  { float: left;  margin: 0.5rem 1.5rem 1rem 0; max-width: 40%; }
-.figure--align-right { float: right; margin: 0.5rem 0 1rem 1.5rem; max-width: 40%; }
+.figure--align-left   { float: left;  margin: 0.5rem 1.5rem 1rem 0; max-width: 40%; }
+.figure--align-right  { float: right; margin: 0.5rem 0 1rem 1.5rem; max-width: 40%; }
+.figure--align-center { margin-left: auto; margin-right: auto; }
 @media (max-width: 720px) {
   .figure--align-left, .figure--align-right { float: none; max-width: 100%; margin: 1.5rem 0; }
   .figure--bleed { margin-left: 0; margin-right: 0; }
@@ -563,6 +639,289 @@ pre.file-tree .file-tree__dir-line {
   height: 100%;
   border: 0;
 }
+
+/* ---------- Webex chat simulation -------------------------------------- */
+/* Mimics the Webex desktop client's light theme: white bg, soft gray
+   borders, stacked messages (no left/right bubbles). The "me" case
+   swaps the initials disc for a small chat-bubble glyph and shows
+   "You" as the name — matching how Webex itself renders the active
+   user's messages. */
+.webex {
+  --wx-bg:        #ffffff;
+  --wx-bg-alt:    #fafafa;
+  --wx-line:      #e5e7eb;
+  --wx-line-2:    #d1d5db;
+  --wx-text:      #1f2937;
+  --wx-text-mute: #6b7280;
+  --wx-text-soft: #9ca3af;
+  --wx-green:     #15803d;
+  --wx-blue:      #2563eb;
+
+  margin: 1.75rem 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--wx-bg);
+  color: var(--wx-text);
+  border: 1px solid var(--wx-line);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.webex__header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: 1rem;
+  padding: 1.1rem 1.25rem 1rem;
+  border-bottom: 1px solid var(--wx-line);
+  background: linear-gradient(115deg, #ffffff 40%, #ededed 100%);
+}
+.webex__name {
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--wx-text);
+}
+.webex__star {
+  display: inline-block;
+  margin-left: 0.55rem;
+  color: var(--wx-text-soft);
+  font-size: 1.05rem;
+  vertical-align: middle;
+}
+.webex__status {
+  margin-top: 0.15rem;
+  color: var(--wx-text-mute);
+  font-size: 0.9rem;
+}
+.webex__toolbar {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.webex__btn {
+  display: inline-flex;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border: 1px solid var(--wx-line-2);
+  color: var(--wx-text-mute);
+}
+.webex__btn svg { width: 1rem; height: 1rem; }
+.webex__btn--blue  { background: var(--wx-blue);  color: #fff; border-color: var(--wx-blue); }
+.webex__btn--green { background: var(--wx-green); color: #fff; border-color: var(--wx-green); }
+
+.webex__tabs-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--wx-line);
+  gap: 1rem;
+}
+.webex__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.webex__tab {
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  color: var(--wx-text-mute);
+}
+.webex__tab--active {
+  background: #ececec;
+  color: var(--wx-text);
+  font-weight: 500;
+}
+.webex__tabs-actions {
+  display: flex;
+  gap: 0.85rem;
+  color: var(--wx-text-mute);
+  align-items: center;
+}
+.webex__tabs-actions svg { width: 1.05rem; height: 1.05rem; }
+
+.webex__body {
+  padding: 0.85rem 1.25rem 1rem;
+  min-height: 8rem;
+  background: var(--wx-bg);
+}
+.webex__date {
+  text-align: center;
+  margin: 0.75rem 0 1rem;
+  font-size: 0.92rem;
+  color: var(--wx-text-mute);
+}
+
+/* Messages — all stacked left, no bubbles. Avatar | (name + time, body). */
+.webex-msg {
+  display: grid;
+  grid-template-columns: 2.4rem 1fr;
+  gap: 0.85rem;
+  margin: 1rem 0 1.25rem;
+  align-items: start;
+}
+.webex-msg__avatar {
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 50%;
+  background: #1d8b54;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+/* "You" avatar — gray chat-bubble glyph in an outlined white circle. */
+.webex-msg__avatar--me {
+  background: #fff;
+  border: 1px solid var(--wx-line-2);
+  color: var(--wx-text-mute);
+}
+.webex-msg__avatar--me svg { width: 1.05rem; height: 1.05rem; }
+
+.webex-msg__content { min-width: 0; }
+.webex-msg__head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  margin-bottom: 0.2rem;
+}
+.webex-msg__name { font-weight: 600; font-size: 0.95rem; color: var(--wx-text); }
+.webex-msg__time { color: var(--wx-text-mute); font-size: 0.88rem; }
+.webex-msg__body { color: var(--wx-text); font-size: 0.98rem; line-height: 1.5; }
+.webex-msg__body > :first-child { margin-top: 0; }
+.webex-msg__body > :last-child { margin-bottom: 0; }
+.webex-msg__body p { margin: 0; }
+/* The site-wide `strong { color: var(--color-ink) }` would dim bold text
+   in dark mode of a parent page; inherit the message body's colour so
+   `**emphasis**` stays consistent with surrounding prose. */
+.webex-msg__body strong,
+.webex-msg__body b { color: inherit; }
+.webex-msg__body code {
+  background: #f3f4f6;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  font-size: 0.88em;
+  color: var(--wx-text);
+  border: none;
+}
+.webex-msg__body a { color: var(--wx-blue); }
+
+.webex__seenby {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  margin: 0.75rem 0 0.25rem;
+  font-size: 0.92rem;
+  color: var(--wx-text-mute);
+}
+.webex__seenby-avatar {
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 50%;
+  background: #1d8b54;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.62rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.webex__footer {
+  padding: 0.85rem 1.25rem 1rem;
+  border-top: 1px solid var(--wx-line);
+  background: var(--wx-bg);
+}
+.webex__compose-icons {
+  display: flex;
+  align-items: center;
+  gap: 1.05rem;
+  color: var(--wx-text-mute);
+  font-size: 1.05rem;
+  margin-bottom: 0.7rem;
+}
+.webex__compose-icons svg { width: 1.1rem; height: 1.1rem; }
+/* Markdown + GIF chips in the composer toolbar — tonal grey letter
+   chips matching the surrounding outlined SVG icons. No coloured fill;
+   `currentColor` inherits the composer's muted grey so everything in
+   the row reads as a single visual group, like the real Webex client. */
+.webex__m,
+.webex__gif {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.15rem;
+  padding: 0 0.32rem;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+.webex__m { min-width: 1.15rem; padding: 0 0.25rem; }
+.webex__input-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  color: var(--wx-text-mute);
+  font-size: 0.95rem;
+}
+.webex__input { color: var(--wx-text-soft); }
+.webex__hint  {
+  color: var(--wx-text-mute);
+  font-size: 0.88rem;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.webex__hint svg { width: 1rem; height: 1rem; }
+
+@media (max-width: 720px) {
+  .webex__name { font-size: 1.25rem; }
+  .webex__btn  { width: 1.85rem; height: 1.85rem; }
+  .webex__header, .webex__body, .webex__footer { padding-left: 0.9rem; padding-right: 0.9rem; }
+  .webex__tabs-actions { display: none; }
+  .webex__hint span { display: none; }
+}
+
+/* Dark mode — mirrors Webex desktop's own dark theme. Neutral cool gray
+   (not navy/purple) so the chat reads as its own surface, distinct from
+   the page's dark navy without competing for the eye. Variables drive
+   every surface that needs to flip; the element-specific overrides
+   below cover the few spots that use hardcoded colour. */
+[data-theme="dark"] .webex {
+  --wx-bg:        #1a1d24;
+  --wx-bg-alt:    #222630;
+  --wx-line:      rgba(255, 255, 255, 0.08);
+  --wx-line-2:    rgba(255, 255, 255, 0.20);
+  --wx-text:      rgba(255, 255, 255, 0.92);
+  --wx-text-mute: rgba(255, 255, 255, 0.50);
+  --wx-text-soft: rgba(255, 255, 255, 0.32);
+}
+[data-theme="dark"] .webex__header {
+  background: linear-gradient(115deg, #1a1d24 40%, #2a2f3a 100%);
+}
+[data-theme="dark"] .webex__btn          { background: transparent; }
+[data-theme="dark"] .webex__tab--active  { background: rgba(255, 255, 255, 0.10); color: #fff; }
+[data-theme="dark"] .webex-msg__avatar--me { background: #2a2f3a; }
+[data-theme="dark"] .webex-msg__body code { background: rgba(255, 255, 255, 0.10); color: var(--wx-text); }
 
 /* ---------- Objectives / Prerequisites lists --------------------------- */
 .list-block {

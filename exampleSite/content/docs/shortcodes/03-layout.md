@@ -14,19 +14,25 @@ A simple tab block:
 
 {{< tabs >}}
 {{< tab "macOS" >}}
+
 ```bash
 brew install hugo
 ```
+
 {{< /tab >}}
 {{< tab "Linux" >}}
+
 ```bash
 sudo apt install hugo
 ```
+
 {{< /tab >}}
 {{< tab "Windows" >}}
+
 ```powershell
 choco install hugo-extended
 ```
+
 {{< /tab >}}
 {{< /tabs >}}
 
@@ -73,7 +79,7 @@ $ npm run dev
 {{</* /terminal */>}}
 ```
 
-Lines starting with `$ ` get a styled prompt; everything else renders as output. The blinking cursor is decorative.
+Lines starting with `$` get a styled prompt; everything else renders as output. The blinking cursor is decorative.
 
 ## Keyboard shortcuts
 
@@ -130,7 +136,9 @@ Paste output from the `tree` command directly. Lines containing `/` are highligh
 {{</* image src="dashboard.png" alt="Dashboard" caption="Click any image to zoom." */>}}
 ```
 
-`image` resolves the `src` against the page's resources first, then falls back to a relative URL. Add `align="left"` / `"right"` / `"bleed"` for floated or full-bleed variants.
+`image` resolves the `src` against the page's resources first, then falls back to a relative URL. Add `align="left"` / `"right"` for floated variants (prose wraps around, capped at 40% width; unfloats on screens narrower than 720px), `align="center"` to centre an image narrower than the content column, or `align="bleed"` to extend the figure past the prose margins for a full-bleed screenshot.
+
+Pass `width=` (e.g. `width="320px"`, `width="50%"`) to clamp the whole figure, or `height=` to clamp just the image vertically. Either dimension accepts any CSS length (`px`, `rem`, `%`, `vh`, …); with only one set, the browser preserves the image's intrinsic aspect ratio. Setting both pins the image inside a fixed box without distortion.
 
 ### `figure` alias
 

@@ -1,9 +1,20 @@
 {{- /*
   Checkpoint — a "you've made it this far" milestone marker.
-  {{< checkpoint "Logged in successfully" >}}
+
+  Args:
+    title (positional or named) — milestone heading. Supports inline
+                                   markdown (**bold**, *italic*, `code`,
+                                   [links](…), etc.).
+
+  Self-closing only — no body content. To add follow-up prose under the
+  checkpoint, put it in the page body immediately below the shortcode.
+
+  Usage:
+    {{< checkpoint "Logged in successfully" >}}
+    {{< checkpoint "Workshop complete — **nice work!**" >}}
 */ -}}
 {{- $title := .Get "title" | default (.Get 0) | default (i18n "checkpoint") -}}
 <aside class="checkpoint">
   <p class="checkpoint__label">{{ i18n "checkpoint" }}</p>
-  <p class="checkpoint__title">{{ $title }}</p>
+  <p class="checkpoint__title">{{ .Page.RenderString (dict "display" "inline") $title }}</p>
 </aside>
