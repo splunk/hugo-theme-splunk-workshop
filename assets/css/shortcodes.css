@@ -1182,7 +1182,6 @@ pre.file-tree .file-tree__dir-line {
 /* ---------- Cards (in content) ---------------------------------------- */
 .shortcode-card {
   --card-accent: var(--color-accent);
-  --card-sweep: 0%;
   position: relative;
   display: block;
   padding: 1.4rem 1.5rem;
@@ -1191,38 +1190,47 @@ pre.file-tree .file-tree__dir-line {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   transition:
-    --card-sweep 380ms var(--ease),
     transform 280ms var(--ease),
     border-color var(--t-base) var(--ease),
     box-shadow 280ms var(--ease);
+  overflow: hidden;
+  isolation: isolate;
   text-decoration: none;
   color: inherit;
-  overflow: hidden;
 }
-/* Top-edge accent stripe that grows in on hover. Rendered as a ::before so
-   it paints ABOVE any image bleeding to the card's top edge (`__image` and
-   `__media` use negative margins to reach the inner border, which would
-   otherwise cover a background-image stripe). */
+/* Hover ring — full brand-gradient layer at z-index -2, masked by a
+   paper-coloured ::after inset 1px at z-index -1. Only the 1px edge
+   shows through on hover. Matches the auto-grid `.card` hover for a
+   single unified card visual language. The `--card-accent` variable
+   (settable per-card via `color="..."`) drives the shadow tint, so
+   author-supplied colours still influence the hover, just on shadow
+   rather than the ring. */
 .shortcode-card::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  width: var(--card-sweep);
-  height: 1px;
-  background: linear-gradient(90deg, var(--card-accent), var(--color-accent-2, var(--card-accent)));
-  pointer-events: none;
-  z-index: 1;
+  inset: 0;
+  background: var(--gradient-accent);
+  opacity: 0;
+  transition: opacity var(--t-base) var(--ease);
+  z-index: -2;
+}
+.shortcode-card::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  background: var(--color-surface);
+  border-radius: calc(var(--radius-lg) - 1px);
+  z-index: -1;
 }
 a.shortcode-card:hover {
-  --card-sweep: 100%;
-  border-color: transparent;
   transform: translateY(-3px);
+  border-color: transparent;
   box-shadow:
     0 10px 26px color-mix(in oklab, var(--card-accent) 18%, transparent),
     0 2px 8px color-mix(in oklab, var(--card-accent) 10%, transparent);
   color: inherit;
 }
+a.shortcode-card:hover::before { opacity: 1; }
 a.shortcode-card:hover .shortcode-card__title { color: var(--color-accent-text); }
 .shortcode-card__title { transition: color var(--t-base) var(--ease); }
 .shortcode-card__title {
@@ -1255,8 +1263,51 @@ a.shortcode-card:hover .shortcode-card__title { color: var(--color-accent-text);
   padding: 5px;
   border-radius: var(--radius-lg); }
 
-/* Cards rendered by {{< children type="card" >}} — give them a real flex layout
-   and a small meta row so they match the home-page card density. */
+/* Hero icon — opt-in via `hero-icon=` on the {{< card >}} shortcode.
+   No background tint, no border divider — the gradient icon floats
+   in the card's own surface so it pops against neutral whitespace
+   and the card reads as one continuous surface (not header-then-body). */
+.shortcode-card__hero {
+  display: grid;
+  place-items: center;
+  height: 8rem;
+  margin: -1.4rem -1.5rem 0.5rem;
+}
+.shortcode-card__hero svg { width: 6.5rem; height: 6.5rem; }
+
+/* Meta row — used by both the {{< card >}} shortcode (opt-in via
+   show-time= / show-pages=, emits <span class="shortcode-card__meta-item">)
+   and {{< children type="card" >}} (emits bare <span>). Same visual:
+   hairline top border, mono uppercase, magenta-bullet separators. */
+.shortcode-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--color-border);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--color-ink-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.shortcode-card__meta:empty { display: none; }
+.shortcode-card__meta-item,
+.shortcode-card__meta > span { display: inline-flex; align-items: center; gap: 0.3rem; }
+.shortcode-card__meta-item::before,
+.shortcode-card__meta > span + span::before {
+  content: "";
+  width: 4px;
+  height: 4px;
+  background: var(--color-accent);
+  border-radius: 50%;
+}
+.shortcode-card__meta-item:first-child::before { display: none; }
+
+/* Cards rendered by {{< children type="card" >}} — flex-column layout so
+   every card in a row has its meta pinned to the bottom (`margin-top: auto`)
+   regardless of body length. */
 .shortcode-card--children {
   display: flex;
   flex-direction: column;
@@ -1268,27 +1319,7 @@ a.shortcode-card:hover .shortcode-card__title { color: var(--color-accent-text);
   line-height: 1.55;
   margin-bottom: 1rem;
 }
-.shortcode-card__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--color-ink-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  padding-top: 0.85rem;
-  margin-top: auto;
-  border-top: 1px solid var(--color-border);
-}
-.shortcode-card__meta span { display: inline-flex; align-items: center; gap: 0.3rem; }
-.shortcode-card__meta span + span::before {
-  content: "";
-  width: 4px; height: 4px;
-  background: var(--color-accent);
-  border-radius: 50%;
-}
-.shortcode-card__meta:empty { display: none; }
+.shortcode-card--children .shortcode-card__meta { margin-top: auto; }
 
 /* Featured image at the top of a children-card (image="true" arg). Bleeds
    to the inner card edges and follows the card's rounded top corners.

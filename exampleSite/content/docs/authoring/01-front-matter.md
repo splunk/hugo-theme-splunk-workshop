@@ -60,6 +60,9 @@ nopager     = false                  # render the page but suppress prev/next
 show_toc     = true                   # override site-wide `show_toc` per page
 noautocards = false                  # section-only: suppress the auto-card-grid fallback
 subsections = false                  # section-only: list sub-sections instead of pages
+icon        = "book-text"            # Lucide name; renders as the card's hero
+                                      #   visual (pink→orange gradient) in any
+                                      #   auto-grid / cards-by-category listing
 hero_title   = "Splunk4*Ninjas*."     # hero-only: H1 text rendered through markdownify
                                       #            (the only surface where `*emphasis*` works)
 # hub       = true                   # DEPRECATED — use `layout = "hero"` instead.

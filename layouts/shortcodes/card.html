@@ -3,55 +3,81 @@
   the parent's CSS grid lays it out, otherwise it stands alone.
 
   Canonical API:
-    positional 0 = title
-    positional 1 = href
-    named:         title, href, icon, image, color
-    Inner          = body content (rendered as markdown)
+    positional 0  = title
+    positional 1  = href
+    named:          title, href, icon, image, hero-icon, color,
+                    show-time, show-pages
+
+  `icon` is the small inline glyph next to the title; `hero-icon`
+  renders a big gradient Lucide icon as the card's featured-image
+  slot. When `hero-icon` is set, the inline `icon` is suppressed —
+  one identity signal per card.
+
+  `show-time` / `show-pages` (booleans) opt into a meta row pulled
+  from the linked Hugo page (reading time, child-page count). Both
+  no-op for external `href` values where the target can't be resolved.
 
   Legacy alias (deprecated, accepted for relearn compatibility):
     `url` — use `href` instead.
 */ -}}
-{{- $title   := .Get "title" | default (.Get 0) -}}
-{{- $hrefRaw := .Get "href"  | default (.Get "url") | default (.Get 1) -}}
-{{- $href    := partial "site-href.html" $hrefRaw -}}
-{{- $icon    := .Get "icon" -}}
-{{- $image   := .Get "image" -}}
-{{- $color   := .Get "color" -}}
-{{- $content := .Inner | .Page.RenderString -}}
+{{- $title     := .Get "title" | default (.Get 0) -}}
+{{- $hrefRaw   := .Get "href"  | default (.Get "url") | default (.Get 1) -}}
+{{- $href      := partial "site-href.html" $hrefRaw -}}
+{{- $icon      := .Get "icon" -}}
+{{- $image     := .Get "image" -}}
+{{- $heroIcon  := .Get "hero-icon" -}}
+{{- $color     := .Get "color" -}}
+{{- $showTime  := eq (lower (.Get "show-time"  | default "" | string)) "true" -}}
+{{- $showPages := eq (lower (.Get "show-pages" | default "" | string)) "true" -}}
+{{- $content   := .Inner | .Page.RenderString -}}
+
+{{- /* Resolve the link target once — used for both the image auto-pull
+       fallback and the optional meta row. Nil for external hrefs. */ -}}
+{{- $tp := "" -}}
+{{- with $hrefRaw }}{{ $tp = site.GetPage . }}{{ end -}}
 
 {{- /* Final URL for the card image. Resolution order:
-       1. Explicit `image="..."` arg — author-provided, wins. Path piped
-          through `relURL` so baseURL subpath is honoured.
-       2. Auto-pull: if no explicit image AND `href` resolves to a Hugo
-          Page, look up that page's `params.images[0]` and resolve it
-          against the target page's bundle resources. Mirrors the 3-step
-          lookup used by `children type="card" image="true"`.
-       3. Nothing — card renders without an image. Graceful no-op for
-          external hrefs, pages without `params.images`, or unresolvable
-          bundle paths. */ -}}
+       1. Explicit `image="..."` arg — author-provided, wins.
+       2. Auto-pull: target page's `params.images[0]` via bundle resources.
+       3. Nothing — render without an image (or fall through to hero-icon). */ -}}
 {{- $imgURL := "" -}}
 {{- if $image -}}
   {{- $imgURL = $image | relURL -}}
-{{- else if $hrefRaw -}}
-  {{- with site.GetPage $hrefRaw -}}
-    {{- $tp := . -}}
-    {{- with $tp.Params.images -}}
-      {{- $raw  := index . 0 -}}
-      {{- $base := path.Base $raw -}}
-      {{- with $tp.Resources.GetMatch $raw -}}
+{{- else if $tp -}}
+  {{- with $tp.Params.images -}}
+    {{- $raw  := index . 0 -}}
+    {{- $base := path.Base $raw -}}
+    {{- with $tp.Resources.GetMatch $raw -}}
+      {{- $imgURL = .RelPermalink -}}
+    {{- else -}}
+      {{- with $tp.Resources.GetMatch (printf "images/%s" $base) -}}
         {{- $imgURL = .RelPermalink -}}
       {{- else -}}
-        {{- with $tp.Resources.GetMatch (printf "images/%s" $base) -}}
+        {{- with $tp.Resources.GetMatch $base -}}
           {{- $imgURL = .RelPermalink -}}
-        {{- else -}}
-          {{- with $tp.Resources.GetMatch $base -}}
-            {{- $imgURL = .RelPermalink -}}
-          {{- end -}}
         {{- end -}}
       {{- end -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}
+
+{{- /* Suppress inline icon when a hero icon is set — one identity
+       signal per card; otherwise the inline magenta circle competes
+       with the gradient hero. */ -}}
+{{- $inlineIcon := cond (ne $heroIcon "") "" $icon -}}
+
+{{- /* Prepare meta-row strings. show-time / show-pages are no-ops
+       without a resolved target page. */ -}}
+{{- $timeStr  := "" -}}
+{{- $pagesStr := "" -}}
+{{- if and $showTime $tp -}}
+  {{- $timeStr = $tp.Params.time | default $tp.Params.duration | default (printf "%d min" $tp.ReadingTime) -}}
+{{- end -}}
+{{- if and $showPages $tp -}}
+  {{- $count := partial "workshop/children-count.html" $tp -}}
+  {{- if gt $count 1 -}}{{ $pagesStr = i18n "pagesCount" (dict "Count" $count) }}{{- end -}}
+{{- end -}}
+{{- $hasMeta := or $timeStr $pagesStr -}}
 
 {{- /* Flag the page so layouts (notably index.html) suppress their
        auto-card-grid when the body has already authored its own. */ -}}
@@ -60,13 +86,17 @@
 {{- if $href -}}
 <a class="shortcode-card" href="{{ $href }}"{{ with $color }} style="--card-accent: {{ . | safeCSS }}"{{ end }}>
   {{- if $imgURL }}<div class="shortcode-card__image"><img src="{{ $imgURL }}" alt="" loading="lazy"></div>{{ end -}}
-  {{ with $title }}<p class="shortcode-card__title">{{ if $icon }}<span class="shortcode-card__icon">{{ partial "icon-svg.html" $icon }}</span>{{ end }}{{ . }}</p>{{ end }}
+  {{- if and (not $imgURL) $heroIcon }}<div class="shortcode-card__hero" aria-hidden="true">{{ partial "cards/card-hero-icon.html" $heroIcon }}</div>{{ end -}}
+  {{ with $title }}<p class="shortcode-card__title">{{ with $inlineIcon }}<span class="shortcode-card__icon">{{ partial "icon-svg.html" . }}</span>{{ end }}{{ . }}</p>{{ end }}
   <div class="shortcode-card__body">{{ $content | safeHTML }}</div>
+  {{- if $hasMeta }}<div class="shortcode-card__meta">{{ with $timeStr }}<span class="shortcode-card__meta-item">{{ . }}</span>{{ end }}{{ with $pagesStr }}<span class="shortcode-card__meta-item">{{ . }}</span>{{ end }}</div>{{ end }}
 </a>
 {{- else -}}
 <div class="shortcode-card"{{ with $color }} style="--card-accent: {{ . | safeCSS }}"{{ end }}>
   {{- if $imgURL }}<div class="shortcode-card__image"><img src="{{ $imgURL }}" alt="" loading="lazy"></div>{{ end -}}
-  {{ with $title }}<p class="shortcode-card__title">{{ if $icon }}<span class="shortcode-card__icon">{{ partial "icon-svg.html" $icon }}</span>{{ end }}{{ . }}</p>{{ end }}
+  {{- if and (not $imgURL) $heroIcon }}<div class="shortcode-card__hero" aria-hidden="true">{{ partial "cards/card-hero-icon.html" $heroIcon }}</div>{{ end -}}
+  {{ with $title }}<p class="shortcode-card__title">{{ with $inlineIcon }}<span class="shortcode-card__icon">{{ partial "icon-svg.html" . }}</span>{{ end }}{{ . }}</p>{{ end }}
   <div class="shortcode-card__body">{{ $content | safeHTML }}</div>
+  {{- if $hasMeta }}<div class="shortcode-card__meta">{{ with $timeStr }}<span class="shortcode-card__meta-item">{{ . }}</span>{{ end }}{{ with $pagesStr }}<span class="shortcode-card__meta-item">{{ . }}</span>{{ end }}</div>{{ end }}
 </div>
 {{- end -}}

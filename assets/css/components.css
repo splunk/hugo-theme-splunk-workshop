@@ -217,15 +217,6 @@
 .cards-category .cards {
   margin: 1.25rem 0 0;
 }
-/* @property registration lets width interpolate via a typed custom
-   property — the top-edge gradient sweep on .shortcode-card:hover.
-   `inherits: true` so `.shortcode-card::before` can read the live value
-   off the parent (it can't define its own :hover). */
-@property --card-sweep {
-  syntax: '<percentage>';
-  inherits: true;
-  initial-value: 0%;
-}
 
 .card {
   position: relative;
@@ -315,6 +306,21 @@
 .card__meta-item { display: inline-flex; align-items: center; gap: 0.3rem; }
 .card__meta-item::before { content: ""; width: 4px; height: 4px; background: var(--color-accent); border-radius: 50%; }
 .card__meta-item:first-child::before { display: none; }
+
+/* Card hero — Lucide icon as a "featured image" at the top of an
+   auto-grid card. Opt-in via `icon = "name"` in a section's front
+   matter. No background tint, no border divider — the gradient icon
+   floats on the card's own surface so it pops against neutral
+   whitespace AND the hover ring (`::before` gradient masked by
+   `::after` paper inset) stays visible at the top edge. Matches the
+   matching `.shortcode-card__hero` treatment. */
+.card__hero {
+  display: grid;
+  place-items: center;
+  height: 6.5rem;
+  margin: -1rem 0 0.75rem;
+}
+.card__hero svg { width: 2.75rem; height: 2.75rem; }
 
 /* ---- Inline icon ---- */
 .inline-icon {

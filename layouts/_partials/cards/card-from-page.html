@@ -11,7 +11,10 @@
 {{- $hasIndex := isset . "index" -}}
 {{- $index    := .index -}}
 {{- $notime   := .notime | default false -}}
-<a class="card" href="{{ $page.RelPermalink }}">
+<a class="card{{ with $page.Params.icon }} card--has-hero{{ end }}" href="{{ $page.RelPermalink }}">
+  {{- with $page.Params.icon }}
+  <div class="card__hero" aria-hidden="true">{{ partial "cards/card-hero-icon.html" . }}</div>
+  {{- end }}
   {{- if $hasIndex }}<span class="card__num">{{ printf "%02d" (add $index 1) }}</span>{{ end }}
   <h3 class="card__title">{{ $page.LinkTitle }}</h3>
   {{ with $page.Description }}<p class="card__desc">{{ . }}</p>{{ end }}

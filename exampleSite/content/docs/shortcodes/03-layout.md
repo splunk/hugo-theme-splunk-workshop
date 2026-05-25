@@ -441,6 +441,63 @@ Explicit `image=` always wins over the auto-pull. Path is piped through `relURL`
 
 **3. Featured image via `children type="card" image="true"`.** Auto-discovered for **every** card in a `children` listing, same `images` front-matter contract. The auto-discovery semantics are identical; the difference is `children` lists every visible sub-page automatically, while hand-written `cards` + `card` blocks let you curate which pages appear and in what order.
 
+### Hero icons — featured visual via Lucide
+
+When you don't want a raster image but still want a visual anchor at the top of a card, pass `hero-icon="<lucide-name>"`. The icon renders large in the card's featured-image slot, stroked with the brand pink→orange gradient:
+
+{{< cards >}}
+{{< card title="Resources" href="/docs/" hero-icon="book-text" >}}
+Reference docs, community links, deeper reading.
+{{< /card >}}
+{{< card title="Customize" href="/docs/customizing/" hero-icon="settings" >}}
+Rebrand colors, fonts, and logo.
+{{< /card >}}
+{{< card title="Get started" href="/docs/getting-started/" hero-icon="rocket" >}}
+Spin up the theme in five minutes.
+{{< /card >}}
+{{< /cards >}}
+
+```markdown
+{{</* card title="Resources" href="/docs/" hero-icon="book-text" */>}}
+Reference docs, community links, deeper reading.
+{{</* /card */>}}
+```
+
+The gradient is locked to the theme's `--color-accent` → `--color-accent-2` variables, so sites that rebrand those tokens in `hugo.toml` automatically get their own gradient — no fork needed.
+
+**Precedence:** if both `image=` and `hero-icon=` are set on the same card, `image=` wins (the explicit raster beats the derived visual).
+
+**Inline icon suppression:** the `icon=` arg renders a small glyph next to the title. When `hero-icon=` is also set, the inline `icon=` is **automatically suppressed** — one identity signal per card. Use `hero-icon=` OR `icon=`, not both; the hero is the right call for landing-card visuals.
+
+**Auto-grid equivalent.** The auto card-grid (sections with `home_sections` or `subsections = true`) reads the same Lucide name from each child page's `icon` front-matter key and renders the same hero treatment without any per-card markup:
+
+```toml
+# content/resources/_index.md
++++
+title = "Resources"
+icon  = "book-text"
++++
+```
+
+Sections without an `icon` key render the existing text-only card layout — no regression.
+
+### Opt-in meta row — `show-time` / `show-pages`
+
+Manual `{{< card >}}`s render title + body by default. Pass either flag to add a hairline-separated meta row pulled from the linked Hugo page (same mono-uppercase + magenta-bullet styling as the auto-grid cards):
+
+```markdown
+{{</* card title="Scenarios" href="/scenarios/" hero-icon="rocket" show-time=true show-pages=true */>}}
+Guided workshops...
+{{</* /card */>}}
+```
+
+| Flag | Pulls from |
+| --- | --- |
+| `show-time=true` | `time` / `duration` front matter, falling back to Hugo's auto-estimated `ReadingTime`. |
+| `show-pages=true` | Child-page count via the `workshop/children-count` partial. Hidden if ≤1. |
+
+Both flags **no-op silently on external `href`** values where the target isn't a Hugo page. Safe to leave on for any card.
+
 ### Categorized card grids
 
 When a section has too many children for one flat grid to scan, group them. The `cards-by-category` shortcode renders one grid per named category, defined in the section's own `_index.md` front matter.

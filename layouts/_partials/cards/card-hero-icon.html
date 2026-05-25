@@ -1,0 +1,22 @@
+{{- /*
+  card-hero-icon — Lucide icon rendered as a card's "featured image",
+  with the brand pink→orange gradient as the stroke. Used by
+  card-from-page when a section sets `icon = "..."` in front matter.
+
+  Same data lookup as `icon-svg.html`; the only differences are the
+  outer <svg> shell — inline <defs> with a <linearGradient>, and
+  `stroke="url(#card-hero-grad)"` in place of `currentColor`. Inlining
+  the defs per icon means each <svg> resolves the gradient locally;
+  duplicate `id`s across multiple instances are tolerated by browsers
+  for url() references and each <svg> self-resolves cleanly.
+
+  `stop-color` reads from theme params via CSS variables, so sites that
+  override --color-accent / --color-accent-2 in their hugo.toml get
+  their own gradient automatically.
+*/ -}}
+{{- $name := . -}}
+{{- $i := hugo.Data.icons -}}
+{{- $svg := index $i.icons $name -}}
+{{- if not $svg }}{{ with index $i.aliases $name }}{{ $svg = index $i.icons . }}{{ end }}{{ end -}}
+{{- if not $svg }}{{ $svg = $i.meta.fallback }}{{ end -}}
+<svg viewBox="{{ $i.meta.viewBox }}" fill="none" stroke="url(#card-hero-grad)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><defs><linearGradient id="card-hero-grad" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse"><stop offset="10%" style="stop-color: var(--color-accent)"/><stop offset="90%" style="stop-color: var(--color-accent-2)"/></linearGradient></defs>{{ $svg | safeHTML }}</svg>
