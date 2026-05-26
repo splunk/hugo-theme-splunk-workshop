@@ -483,7 +483,7 @@ Sections without an `icon` key render the existing text-only card layout — no 
 
 ### Opt-in meta row — `show-time` / `show-pages`
 
-Manual `{{< card >}}`s render title + body by default. Pass either flag to add a hairline-separated meta row pulled from the linked Hugo page (same mono-uppercase + magenta-bullet styling as the auto-grid cards):
+Manual `{{</* card */>}}`s render title + body by default. Pass either flag to add a hairline-separated meta row pulled from the linked Hugo page (same mono-uppercase + magenta-bullet styling as the auto-grid cards):
 
 ```markdown
 {{</* card title="Scenarios" href="/scenarios/" hero-icon="rocket" show-time=true show-pages=true */>}}
@@ -554,7 +554,7 @@ Other meta items (difficulty, "N pages" count) keep rendering. Scope is per-shor
 
 ### Progress tracking — the completion tick
 
-Cards that link to a section grow a small magenta tick in their bottom-right corner once the reader has visited every page underneath. Works on all three card-rendering paths — the auto card-grid, `{{< card >}}`, and `{{< children type="card" >}}` — without any per-card opt-in. The same data drives the sidebar's chapter roll-up indicators, so the two are always in agreement.
+Cards that link to a section grow a small magenta tick in their bottom-right corner once the reader has visited every page underneath. Works on all three card-rendering paths — the auto card-grid, `{{</* card */>}}`, and `{{</* children type="card" */>}}` — without any per-card opt-in. The same data drives the sidebar's chapter roll-up indicators, so the two are always in agreement.
 
 **How completion is measured.** Two cases:
 
