@@ -11,7 +11,13 @@
 {{- $hasIndex := isset . "index" -}}
 {{- $index    := .index -}}
 {{- $notime   := .notime | default false -}}
-<a class="card{{ with $page.Params.icon }} card--has-hero{{ end }}" href="{{ $page.RelPermalink }}">
+{{- $count    := partial "workshop/children-count.html" $page -}}
+{{- /* Completion tracking — emit the linked section's URL so
+       workshop-progress.js can mark the card complete. The total
+       page count is read from localStorage (written by the sidebar's
+       own visit-tracker), so Hugo doesn't have to guess what counts
+       as a "page" — the sidebar is the source of truth. */ -}}
+<a class="card{{ with $page.Params.icon }} card--has-hero{{ end }}" href="{{ $page.RelPermalink }}" data-section-root="{{ $page.RelPermalink }}"{{ if eq $count 0 }} data-section-pages="1"{{ end }}>
   {{- with $page.Params.icon }}
   <div class="card__hero" aria-hidden="true">{{ partial "cards/card-hero-icon.html" . }}</div>
   {{- end }}
@@ -21,7 +27,10 @@
   <div class="card__meta">
     {{ if not $notime }}{{ with ($page.Params.time | default $page.Params.duration | default (printf "%d min" $page.ReadingTime)) }}<span class="card__meta-item">{{ . }}</span>{{ end }}{{ end }}
     {{ with $page.Params.difficulty }}<span class="card__meta-item">{{ . }}</span>{{ end }}
-    {{- $count := partial "workshop/children-count.html" $page -}}
     {{ if gt $count 1 }}<span class="card__meta-item">{{ i18n "pagesCount" (dict "Count" $count) }}</span>{{ end }}
   </div>
+  {{- /* No aria-hidden on the wrapper — that would suppress the sr-only
+         "Completed" announcement. The SVG inside icon-svg.html already
+         carries aria-hidden, so it stays decorative for AT users. */ -}}
+  <span class="card__check" hidden>{{ partial "icon-svg.html" "check" }}<span class="sr-only">{{ i18n "completed" | default "Completed" }}</span></span>
 </a>

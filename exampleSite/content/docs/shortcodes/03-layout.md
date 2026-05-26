@@ -552,6 +552,56 @@ Both `{{</* children type="card" */>}}` and `{{</* cards-by-category */>}}` acce
 
 Other meta items (difficulty, "N pages" count) keep rendering. Scope is per-shortcode-invocation — drop the arg and a sibling card grid on the same page still shows times.
 
+### Progress tracking — the completion tick
+
+Cards that link to a section grow a small magenta tick in their bottom-right corner once the reader has visited every page underneath. Works on all three card-rendering paths — the auto card-grid, `{{< card >}}`, and `{{< children type="card" >}}` — without any per-card opt-in. The same data drives the sidebar's chapter roll-up indicators, so the two are always in agreement.
+
+**How completion is measured.** Two cases:
+
+- **Multi-page workshop section** — the workshop sidebar's link count is the threshold. As the reader dwells on each page for ≥ 2 seconds, the URL goes into a per-workshop visited list. Once `visited.length >= totalSidebarLinks`, the parent card's tick lights up on next render.
+- **Single-page section** (an `_index.md` with no children) — there's no workshop sidebar to count from, so a universal page-dwell tracker handles it: a single 2-second dwell on the page marks the parent card complete. Hugo emits `data-section-pages="1"` on these cards so the JS knows to use the leaf-completion path.
+
+**State lives in localStorage** under three keys, scoped per origin:
+
+| Key | Shape | Written by |
+| --- | --- | --- |
+| `splunk-workshop:visited` | `{ <workshopRoot>: [<url>, …] }` | Workshop sidebar dwell-tracker |
+| `splunk-workshop:totals` | `{ <workshopRoot>: <count> }` | Workshop sidebar (link count at visit time) |
+| `splunk-workshop:pages` | `[<url>, …]` | Universal page-dwell tracker (every page) |
+
+Totals are refreshed on every visit, so adding or removing pages from a workshop automatically updates the completion threshold the next time the reader opens any page in it.
+
+**Resetting progress for dev / testing / a clean demo.**
+
+Open DevTools (`Cmd+Opt+I` / `Ctrl+Shift+I`) → Console. To wipe all three buckets and reload:
+
+```js
+["visited", "totals", "pages"].forEach(k => localStorage.removeItem("splunk-workshop:" + k));
+location.reload();
+```
+
+To reset just one bucket — for example, only the universal-pages set used by leaf cards:
+
+```js
+localStorage.removeItem("splunk-workshop:pages"); location.reload();
+```
+
+Or via the UI: DevTools → Application tab → Storage → Local Storage → your origin → delete the three `splunk-workshop:*` rows → refresh.
+
+Inspect current state any time with:
+
+```js
+console.table({
+  visited: JSON.parse(localStorage.getItem("splunk-workshop:visited") || "{}"),
+  totals:  JSON.parse(localStorage.getItem("splunk-workshop:totals")  || "{}"),
+  pages:   JSON.parse(localStorage.getItem("splunk-workshop:pages")   || "[]"),
+});
+```
+
+The 2-second dwell timer cancels on `pagehide` and `visibilitychange`, so quick clicks don't pollute state — you have to actually stay on a page to mark it visited.
+
+**Accessibility.** Completed cards get a visually-hidden "Completed" label inside the tick badge so assistive tech announces the state. The SVG itself stays `aria-hidden`; the wrapper does not.
+
 ## Indicators
 
 Two inline-pill shortcodes for surfacing workshop metadata anywhere in the body. They render as `<span class="indicator">` so they sit cleanly mid-prose.

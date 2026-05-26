@@ -322,6 +322,43 @@
 }
 .card__hero svg { width: 2.75rem; height: 2.75rem; }
 
+/* ---- Visually-hidden helper (screen-reader-only text) ---- */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---- Card completion tick — bare magenta check in the bottom-right
+   corner, sized to sit on the meta-row baseline so it reads as part
+   of the row rather than an oversized badge. Hidden by default; JS
+   adds `.is-complete` to reveal. Position aligns to each card family's
+   own padding so the tick lines up with the meta text's right edge. */
+.card__check,
+.shortcode-card__check {
+  display: none;
+  position: absolute;
+  color: var(--color-accent);
+  z-index: 2;
+}
+.card.is-complete .card__check,
+.shortcode-card.is-complete .shortcode-card__check {
+  display: inline-flex;
+  align-items: center;
+}
+.card__check svg,
+.shortcode-card__check svg {
+  width: 0.95rem;
+  height: 0.95rem;
+  stroke-width: 3;
+}
+.card__check          { bottom: 1.5rem;  right: 1.75rem; }
+.shortcode-card__check { bottom: 1.4rem; right: 1.5rem;  }
+
 /* ---- Inline icon ---- */
 .inline-icon {
   display: inline-flex;

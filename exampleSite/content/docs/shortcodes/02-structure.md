@@ -32,7 +32,7 @@ The third positional arg is an optional time hint that renders next to the step 
 
 ## Exercise + Solution
 
-The `exercise` shortcode is the canonical way to mark a hands-on task. It renders a scoped frame with an **EXERCISE** label, a title, and an accent left-border — visually distinct from a `notice` (which is informational only). Use it when the section *is something the reader does*.
+The `exercise` shortcode is the canonical way to mark a hands-on task. It renders a scoped frame with a full-bleed pink→orange gradient header bar — `◎ EXERCISE · Title` in mono caps — over a panel containing the task itself. The gradient bar is the brand-marker; no left-border accent needed. Visually distinct from a `notice` (which is informational only): the gradient bar reads as "do this thing" before the reader even gets to the title. Use it when the section *is something the reader does*.
 
 ### 1. The basic shape
 

@@ -70,26 +70,50 @@
        without a resolved target page. */ -}}
 {{- $timeStr  := "" -}}
 {{- $pagesStr := "" -}}
+{{- $count    := 0 -}}
+{{- if $tp -}}{{- $count = partial "workshop/children-count.html" $tp -}}{{- end -}}
 {{- if and $showTime $tp -}}
   {{- $timeStr = $tp.Params.time | default $tp.Params.duration | default (printf "%d min" $tp.ReadingTime) -}}
 {{- end -}}
 {{- if and $showPages $tp -}}
-  {{- $count := partial "workshop/children-count.html" $tp -}}
   {{- if gt $count 1 -}}{{ $pagesStr = i18n "pagesCount" (dict "Count" $count) }}{{- end -}}
 {{- end -}}
 {{- $hasMeta := or $timeStr $pagesStr -}}
+
+{{- /* Completion-tracking data attr — only emitted when href resolves
+       to an internal Hugo page (external links can't be tracked). The
+       JS bumps `.is-complete` on the card once every page under the
+       linked section has been dwelled-on. Total page count is read
+       from localStorage (written by the sidebar's visit-tracker), so
+       Hugo doesn't have to guess what the sidebar counts as a page. */ -}}
+{{- $trackAttrs := "" -}}
+{{- if $tp -}}
+  {{- $trackAttrs = printf ` data-section-root=%q` $tp.RelPermalink -}}
+  {{- /* Leaf section (_index.md only, no children) — emit the
+         data-section-pages="1" marker so the JS uses the universal
+         page-dwell tracker instead of looking for a workshop sidebar
+         (which doesn't exist for single-page sections). */ -}}
+  {{- if eq $count 0 -}}
+    {{- $trackAttrs = printf "%s data-section-pages=\"1\"" $trackAttrs -}}
+  {{- end -}}
+  {{- $trackAttrs = $trackAttrs | safeHTMLAttr -}}
+{{- end -}}
 
 {{- /* Flag the page so layouts (notably index.html) suppress their
        auto-card-grid when the body has already authored its own. */ -}}
 {{- .Page.Store.Set "_has_cards" true -}}
 
 {{- if $href -}}
-<a class="shortcode-card" href="{{ $href }}"{{ with $color }} style="--card-accent: {{ . | safeCSS }}"{{ end }}>
+<a class="shortcode-card" href="{{ $href }}"{{ with $color }} style="--card-accent: {{ . | safeCSS }}"{{ end }}{{ $trackAttrs }}>
   {{- if $imgURL }}<div class="shortcode-card__image"><img src="{{ $imgURL }}" alt="" loading="lazy"></div>{{ end -}}
   {{- if and (not $imgURL) $heroIcon }}<div class="shortcode-card__hero" aria-hidden="true">{{ partial "cards/card-hero-icon.html" $heroIcon }}</div>{{ end -}}
   {{ with $title }}<p class="shortcode-card__title">{{ with $inlineIcon }}<span class="shortcode-card__icon">{{ partial "icon-svg.html" . }}</span>{{ end }}{{ . }}</p>{{ end }}
   <div class="shortcode-card__body">{{ $content | safeHTML }}</div>
   {{- if $hasMeta }}<div class="shortcode-card__meta">{{ with $timeStr }}<span class="shortcode-card__meta-item">{{ . }}</span>{{ end }}{{ with $pagesStr }}<span class="shortcode-card__meta-item">{{ . }}</span>{{ end }}</div>{{ end }}
+  {{- /* No aria-hidden on the wrapper — that would suppress the sr-only
+         "Completed" announcement. The SVG inside icon-svg.html already
+         carries aria-hidden, so it stays decorative for AT users. */ -}}
+  {{- if $tp }}<span class="shortcode-card__check" hidden>{{ partial "icon-svg.html" "check" }}<span class="sr-only">{{ i18n "completed" | default "Completed" }}</span></span>{{ end }}
 </a>
 {{- else -}}
 <div class="shortcode-card"{{ with $color }} style="--card-accent: {{ . | safeCSS }}"{{ end }}>

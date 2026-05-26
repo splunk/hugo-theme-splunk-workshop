@@ -182,6 +182,18 @@ Putting your SRE hat back on...
 
 Purely a visual treatment — no shortcode change. The CSS picks it up because the inner `.callout` literally lives inside the outer's `.callout__body`; the descendant selector handles it. Deep nesting (3+ levels) keeps cascading.
 
+## Severity ladder
+
+Visual weight escalates with severity — pick the right type and the page does the right thing automatically:
+
+| Type | Visual treatment |
+| --- | --- |
+| `note` / `tip` / `info` / `success` | Soft tinted background (~7–10%), coloured left rule, small icon disc. The "quiet end" — sits next to prose without shouting. |
+| `warning` | Louder background (~16%), hairline perimeter border on top of the 5px left rule. Reads as "stop and read before continuing". |
+| `danger` | Full saturated red bg, white title + body + icon, soft drop shadow. Reserved for irreversible actions — data loss, prod side-effects, things you cannot undo. |
+
+Use `danger` sparingly. Its visual cost is high by design; if everything's an emergency, nothing is. A workshop with two genuine danger blocks across 40 pages has them land properly. A workshop with twenty does not.
+
 ## When to use which
 
 | Situation | Use |

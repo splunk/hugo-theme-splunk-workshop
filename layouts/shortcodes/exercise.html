@@ -1,25 +1,27 @@
 {{- /*
-  Exercise — boxed problem statement, optionally collapsible solution.
-  Use a nested `{{< solution >}}` shortcode for the answer.
+  Exercise — boxed problem statement with a full-bleed gradient header
+  bar containing the title. Body content sits in the panel below.
+  Optionally collapsible solution via a nested {{< solution >}}.
 
-  Resets the page-wide step counter so that {{< step >}} blocks nested
-  inside this exercise restart from 1, independent of any step blocks
-  earlier on the same page.
+  Resets the page-wide step counter so nested {{< step >}} blocks
+  restart from 1 inside this exercise.
 */ -}}
 {{- $title := .Get "title" | default (.Get 0) | default (i18n "exerciseDefault") -}}
 {{- .Page.Store.Set "step_counter" 0 -}}
 <section class="exercise">
-  <header class="exercise__head">
-    <p class="exercise__label">{{ i18n "exercise" }}</p>
-    {{- /* Rendered as <p>, not <h3>, on purpose: exercises don't claim a
-           heading level in the page outline. The surrounding prose
-           headings define the structure; an exercise is a labelled
-           block within that structure, not a peer of it. Avoids the
-           heading-order violations axe-core flags when {{< exercise >}}
-           sits inside an h3 section. */ -}}
-    <p class="exercise__title">{{ $title }}</p>
+  <header class="exercise__bar">
+    <span class="exercise__bar-icon" aria-hidden="true">{{ partial "icon-svg.html" "target" }}</span>
+    <span class="exercise__bar-label">{{ i18n "exercise" }}</span>
+    <span class="exercise__bar-divider" aria-hidden="true">·</span>
+    {{- /* The title lives in the bar so the gradient header IS the title
+           surface. Kept as a <span> rather than promoted to <h*> — see
+           the original axe-core note: exercises don't claim a heading
+           level in the page outline. */ -}}
+    <span class="exercise__bar-title">{{ $title }}</span>
   </header>
-  <div class="exercise__body">
-    {{ .Inner | .Page.RenderString }}
+  <div class="exercise__panel">
+    <div class="exercise__body">
+      {{ .Inner | .Page.RenderString }}
+    </div>
   </div>
 </section>

@@ -67,5 +67,5 @@
 {{- if $useDetails -}}
 <details class="{{ $cls }}"{{ if $detailsOpen }} open{{ end }}{{ with $groupid }} name="{{ . }}"{{ end }}{{ $styleAttr | safeHTMLAttr }}><summary class="callout__summary"><span class="callout__icon" aria-hidden="true">{{ $iconHTML | safeHTML }}</span><span class="callout__title">{{ $resolvedTitle }}</span><span class="callout__chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></summary><div class="callout__body">{{ $inner | safeHTML }}</div></details>
 {{- else -}}
-<div class="{{ $cls }}"{{ $styleAttr | safeHTMLAttr }}><span class="callout__icon" aria-hidden="true">{{ $iconHTML | safeHTML }}</span><div class="callout__body"><p class="callout__title">{{ $resolvedTitle }}</p>{{ $inner | safeHTML }}</div></div>
+<div class="{{ $cls }}"{{ $styleAttr | safeHTMLAttr }}><span class="callout__icon" aria-hidden="true">{{ $iconHTML | safeHTML }}</span><p class="callout__title">{{ $resolvedTitle }}</p><div class="callout__body">{{ $inner | safeHTML }}</div></div>
 {{- end -}}

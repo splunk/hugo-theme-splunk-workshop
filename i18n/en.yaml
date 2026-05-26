@@ -32,6 +32,8 @@
   translation: "Copy"
 - id: copied
   translation: "Copied"
+- id: completed
+  translation: "Completed"             # screen-reader label on the card-completion tick badge
 - id: chapter
   translation: "Chapter"
 - id: notFoundTitle
