@@ -84,6 +84,12 @@
   translation: "Question"
 - id: exerciseDefault
   translation: "Try it"
+- id: acknowledge
+  translation: "Acknowledge"           # label in the acknowledge bar header
+- id: acknowledgeDefault
+  translation: "Please acknowledge"    # fallback title when none is provided
+- id: iUnderstand
+  translation: "I understand"          # acknowledge modal CTA button
 - id: expand
   translation: "Expand"
 - id: details

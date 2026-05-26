@@ -1,0 +1,52 @@
+{{- /*
+  Acknowledge — content the reader must explicitly acknowledge before
+  continuing. Renders two surfaces:
+
+    1. An always-visible inline block (orange warning bar over a panel
+       containing the body) so the content stays in the page for later
+       reference.
+    2. A native <dialog> modal that pops on first page-load and can only
+       be dismissed via the "I understand" button. ESC is blocked; the
+       backdrop swallows clicks. State persists in localStorage keyed
+       by `<page-permalink>::<ordinal>`, so re-visits don't re-prompt.
+
+  Args:
+    title (positional or named) — heading shown in both surfaces.
+
+  Usage:
+    {{< acknowledge "Watch the instructor — don't run this yourself" >}}
+    Rather than each attendee setting this up, watch the demo.
+
+    You will continue performing steps on the next page.
+    {{< /acknowledge >}}
+*/ -}}
+{{- $title    := .Get "title" | default (.Get 0) | default (i18n "acknowledgeDefault" | default "Please acknowledge") -}}
+{{- $ackId    := printf "%s::%d" .Page.RelPermalink .Ordinal -}}
+{{- $titleId  := printf "ack-title-%d" .Ordinal -}}
+{{- /* Render the inner once and reuse it across both surfaces — keeps the
+       inline copy and modal copy byte-identical (and avoids running
+       RenderString twice). */ -}}
+{{- $body     := .Inner | .Page.RenderString -}}
+{{- $iconHTML := partial "icon-svg.html" "warning" -}}
+{{- $btnLabel := i18n "iUnderstand" | default "I understand" -}}
+
+<aside class="ack" data-ack-id="{{ $ackId }}">
+  <header class="ack__bar">
+    <span class="ack__bar-icon" aria-hidden="true">{{ $iconHTML }}</span>
+    <span class="ack__bar-label">{{ i18n "acknowledge" | default "Acknowledge" }}</span>
+    <span class="ack__bar-divider" aria-hidden="true">·</span>
+    <span class="ack__bar-title">{{ $title }}</span>
+  </header>
+  <div class="ack__panel">
+    <div class="ack__body">{{ $body | safeHTML }}</div>
+  </div>
+</aside>
+
+<dialog class="ack-modal" data-ack-modal-for="{{ $ackId }}" aria-labelledby="{{ $titleId }}">
+  <div class="ack-modal__inner">
+    <span class="ack-modal__icon" aria-hidden="true">{{ $iconHTML }}</span>
+    <p class="ack-modal__title" id="{{ $titleId }}">{{ $title }}</p>
+    <div class="ack-modal__body">{{ $body | safeHTML }}</div>
+    <button class="ack-modal__ack" type="button">{{ $btnLabel }}</button>
+  </div>
+</dialog>

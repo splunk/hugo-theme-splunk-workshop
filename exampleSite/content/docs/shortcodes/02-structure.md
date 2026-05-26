@@ -203,6 +203,38 @@ After:
 
 Nested notices, terminals, code blocks, trees, and solutions all carry over verbatim. Two label badges (EXERCISE + WARNING) read as **complementary** — different visual languages. Two notice frames (green + orange) read as **stacked** — same visual language competing for attention.
 
+## Acknowledge
+
+For content the reader **must not skim past** — instructor-only steps, configuration that's already been done for them, irreversible warnings the workshop assumes you've understood. Renders two surfaces:
+
+1. **An inline orange-banded block** that stays in the page for later reference.
+2. **A native `<dialog>` modal** that pops on first page-load and can only be dismissed by clicking the "I understand" button. ESC is blocked; the backdrop swallows clicks. Once acknowledged, the modal stays closed on every subsequent visit.
+
+{{< acknowledge "Only need 1 integration" >}}
+Rather than each attendee setting this up, watch your instructor perform the following steps.
+
+You will continue performing steps on the next page.
+{{< /acknowledge >}}
+
+```markdown
+{{</* acknowledge "Only need 1 integration" */>}}
+Rather than each attendee setting this up, watch your instructor perform
+the following steps.
+
+You will continue performing steps on the next page.
+{{</* /acknowledge */>}}
+```
+
+**Acknowledgement state** lives in localStorage under `splunk-workshop:acks`, keyed by `<page-permalink>::<ordinal>` — so the same page can host multiple acknowledge blocks and each one is tracked independently. State persists across reloads and sessions; to reset for dev/demo:
+
+```js
+localStorage.removeItem("splunk-workshop:acks"); location.reload();
+```
+
+**Use it sparingly.** The whole point is that ack blocks demand engagement; if every page has one, attendees stop reading them. Reserve for content that genuinely can't be skimmed — usually "watch the instructor do this, don't do it yourself" or "the next step will delete data, don't run it twice".
+
+**`prefers-reduced-motion`** is respected by the modal's transitions. The "I understand" button is gradient-styled and keyboard-focusable; native `<dialog>` traps focus inside the modal while it's open, so Tab cycles only through the modal's contents.
+
 ## Checkpoint
 
 {{< checkpoint "Reached the end of the structural shortcodes" >}}

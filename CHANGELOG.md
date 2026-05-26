@@ -5,6 +5,41 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.10.4] - 2026-05-26
+
+### Added
+
+- **`acknowledge` shortcode** — content the reader must explicitly click through before continuing. Renders two surfaces from one block: an always-visible inline orange-banded aside (so the content stays in the page for later reference) **and** a native `<dialog>` modal that pops on first page-load. ESC is blocked via the cancel event; the only way out is the "I understand" button. Ack state persists in localStorage under `splunk-workshop:acks`, keyed by `<page-permalink>::<ordinal>` so multiple acknowledge blocks on one page are tracked independently. Reserve for content that genuinely cannot be skimmed — "watch the instructor do this", "the next step deletes data, don't run it twice". Documented in [docs/shortcodes/structure › Acknowledge](docs/shortcodes/02-structure/#acknowledge).
+- **Card completion tick** — a magenta check appears in the bottom-right corner of any card whose linked section has been fully read. Works on all three card render paths: the auto card-grid, `{{< card >}}`, and `{{< children type="card" >}}`. State lives in three localStorage keys: `splunk-workshop:visited` (per-workshop URL list), `splunk-workshop:totals` (per-workshop sidebar link count, written every visit so workshop content changes update the threshold automatically), and `splunk-workshop:pages` (universal page-dwell set, covers single-page `_index.md` sections that don't have a workshop sidebar). Documented in [docs/shortcodes/layout › Progress tracking](docs/shortcodes/03-layout/#progress-tracking--the-completion-tick), including dev reset/inspect snippets and the accessibility note.
+- **Card hero icons** — Lucide icon as a card's "featured image", stroked with the brand pink→orange gradient. Opt in via `icon = "name"` in a section's front matter (auto-grid cards) or `hero-icon = "name"` on `{{< card >}}`. The gradient uses `--color-accent` / `--color-accent-2` so rebranded sites get their own gradient. Inline `icon=` is auto-suppressed when `hero-icon=` is set — one identity signal per card.
+- **`{{< card >}}` meta row** — opt-in via `show-time=true` / `show-pages=true`. Pulls reading time + child-page count from the linked Hugo page, rendering the same mono-uppercase + magenta-bullet styling as the auto-grid card meta. No-ops silently on external `href` values.
+- **Exercise gradient header bar** — full-bleed pink→orange bar carrying a target icon (subtle 2.4 s heartbeat pulse, honors `prefers-reduced-motion`) + label + title in mono caps. Body sits in a clean panel below. Replaces the chip-style header.
+- **`book-text` and `target` icons** in `data/icons.toml`.
+- **`completed`, `acknowledge`, `acknowledgeDefault`, `iUnderstand` i18n keys** in `en.yaml`.
+
+### Changed
+
+- **Callout markup restructure** — the title is now a sibling of `.callout__body` (not inside it). The callout uses a 2-row grid: row 1 is `icon | title`, row 2 is the body spanning both columns. Body prose now flows at the full callout width instead of being indented under the icon column. The collapsible `<details>` variant was already correct; no change there.
+- **Callout severity escalation** — `warning` gets a perimeter hairline border on top of its 5 px left rule plus a louder 16 % bg ("stop and read"). `danger` goes full saturated red with white text/icon and a soft drop shadow ("irreversible action"). Quiet severities (`note` / `tip` / `info` / `success`) are unchanged.
+- **`.shortcode-card` hover** unified with the auto-grid `.card` — both now show the same gradient-ring effect (full brand-gradient `::before` masked by a paper-inset `::after`, fades in on hover). The old top-edge gradient sweep is gone. Per-card `--card-accent` still drives the shadow tint.
+- **`.card__hero` and `.shortcode-card__hero`** dropped the pink-tinted background and border-bottom divider. The gradient icon now floats on the card's surface so it pops against neutral whitespace AND the hover ring stays uninterrupted around the full perimeter.
+
+### Fixed
+
+- **Card completion tick a11y** — removed `aria-hidden="true"` from the badge wrapper so the `.sr-only` "Completed" label gets announced to assistive tech. The SVG inside `icon-svg.html` keeps its own `aria-hidden` (decorative).
+- **`children.html` tick badge** now emits the `hidden` attribute, matching the other two card templates.
+- **Acknowledge modal centring** — explicit `position: fixed; inset: 0; margin: auto` works around browsers that drop the UA stylesheet's default modal-dialog centring. Long bodies scroll inside the modal via `max-height: calc(100dvh - 3rem)` + `overflow: auto`.
+- **`hugo.Data.icons` gradient on thin strokes** — the card-hero-icon partial uses `gradientUnits="userSpaceOnUse"` so horizontal/vertical text-line strokes (zero-height bounding box) render the gradient correctly in every browser, not just Chrome/Safari.
+- **Dead CSS** — removed the `@property --card-sweep` declaration left over from the previous shortcode-card hover; consolidated two near-identical `.shortcode-card__meta` blocks into one with both selector contracts (`__meta-item` and bare `<span>`) preserved.
+
+### Documented
+
+- New "Progress tracking — the completion tick" section in cards docs covering both completion paths, the three localStorage keys, dev reset/inspect snippets, the 2-second dwell behaviour, and the accessibility note.
+- New "Severity ladder" section in callouts docs describing the visual escalation across severities with use-sparingly guidance for `danger`.
+- New "Acknowledge" section in structural-shortcodes docs.
+- New "Hero icons" and "Opt-in meta row" sub-sections in cards docs; new `icon =` key in the front-matter reference.
+- Exercise description updated to reflect the gradient-bar layout.
+
 ## [0.10.3] - 2026-05-24
 
 ### Added
