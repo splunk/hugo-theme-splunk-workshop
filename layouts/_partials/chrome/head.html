@@ -96,6 +96,7 @@
   <script type="module" src="{{ $bundle.RelPermalink }}" defer></script>
 {{ end }}
 
-{{- /* Site extension point — last thing in <head>. See custom-header.html. */ -}}
-{{- partial "chrome/custom-header.html" . }}
+{{- /* Site extension point — last thing in <head>. Sites override via
+       layouts/_partials/custom-header.html in their own repo. */ -}}
+{{- partial "custom-header.html" . }}
 

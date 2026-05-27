@@ -21,11 +21,6 @@
       {{- end }}
       <button class="site-search-trigger" type="button" data-search-trigger aria-label="{{ i18n "searchTrigger" }}" aria-haspopup="dialog">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <span class="site-search-trigger__label">{{ i18n "searchTrigger" }}</span>
-        <kbd class="site-search-trigger__kbd">/</kbd>
-      </button>
-      <button class="kbd-help-trigger" type="button" data-kbd-help-trigger aria-label="{{ i18n "keyboardShortcuts" | default "Keyboard shortcuts" }}" aria-haspopup="dialog">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
       </button>
       {{ with $p.repoURL }}
         <a class="nav__link" href="{{ . }}" target="_blank" rel="noopener" aria-label="GitHub repository">
@@ -39,6 +34,9 @@
           <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
         </button>
       {{ end }}
+      <button class="kbd-help-trigger" type="button" data-kbd-help-trigger aria-label="{{ i18n "keyboardShortcuts" | default "Keyboard shortcuts" }}" aria-haspopup="dialog">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </button>
     </nav>
 
     <button class="menu-btn" data-menu-btn aria-label="{{ i18n "openMenu" }}">

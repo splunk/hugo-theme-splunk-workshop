@@ -5,6 +5,25 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.10.10] - 2026-05-27
+
+### Changed
+
+- **Header search trigger is now an icon-only button** instead of a placeholder-style pill with `Search` label and `/` kbd hint. The pill mimicked an `<input>` but you couldn't type into it — clicking opened a modal where you typed. That's a misleading affordance; the new icon-only button is consistent with the help and theme-toggle buttons and the `/` shortcut still works (the keyboard-help dialog documents it). The 65-line `.site-search-trigger` ruleset in `components.css` is gone — search joins `.theme-toggle` / `.kbd-help-trigger` in a shared rule.
+- **Header layout reordered.** Trailing controls are now `search · github · lang · theme · help`. Help moves from second-from-left to the trailing position — it's a tertiary affordance, terminal position matches the convention used by Linear / Notion / Stripe.
+- **All header icon buttons (search, lang, theme, help) use brand pink (`--color-accent`) for the icon at rest**, not muted ink. Hover keeps the same icon colour and lights the border to match. The language switcher's `EN` label and chevron stay in muted ink as informational text — only the globe icon is pink, matching the other action icons.
+- **Pill outlines bumped to `--color-border-strong`** (`#C7CDD8` light / `#2A3A56` dark) so the rings are visible in dark mode without being heavy in light mode. The previous `--color-border` resolved to `#1F2C44` against the dark-mode navy paper — about 1.5:1 contrast, basically invisible.
+
+### Fixed
+
+- **`custom-header.html` override path mismatch (also touched by the v0.10.9 rename).** The stub's comment told sites to override at `layouts/_partials/custom-header.html`, but `head.html` invoked `partial "chrome/custom-header.html"` — Hugo's lookup is exact-path, so site overrides at the documented path were silently never loaded. The v0.10.9 commit moved the stub via `git mv` but didn't update the `head.html` invocation in the same commit; this release lands the invocation update that completes the fix.
+
+## [0.10.9] - 2026-05-27
+
+### Fixed (incomplete — see 0.10.10)
+
+- Theme stub moved from `layouts/_partials/chrome/custom-header.html` to `layouts/_partials/custom-header.html`. The invocation update in `head.html` was meant to ship with this rename but did not — see 0.10.10. Don't pin against this version on its own; it's a partial fix.
+
 ## [0.10.8] - 2026-05-27
 
 ### Changed

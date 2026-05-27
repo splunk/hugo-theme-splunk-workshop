@@ -120,7 +120,7 @@
   gap: 0.35rem;
   height: 2.25rem;
   padding: 0 0.7rem;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-strong);
   border-radius: 999px;
   background: transparent;
   font-family: var(--font-mono);
@@ -135,7 +135,7 @@
   color: var(--color-accent-text);
   border-color: var(--color-accent);
 }
-.lang-switch__btn svg { color: inherit; }
+.lang-switch__btn svg { color: var(--color-accent); }
 .lang-switch__current { line-height: 1; }
 .lang-switch__chev {
   display: inline-block;
@@ -186,9 +186,10 @@
   pointer-events: none;
 }
 
-/* ---- Theme toggle + keyboard-shortcuts button ----
-   Both render as small icon-only pills in the header. Same dimensions
-   and hover treatment; they share a base ruleset to stay consistent. */
+/* ---- Header icon buttons (search, theme-toggle, kbd-help) ----
+   All three render as small icon-only pills. Same dimensions, light-grey
+   outline at rest, brand-pink icon. Hover lights the border to match. */
+.site-search-trigger,
 .theme-toggle,
 .kbd-help-trigger {
   display: inline-flex;
@@ -196,16 +197,19 @@
   justify-content: center;
   width: 2.25rem;
   height: 2.25rem;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-strong);
   border-radius: 999px;
-  color: var(--color-ink-muted);
+  color: var(--color-accent);
+  background: transparent;
+  cursor: pointer;
   transition: all var(--t-fast) var(--ease);
 }
+.site-search-trigger:hover,
 .theme-toggle:hover,
 .kbd-help-trigger:hover {
-  color: var(--color-accent-text);
   border-color: var(--color-accent);
 }
+.site-search-trigger svg,
 .theme-toggle svg,
 .kbd-help-trigger svg { width: 1rem; height: 1rem; }
 /* Status-based icons — the icon represents the CURRENT mode, not the
@@ -785,8 +789,5 @@
   .nav { gap: 0.4rem; }
   .nav__link,
   .lang-switch { display: none; }
-  .site-search-trigger { padding: 0.5rem; }
-  .site-search-trigger__label,
-  .site-search-trigger__kbd { display: none; }
   .pager { grid-template-columns: 1fr; }
 }
