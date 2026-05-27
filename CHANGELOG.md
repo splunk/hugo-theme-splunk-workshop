@@ -5,6 +5,20 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.10.7] - 2026-05-27
+
+### Fixed
+
+- **`{{% exercise %}}` produced a stray `<pre><code>&lt;/div&gt;</code></pre>` at the end of the rendered exercise body.** The template's closing `</div>` for `.exercise__body` was indented 4 spaces. Because `{{% exercise %}}` is a percent-form shortcode, Hugo runs the rendered output through Goldmark again as part of the surrounding markdown context. When the inner `.Page.RenderString` output ended with a blank line, the 4-space-indented `</div>` was parsed as a CommonMark indented code block — wrapped in `<pre><code>` and HTML-escaped. Same gotcha that `callout-render.html` documents at the top of its file. Fix: the exercise template is now flat (no internal line breaks inside open tags, no 4+ space indentation), matching the callout-render pattern. Verified clean against the live workshop content.
+
+### Reverted
+
+- **Body prose spacing back to `margin-block: 1.1em`** (from the `0.2em` introduced in v0.10.3). The tightened spacing collapsed paragraph breaks visually inside shortcode bodies (exercises, callouts, etc.), where readers expect normal breathing room between distinct prose blocks. If your site relied on the tighter spacing, override per-site with a CSS rule scoped to `.content p { margin-block: 0.2em }` (or whichever selector matches your needs).
+
+### Audited
+
+- Swept every percent-form shortcode that pipes `.Inner` through `.Page.RenderString` (`acknowledge`, `solution`, `expand`, `details`, `objectives`, `prerequisites`, `presenter`, `checkpoint`, `notice`, plus the inline-flat shortcodes `lead`, `card`, `button`, `cta`, `tab`, `step`). Empirically confirmed no other template produces the indented-code-block bug — all closing tags happen to sit at ≤2-space indent (or single-line) which is below the CommonMark threshold. The `exercise.html` template was the only outlier.
+
 ## [0.10.6] - 2026-05-27
 
 ### Fixed
