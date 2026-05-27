@@ -1,0 +1,36 @@
+{{- /*
+  One workshop row for the browse ("See all") view. Same data the card
+  partials read (card-from-page.html) — title, description, difficulty,
+  time/duration, child-page count, git Lastmod — rendered as a dense
+  GitHub-repo-list row instead of a grid card.
+
+  Args (dict): page (required).
+
+  Recency: "Updated" badge + age string come from git `.Lastmod`
+  (reliable, format-independent). "New" is opt-in via `new = true` in
+  front matter — front-matter dates are NOT used (US/UK format drift).
+*/ -}}
+{{- $page := .page -}}
+{{- $count := partial "workshop/children-count.html" $page -}}
+{{- $isNew := eq ($page.Params.new | default false) true -}}
+{{- /* "Updated" when git Lastmod is within 14 days. */ -}}
+{{- $recentlyUpdated := lt (int (div (now.Sub $page.Lastmod).Hours 24)) 14 -}}
+<a class="ws-row" href="{{ $page.RelPermalink }}">
+  {{- with $page.Params.icon }}
+  <span class="ws-row__icon" aria-hidden="true">{{ partial "icon-svg.html" . }}</span>
+  {{- end }}
+  <span class="ws-row__main">
+    <span class="ws-row__title-line">
+      <span class="ws-row__title">{{ $page.LinkTitle }}</span>
+      {{- if $isNew }}<span class="ws-row__badge ws-row__badge--new">{{ i18n "newLabel" | default "New" }}</span>{{ end }}
+      {{- if and $recentlyUpdated (not $isNew) }}<span class="ws-row__badge ws-row__badge--updated">{{ i18n "updatedLabel" | default "Updated" }}</span>{{ end }}
+    </span>
+    {{- with $page.Description }}<span class="ws-row__desc">{{ . }}</span>{{ end }}
+    <span class="ws-row__meta">
+      {{- with ($page.Params.time | default $page.Params.duration) }}<span>{{ . }}</span>{{ end }}
+      {{- with $page.Params.difficulty }}<span>{{ . }}</span>{{ end }}
+      {{- if gt $count 1 }}<span>{{ i18n "pagesCount" (dict "Count" $count) }}</span>{{ end }}
+    </span>
+  </span>
+  <span class="ws-row__updated">{{ i18n "updatedLabel" | default "Updated" }} <strong>{{ partial "browse/reltime.html" $page.Lastmod }}</strong></span>
+</a>

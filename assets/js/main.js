@@ -17,6 +17,7 @@ import { initPresenter }    from "./presenter.js";
 import { initKeyboardNav }  from "./keyboard-nav.js";
 import { initSearch }       from "./search.js";
 import { initLangSwitch }   from "./lang-switch.js";
+import { initBrowse }       from "./browse.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   initThemeToggle();
@@ -37,4 +38,5 @@ document.addEventListener("DOMContentLoaded", () => {
   initKeyboardNav();
   initSearch();
   initLangSwitch();
+  initBrowse();
 });
