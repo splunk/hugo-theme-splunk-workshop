@@ -5,7 +5,14 @@
 {{- $title   := .Get "title"   -}}
 {{- $align   := .Get "align"   | default "" -}}
 {{- $url := $src -}}
-{{- with .Page.Resources.GetMatch $src }}{{- $url = .RelPermalink -}}{{- end -}}
+{{- $isExternal := or (hasPrefix $src "http") (hasPrefix $src "//") (hasPrefix $src "/") (hasPrefix $src "data:") -}}
+{{- if not $isExternal -}}
+  {{- with .Page.Resources.GetMatch $src -}}
+    {{- $url = .RelPermalink -}}
+  {{- else -}}
+    {{- warnidf (printf "figure-missing-%s" $src) "{{< figure >}}: %q not found in page bundle %q" $src .Page.Path -}}
+  {{- end -}}
+{{- end -}}
 <figure class="figure {{ with $align }}figure--align-{{ . }}{{ end }}">
   <div class="figure__inner">
     <img src="{{ $url | safeURL }}" alt="{{ $alt }}" loading="lazy" decoding="async">

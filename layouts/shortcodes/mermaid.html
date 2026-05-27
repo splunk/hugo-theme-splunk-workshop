@@ -5,9 +5,12 @@
     graph LR
       A --> B
     {{< /mermaid >}}
+
+  htmlEscape on .Inner is load-bearing — labels can contain `<`, `>`, `&`
+  or quotes that the browser would otherwise parse as DOM, stripping them
+  from textContent and breaking mermaid's parser. Same approach as relearn.
 */ -}}
-{{- $align := .Get "align" | default "center" -}}
 {{- .Page.Store.Set "_needs_mermaid" true -}}
-<div class="mermaid mermaid--{{ $align }}">
-{{- trim .Inner "\n\r" -}}
-</div>
+<pre class="mermaid">
+{{- trim .Inner "\n\r" | htmlEscape | safeHTML -}}
+</pre>

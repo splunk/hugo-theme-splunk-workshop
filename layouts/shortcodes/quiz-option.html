@@ -1,5 +1,5 @@
 {{- if not .Parent -}}
-  {{- errorf "{{< quiz-option >}} must be used inside {{< quiz >}}" -}}
+  {{- errorf "{{< quiz-option >}} must be used inside {{< quiz >}} (page %q)" .Page.Path -}}
 {{- end -}}
 {{- $key     := printf "_quiz_opts_%d" .Parent.Ordinal -}}
 {{- $correct := eq (.Get "correct" | default (.Get 0) | default "false" | string) "true" -}}

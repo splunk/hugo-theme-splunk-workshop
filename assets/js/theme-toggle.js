@@ -12,6 +12,7 @@
 // The cycle through three states (light → dark → auto → light) was confusing —
 // from the default `auto` it took two clicks to reach dark. Simple toggle wins.
 
+// Key MUST match the pre-paint script literal in chrome/head.html.
 const KEY = "splunk-workshop-theme";
 const VALID = new Set(["light", "dark", "auto"]);
 

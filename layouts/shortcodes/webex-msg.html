@@ -31,4 +31,6 @@
         "color"   $color
         "content" $content -}}
   {{- .Page.Store.Add $key (slice $entry) -}}
+{{- else -}}
+  {{- errorf "{{< webex-msg >}} must be used inside {{< webex >}} (page %q)" .Page.Path -}}
 {{- end -}}

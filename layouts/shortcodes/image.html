@@ -21,8 +21,13 @@
 {{- $width   := .Get "width"   | default "" -}}
 {{- $height  := .Get "height"  | default "" -}}
 {{- $url := $src -}}
-{{- with .Page.Resources.GetMatch $src }}
-  {{- $url = .RelPermalink -}}
+{{- $isExternal := or (hasPrefix $src "http") (hasPrefix $src "//") (hasPrefix $src "/") (hasPrefix $src "data:") -}}
+{{- if not $isExternal -}}
+  {{- with .Page.Resources.GetMatch $src -}}
+    {{- $url = .RelPermalink -}}
+  {{- else -}}
+    {{- warnidf (printf "image-missing-%s" $src) "{{< image >}}: %q not found in page bundle %q" $src .Page.Path -}}
+  {{- end -}}
 {{- end -}}
 {{- /* width clamps the whole figure (so caption + frame stay aligned with
        the image); height clamps just the <img> (browsers preserve the

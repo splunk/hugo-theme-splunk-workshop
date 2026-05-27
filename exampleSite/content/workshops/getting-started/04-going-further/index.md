@@ -26,9 +26,9 @@ If you want a quick rule of thumb for {{< textcolor color="#FF007F" weight="bold
 
 ## 60-second recap
 
-A short video walkthrough that revisits the three workflows you just used end-to-end. Swap in your own workshop video by changing the `YOUR_VIDEO_ID` placeholder.
+A short video walkthrough that revisits the three workflows you just used end-to-end. Swap in your own workshop video by replacing the id below.
 
-{{< youtube YOUR_VIDEO_ID >}}
+{{< youtube dQw4w9WgXcQ >}}
 
 ## Architecture you just built
 

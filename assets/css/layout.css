@@ -7,7 +7,9 @@
   --sidebar-w: 18rem;
   --toc-w: 14rem;
   --gutter: clamp(1.25rem, 3vw, 2.5rem);
-  --content-max: 720px;
+  /* --content-max is set by chrome/theme-vars.html from the
+     contentMaxWidth site param. Don't redeclare here — this bundle loads
+     after theme-vars and would clobber the param. */
 }
 
 /* ---- Page container — full-bleed: rails pin to viewport edges, prose centers in the middle ---- */
@@ -451,10 +453,17 @@
 .content {
   min-width: 0;
   width: 100%;
+  max-width: var(--content-max);
 }
 .content > * { max-width: 100%; }
 .content--full { max-width: none; }
-
+.content > pre,
+.content > .code-block,
+.content > .mermaid,
+.content > .table-wrap,
+.content > .figure--align-bleed {
+  max-width: none;
+}
 /* ---- TOC (right rail — on this page) ---- */
 .toc {
   position: sticky;
@@ -755,8 +764,7 @@
     top: var(--header-h);
     left: 0;
     height: calc(100vh - var(--header-h));
-    width: 85%;
-    max-width: 22rem;
+    width: min(80vw, 22rem);
     background: var(--color-paper);
     border-right: 1px solid var(--color-border);
     padding: 1.5rem;

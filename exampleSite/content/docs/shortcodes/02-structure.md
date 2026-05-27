@@ -16,6 +16,7 @@ Steps are the backbone of any procedure. Each one auto-increments via Hugo's `Sc
 ```bash
 echo "Steps can contain anything — code, callouts, tables, anything."
 ```
+
 {{< /step >}}
 
 {{< step "The next one in the sequence" "2" "2 min" >}}
@@ -45,6 +46,7 @@ index=web sourcetype=access_combined
 ```
 
 {{< solution >}}
+
 ```text
 index=web sourcetype=access_combined
 | stats perc95(response_time) as p95 by uri
@@ -111,6 +113,7 @@ file_storage/checkpoint:
   directory: "./checkpoint-dir"
   create_directory: true
 ```
+
 {{< /step >}}
 
 {{< step "Restart and verify" >}}
@@ -135,19 +138,25 @@ Pick your platform and run the install command:
 
 {{< tabs groupid="install-platform" >}}
 {{< tab "macOS" >}}
+
 ```bash
 brew install otel-collector
 ```
+
 {{< /tab >}}
 {{< tab "Linux" >}}
+
 ```bash
 sudo apt install otel-collector
 ```
+
 {{< /tab >}}
 {{< tab "Windows" >}}
+
 ```powershell
 choco install otel-collector
 ```
+
 {{< /tab >}}
 {{< /tabs >}}
 
@@ -258,15 +267,19 @@ The shortcode is self-closing only — to attach follow-up prose, put it as regu
 ## Objectives & Prerequisites
 
 {{< objectives >}}
+
 - Understand each shortcode in the theme
 - Pick the right one for a given situation
 - Compose them into a great workshop
+
 {{< /objectives >}}
 
 {{< prerequisites >}}
+
 - A working Hugo install (any 0.125+)
 - Comfort using a terminal
 - About 30 minutes of uninterrupted time
+
 {{< /prerequisites >}}
 
 ```markdown

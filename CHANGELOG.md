@@ -5,6 +5,51 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.10.5] - 2026-05-27
+
+### Added
+
+- **`lucide:NAME` shorthand in mermaid diagrams** — type `lucide:download` (or any other icon name from `data/icons.toml`) anywhere in a label and it gets substituted with the inline Lucide SVG before mermaid renders. Works in `{{< mermaid >}}`, `{{% mermaid %}}`, and fenced ```` ```mermaid ```` code blocks. Mirrors mermaid's built-in `fa:fa-NAME` shorthand but reuses the theme's existing Lucide set instead of pulling FontAwesome at runtime. Configurable via `mermaidIconSize` site param (default 24 px).
+- **Legacy `fa:fa-NAME` compatibility shim** — keeps imported diagrams from `hugo-theme-relearn` working unchanged. Pre-mapped tokens: `fa-download`, `fa-upload`, `fa-microchip`, `fa-route`. Extend `FA_ALIASES` in `chrome/footer.html` as new diagrams need it; unknown names pass through as literal text so failures are visible.
+- **Fenced ```` ```mermaid ```` code blocks** — the render-codeblock hook now special-cases the `mermaid` lang and emits the same `<pre class="mermaid">` shape as the shortcode. Authors can use either form.
+- **`route` icon** in `data/icons.toml` (Navigation / direction section).
+
+### Changed
+
+- **Mermaid `securityLevel: "strict"` → `"antiscript"`** — matches relearn's default. Allows raw HTML in labels (`<br>`, `<strong>`, `&nbsp;`) — common when migrating diagrams from relearn — while still stripping `<script>` tags and blocking click handlers. Diagrams that previously rendered `<br>` as literal text now line-break correctly.
+- **Mermaid wrapper `<div>` → `<pre>` with `htmlEscape | safeHTML`** — same approach as relearn. Labels containing `<`, `>`, `&`, or quotes survive `textContent` round-tripping instead of being stripped by the browser's HTML parser before mermaid sees them.
+- **`.content` body width now respects `--content-max`** (driven by `contentMaxWidth` site param, default 720 px). The CSS variable existed but wasn't being applied — callouts and prose were spanning the full middle column up to ~1000 px on wide viewports. Code blocks, mermaid, tables, and full-bleed figures opt out via `max-width: none`.
+- **Mobile sidebar width** — `85%` (max `22rem`) → `min(80vw, 22rem)`. Reliable ~75 px content peek on a 375 px viewport (iPhone SE) instead of the previous ~56 px.
+
+### Fixed
+
+- **`--content-max` cascade collision** — `layout.css` was redeclaring the variable AFTER `chrome/theme-vars.html` set it from the site param, so `contentMaxWidth` overrides had no effect. The variable now lives only in theme-vars.html with a paired comment to prevent regression.
+- **Code-block opt-out** — the `max-width: none` opt-out list targeted `.content > pre` and `.content > .highlight`, neither of which match the actual DOM (the render hook emits `.content > .code-block > .highlight > pre`). Replaced with `.content > .code-block`.
+- **Mermaid theme-toggle re-render** — used `el.innerHTML = src`, which re-parsed labels containing `<` / `>` / `&` as DOM and broke the second render on light/dark flip. Now writes via `el.textContent = src`.
+- **Reading-progress bar resize** — was running synchronously on every resize event; now batched via `requestAnimationFrame` like the scroll handler.
+
+### Accessibility
+
+- **Lightbox** — full WAI-ARIA modal-dialog pattern: `role="dialog"` + `aria-modal="true"`, dedicated close button, focus moves into the lightbox on open and restores to the triggering image on close, Tab is trapped, Escape closes. The keydown listener attaches on open and detaches on close. Triggering images are now keyboard-reachable (`tabindex="0"`, `role="button"`).
+- **Quiz** — arrow keys (and Home / End) navigate between options. Results are announced via an auto-injected polite live region (`role="status"`), so screen readers report "Correct" or "Incorrect — the correct answer is: …" even when no `{{< quiz-feedback >}}` is authored. Answer text comes from a dedicated `.quiz__option-text` span (no longer relying on `:last-child`).
+- **Mobile sidebar** — when open as an overlay (≤820 px), `<main>` and `.site-footer` are marked `inert` so Tab + screen readers stay inside the nav. Focus moves into the sidebar on open. Recomputed on viewport-change so desktop doesn't end up with inert chrome left over from a mobile-overlay state.
+
+### Validation & robustness
+
+- **`figure` / `image` shortcodes** — emit `warnf` when a page-bundle resource lookup misses (skipped for absolute URLs and root-anchored paths so external images don't spam the build log).
+- **`youtube` shortcode** — validates id against `^[A-Za-z0-9_-]{11}$` and errors at build time on typos or copy-paste-with-slashes instead of silently producing a broken iframe URL. Replaced the `YOUR_VIDEO_ID` placeholder in the example workshop content (caught by the new validation).
+- **`webex-msg` shortcode** — `errorf` when used outside a `{{< webex >}}` parent, instead of silently emitting nothing. Matches the existing `quiz-option` parent-guard pattern.
+- **`linkedin` shortcode** — `color` param now allow-listed before interpolation into inline style, preventing `color="red;background:url(…)"` CSS-property-break injection. Same regex as `textcolor.html`.
+
+### Documented
+
+- **Theme storage key locked-step constants** — paired comments on `assets/js/theme-toggle.js` (`const KEY`) and the pre-paint script in `chrome/head.html` flag the load-bearing literal that must stay in sync.
+
+### Visual change (mind on upgrade)
+
+- **Content body now capped at 720 px by default.** Sites that previously relied on prose spanning the full middle column should set `contentMaxWidth = "1080px"` (or another value) in their `[params]`. Code blocks, mermaid, tables, and `figure--align-bleed` figures opt out and remain full-width.
+- **Mermaid `securityLevel` is now `antiscript`**, not `strict`. Downstream sites that need to lock it back to `strict` can override the `mermaid.initialize` call in their own custom footer partial.
+
 ## [0.10.4] - 2026-05-26
 
 ### Added

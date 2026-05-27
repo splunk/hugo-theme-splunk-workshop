@@ -2,17 +2,27 @@
   Code-block render hook.
   Supports a `file` attribute on the fence, e.g.:
     ```js {file="hello.js"}
-  Renders a header with filename, language, and copy button.
+  ```mermaid fences render as diagrams (mirrors the mermaid shortcode).
 */ -}}
 {{- $lang := or .Type "text" -}}
-{{- $file := .Attributes.file -}}
-{{- $hl := .Attributes.hl_lines -}}
-{{- $opts := dict "lineNos" false "tabWidth" 2 -}}
-{{- if $hl }}{{ $opts = merge $opts (dict "hl_lines" $hl) }}{{ end -}}
-<div class="code-block">
-  <div class="code-block__header">
-    <span class="code-block__file">{{ if $file }}{{ $file }}{{ else }}<span class="code-block__lang">{{ $lang }}</span>{{ end }}</span>
-    <button class="code-block__copy" type="button" aria-label="Copy code to clipboard">Copy</button>
+
+{{- if eq $lang "mermaid" -}}
+  {{- /* Output shape mirrors layouts/shortcodes/mermaid.html — see there
+         for the htmlEscape rationale. */ -}}
+  {{- .Page.Store.Set "_needs_mermaid" true -}}
+<pre class="mermaid">
+{{- trim .Inner "\n\r" | htmlEscape | safeHTML -}}
+</pre>
+{{- else -}}
+  {{- $file := .Attributes.file -}}
+  {{- $hl := .Attributes.hl_lines -}}
+  {{- $opts := dict "lineNos" false "tabWidth" 2 -}}
+  {{- if $hl }}{{ $opts = merge $opts (dict "hl_lines" $hl) }}{{ end -}}
+  <div class="code-block">
+    <div class="code-block__header">
+      <span class="code-block__file">{{ if $file }}{{ $file }}{{ else }}<span class="code-block__lang">{{ $lang }}</span>{{ end }}</span>
+      <button class="code-block__copy" type="button" aria-label="Copy code to clipboard">Copy</button>
+    </div>
+    {{ highlight (trim .Inner "\n\r") $lang $opts }}
   </div>
-  {{ highlight (trim .Inner "\n\r") $lang $opts }}
-</div>
+{{- end -}}

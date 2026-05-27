@@ -5,6 +5,11 @@
 */ -}}
 {{- $id    := .Get "id"    | default (.Get 0) -}}
 {{- $title := .Get "title" | default "YouTube video" -}}
+{{- if not $id -}}
+  {{- errorf "{{< youtube >}} called without a video id (page %q)" .Page.Path -}}
+{{- else if not (findRE `^[A-Za-z0-9_-]{11}$` $id) -}}
+  {{- errorf "{{< youtube >}}: invalid video id %q in page %q — expected 11 chars of [A-Za-z0-9_-]" $id .Page.Path -}}
+{{- end -}}
 <div class="youtube">
   <iframe src="https://www.youtube-nocookie.com/embed/{{ $id }}" title="{{ $title }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </div>

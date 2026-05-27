@@ -73,24 +73,70 @@
           onload='renderMathInElement(document.body, {delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}], throwOnError:false})'></script>
 {{ end }}
 {{ if .Store.Get "_needs_mermaid" }}
+  {{- /* Icon map for `lucide:NAME` and `fa:fa-NAME` substitution in
+         diagram labels. Sourced from data/icons.toml. */ -}}
+  {{- $iconsData := hugo.Data.icons -}}
+  {{- $iconMap := dict -}}
+  {{- range $name, $svg := $iconsData.icons -}}{{- $iconMap = merge $iconMap (dict $name $svg) -}}{{- end -}}
+  {{- range $alias, $target := $iconsData.aliases -}}
+    {{- with index $iconsData.icons $target -}}{{- $iconMap = merge $iconMap (dict $alias .) -}}{{- end -}}
+  {{- end }}
+  <script>window.__themeLucideIcons={{ $iconMap | jsonify | safeJS }};</script>
   <script type="module">
     import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.esm.min.mjs";
     const themeFor = () => document.documentElement.dataset.theme === "dark" ? "dark" : "default";
-    // securityLevel "strict" blocks HTML labels and click handlers in diagrams.
-    // Workshops occasionally embed Mermaid from un-reviewed contributors; strict
-    // mode removes the XSS-adjacent surface. If you need clickable diagrams or
-    // raw-HTML labels, downgrade per-site rather than re-enabling it globally.
-    const init = () => mermaid.initialize({ startOnLoad: false, theme: themeFor(), securityLevel: "strict" });
+    // `antiscript` matches relearn; allows <br>/<strong>/&nbsp; in labels
+    // while still blocking <script> + click handlers.
+    const init = () => mermaid.initialize({ startOnLoad: false, theme: themeFor(), securityLevel: "antiscript" });
 
-    // Stash the original mermaid source BEFORE the first mermaid.run() —
-    // mermaid mutates each .mermaid element's textContent into rendered
-    // SVG asynchronously, so reading textContent any time after run()
-    // is fired races against the mutation. Without this pre-stash, theme
-    // toggling reads `data-mermaid-source` containing SVG instead of the
-    // original diagram syntax → mermaid throws "syntax error in text".
+    // Replace `lucide:NAME` and legacy `fa:fa-NAME` tokens in label text
+    // with inline SVG. Done before the source stash so theme re-renders
+    // use the substituted version. FA_ALIASES is derived from actual
+    // workshop usage — extend as needed.
+    const ICONS = window.__themeLucideIcons || {};
+    const FA_ALIASES = {
+      "fa-download":  "download",
+      "fa-upload":    "upload",
+      "fa-microchip": "cpu",
+      "fa-route":     "route",
+    };
+    const ICON_RE = /(?:lucide:|fa:fa-)([a-z0-9-]+)/g;
+    const ICON_SIZE = {{ site.Params.mermaidIconSize | default 24 | int }};
+    // Scoped <style> rather than inline style on each child — mermaid's
+    // antiscript dompurify strips inline styles unevenly across SVG
+    // element types (passes <path>, drops <line>/<polyline>).
+    if (!document.getElementById("__lucide-mi-style")) {
+      const s = document.createElement("style");
+      s.id = "__lucide-mi-style";
+      s.textContent =
+        ".lucide-mi,.lucide-mi *{" +
+          "fill:none!important;stroke:#fff!important;" +
+          "stroke-width:1.5!important;" +
+          "stroke-linecap:round!important;stroke-linejoin:round!important" +
+        "}";
+      document.head.appendChild(s);
+    }
+    const wrapIcon = (path) =>
+      `<svg class="lucide-mi" viewBox="0 0 24 24" width="${ICON_SIZE}" height="${ICON_SIZE}" shape-rendering="geometricPrecision" style="display:inline-block;vertical-align:-3px">${path}</svg>`;
+    const resolve = (rawName, match) => {
+      const faKey = match.startsWith("fa:") ? "fa-" + rawName : null;
+      const name = faKey ? (FA_ALIASES[faKey] || rawName) : rawName;
+      return ICONS[name];
+    };
+    // Substitute icon tokens, then stash the resulting source before
+    // mermaid.run() mutates textContent into rendered SVG — the
+    // theme-toggle re-render reads this back to replay the diagram.
     document.querySelectorAll(".mermaid").forEach(el => {
+      const orig = el.textContent.trim();
+      const substituted = ICON_RE.test(orig)
+        ? orig.replace(ICON_RE, (match, name) => {
+            const svg = resolve(name, match);
+            return svg ? wrapIcon(svg) : match;
+          })
+        : orig;
+      if (substituted !== orig) el.textContent = substituted;
       if (!el.getAttribute("data-mermaid-source")) {
-        el.setAttribute("data-mermaid-source", el.textContent.trim());
+        el.setAttribute("data-mermaid-source", substituted);
       }
     });
 
@@ -109,7 +155,9 @@
           const src = el.getAttribute("data-mermaid-source");
           if (!src) return;
           el.removeAttribute("data-processed");
-          el.innerHTML = src;
+          // textContent (NOT innerHTML) — labels can contain `<`/`>`/`&`
+          // that innerHTML would re-parse as DOM, breaking mermaid.
+          el.textContent = src;
         });
         await mermaid.run({ querySelector: ".mermaid" });
       }, 60);

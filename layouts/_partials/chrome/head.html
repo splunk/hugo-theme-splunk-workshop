@@ -73,7 +73,8 @@
 {{ end }}
 <link rel="stylesheet" href="{{ $css.RelPermalink }}"{{ with $css.Data.Integrity }} integrity="{{ . }}"{{ end }}>
 
-{{- /* Pre-paint mode resolution to avoid FOUC */ -}}
+{{- /* Pre-paint theme resolution to avoid FOUC. Key MUST match
+       assets/js/theme-toggle.js (const KEY). */ -}}
 <script>
   (function() {
     try {

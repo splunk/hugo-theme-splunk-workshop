@@ -22,7 +22,7 @@
       <li>
         <button class="quiz__option" type="button" data-correct="{{ $o.correct }}">
           <span class="quiz__marker">{{ index (slice "A" "B" "C" "D" "E" "F") $i }}</span>
-          <span>{{ $o.text | safeHTML }}</span>
+          <span class="quiz__option-text">{{ $o.text | safeHTML }}</span>
         </button>
       </li>
     {{ end }}

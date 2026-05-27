@@ -16,9 +16,10 @@ export function initProgress() {
     ticking = false;
   };
 
-  window.addEventListener("scroll", () => {
+  const schedule = () => {
     if (!ticking) { window.requestAnimationFrame(update); ticking = true; }
-  }, { passive: true });
-  window.addEventListener("resize", update);
+  };
+  window.addEventListener("scroll", schedule, { passive: true });
+  window.addEventListener("resize", schedule);
   update();
 }
