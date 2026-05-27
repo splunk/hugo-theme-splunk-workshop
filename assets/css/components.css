@@ -2,24 +2,31 @@
    Components — hero, cards, badges, buttons, meta-row
    ========================================================================== */
 
-/* ---- Page-load reveal --------------------------------------------------
-   Staggered entrance for the hero / chapter-landing first impression. The
-   sequence cascades title → lead → CTA over ~600ms. `animation-fill-mode:
-   both` keeps elements invisible during the delay (so they don't flash in
-   their final position before the keyframe begins).
+/* External-link arrow. Explicit color (not currentColor) so it stays
+   visible when the parent link text goes transparent on hover. */
+.link-ext {
+  display: inline-block;
+  width: 0.75em; height: 0.75em;
+  vertical-align: 0.02em;
+  margin-left: 0.2em;
+  color: var(--color-accent-text);
+  opacity: 0.7;
+  transition: transform var(--t-base) cubic-bezier(.34, 1.56, .64, 1),
+              opacity var(--t-fast) var(--ease);
+}
+a:hover .link-ext,
+a:focus-visible .link-ext { opacity: 1; transform: translate(2px, -2px); }
 
-   prefers-reduced-motion: reduce nukes all animation timing globally via
-   the block in assets/css/reset.css, so nothing here needs a guard. */
+/* ---- Page-load reveal — staggered hero entrance.
+   prefers-reduced-motion is handled globally in reset.css. */
 @keyframes reveal-up {
   from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: none; }
 }
 
-/* @property registration lets the chapter-weight bloom interpolate via a
-   custom number, so the end-state opacity can stay at the declared clamp
-   instead of snapping to 1. Browsers without @property support skip the
-   bloom (graceful no-op) — the element renders at its declared clamp
-   opacity from page load. */
+/* @property lets the chapter-weight bloom interpolate via a number so
+   the end-state opacity stays at the declared clamp. Browsers without
+   @property support skip the bloom — element renders at clamp opacity. */
 @property --weight-progress {
   syntax: '<number>';
   inherits: false;
@@ -33,19 +40,15 @@
 /* ---- Chapter hero ---- */
 .hero--chapter .hero__inner { max-width: none; }
 .chapter { position: relative; }
-/* In-column chapter hero used by the new chapter.html (the chapter
-   inhabits the content column alongside the workshop sidebar instead of
-   a full-bleed top hero). */
+/* In-column chapter hero (sits inside the content column, not full-bleed). */
 .chapter-hero {
   position: relative;
   margin: 0 0 1.75rem;
   padding: 0 0 1.25rem;
   border-bottom: 1px solid var(--color-border);
 }
-/* When the chapter has a workshop-meta row immediately after the hero,
-   the meta row provides its own border-bottom — suppress the hero's so
-   the two don't stack as parallel lines. Bare chapters (no time / authors
-   / difficulty / tags) keep the hero border as the single divider. */
+/* Suppress hero border when a workshop-meta row follows — it has its own
+   border-bottom and the two would stack as parallel lines. */
 .chapter-hero:has(+ .workshop-meta) {
   border-bottom: none;
   margin-bottom: 0;
@@ -75,10 +78,8 @@
   -webkit-background-clip: text;
           background-clip: text;
   -webkit-text-fill-color: transparent;
-  /* Smooth opacity scale from ~0.12 on narrow viewports to ~0.18 on wide —
-     avoids the abrupt step the previous media-query-driven value produced.
-     `--weight-progress` is 1 at rest; the weight-bloom keyframe animates it
-     from 0 → 1 so the entrance fades + scales without snapping to opacity:1. */
+  /* `--weight-progress` is 1 at rest; weight-bloom animates 0 → 1 so the
+     entrance fades + scales without snapping to opacity:1. */
   --weight-progress: 1;
   opacity: calc(clamp(0.12, 0.06 + 0.6vw, 0.18) * var(--weight-progress));
   animation: weight-bloom 700ms var(--ease) both;
@@ -148,9 +149,6 @@
 .not-found__lead { margin-inline: auto; }
 .not-found__cta  { margin-top: 2rem; }
 
-/* Footer brand styling lives alongside the rest of the .site-footer rules
-   in layout.css now (kept here for any future overrides). */
-
 /* ---- Hero (home/section landing) ---- */
 .hero {
   position: relative;
@@ -198,11 +196,7 @@
   gap: 1.25rem;
   margin: 3rem 0;
 }
-/* ---- Categorized card grids ----
-   Used by the cards-by-category shortcode. Each <section.cards-category>
-   holds an <h2> + optional intro <p> + a .cards grid. Tighten the .cards
-   top/bottom margin when it's nested inside a category section so the
-   heading sits visually attached to its grid. */
+/* ---- Categorized card grids (cards-by-category shortcode) ---- */
 .cards-category {
   margin-block: 2.5rem;
 }
@@ -218,13 +212,13 @@
   margin: 1.25rem 0 0;
 }
 
+/* Hover ring: ::before paints the gradient, ::after masks it with a
+   paper inset 1px so only the rim shows. */
 .card {
   position: relative;
   display: flex;
   flex-direction: column;
   padding: 1.75rem 1.75rem 1.5rem;
-  /* Hover ring effect: ::before paints the gradient, ::after masks it
-     with paper inset 1px — only the 1px edge shows through. See below. */
   background: var(--color-paper);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
@@ -257,8 +251,6 @@
 .card:hover {
   transform: translateY(-3px);
   border-color: transparent;
-  /* Dual-layer magenta-tinted shadow — the lift feels intentional rather
-     than generic translateY+grey-shadow that ships with every Hugo theme. */
   box-shadow:
     0 10px 30px color-mix(in oklab, var(--color-accent) 16%, transparent),
     0 2px 8px color-mix(in oklab, var(--color-accent) 10%, transparent);
@@ -307,13 +299,8 @@
 .card__meta-item::before { content: ""; width: 4px; height: 4px; background: var(--color-accent); border-radius: 50%; }
 .card__meta-item:first-child::before { display: none; }
 
-/* Card hero — Lucide icon as a "featured image" at the top of an
-   auto-grid card. Opt-in via `icon = "name"` in a section's front
-   matter. No background tint, no border divider — the gradient icon
-   floats on the card's own surface so it pops against neutral
-   whitespace AND the hover ring (`::before` gradient masked by
-   `::after` paper inset) stays visible at the top edge. Matches the
-   matching `.shortcode-card__hero` treatment. */
+/* Card hero — opt-in Lucide icon at the top of an auto-grid card via
+   `icon = "name"` in section front matter. Matches .shortcode-card__hero. */
 .card__hero {
   display: grid;
   place-items: center;
@@ -333,11 +320,7 @@
   border: 0;
 }
 
-/* ---- Card completion tick — bare magenta check in the bottom-right
-   corner, sized to sit on the meta-row baseline so it reads as part
-   of the row rather than an oversized badge. Hidden by default; JS
-   adds `.is-complete` to reveal. Position aligns to each card family's
-   own padding so the tick lines up with the meta text's right edge. */
+/* ---- Card completion tick — JS adds .is-complete to reveal. */
 .card__check,
 .shortcode-card__check {
   display: none;
@@ -407,10 +390,8 @@
   border-color: var(--color-accent);
   color: var(--color-accent-text);
 }
-/* Colour-driven button — used by the relearn-compat path in button.html
-   when `style="blue|red|…"` or `color="#xyz"` is passed. Compact
-   rectangular chip styling to match relearn's inline button look, not
-   the big magenta-pill CTA the rest of .btn defaults to. */
+/* Colour-driven button (relearn-compat path in button.html). Compact
+   chip — not the big magenta-pill CTA the rest of .btn defaults to. */
 .btn--colored {
   background: var(--btn-color, var(--color-accent));
   color: #fff;
@@ -428,17 +409,14 @@
   filter: brightness(1.08);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.24);
 }
-/* Hide the auto-appended arrow on coloured chip buttons — relearn's
-   inline buttons don't have one and it makes the chip look like a CTA. */
+/* Coloured chip buttons skip the auto-arrow — relearn's don't have one. */
 .btn--colored .btn__arrow { display: none; }
 .btn__arrow { transition: transform var(--t-fast) var(--ease); }
 .btn:hover .btn__arrow { transform: translateX(2px); }
 
-/* ---- Inline buttons (relearn-compatible) ---------------------------------
-   Smaller, configurable button rendered by `{{< button >}}`. Default is a
-   neutral white/clear surface; opt into a coloured fill via style="primary"
-   / "success" / colour aliases, or use `color=`. The big Splunk gradient
-   pill lives on the `.btn--primary` class (rendered by `{{< cta >}}`). */
+/* ---- Inline buttons (relearn-compatible — {{< button >}}).
+   Default is neutral; .btn-inline--filled / --outline / --text are the
+   coloured variants. `{{< cta >}}` uses the bigger .btn--primary pill. */
 .btn-inline {
   display: inline-flex;
   align-items: center;
@@ -472,8 +450,7 @@
 .btn-inline__icon { display: inline-flex; align-items: center; }
 .btn-inline__icon svg { width: 0.95em; height: 0.95em; }
 
-/* Filled variant — applied when a colour is requested (style="primary",
-   semantic preset, colour alias, or explicit color=). */
+/* Filled variant — set when a colour is requested. */
 .btn-inline--filled {
   background: var(--btn-color, var(--color-accent));
   color: #fff;
@@ -488,8 +465,7 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.18);
 }
 
-/* Outlined variant — for style="secondary". Transparent fill with the
-   accent colour painting the border + label. */
+/* Outlined variant — style="secondary". */
 .btn-inline--outline {
   background: transparent;
   color: var(--btn-color, var(--color-accent-text));
@@ -504,7 +480,7 @@
   box-shadow: none;
 }
 
-/* Text-only variant — for style="transparent". No background, no border. */
+/* Text-only variant — style="transparent". */
 .btn-inline--text {
   background: transparent;
   color: var(--btn-color, var(--color-accent-text));
@@ -560,10 +536,8 @@
   font-size: 0.78rem;
   color: var(--color-ink-muted);
 }
-/* When the very next element in the article is an h2, it brings its own
-   top-border + gradient stripe (see typography.css h2 / h2::before).
-   Suppress this row's border-bottom + margin so the two dividers don't
-   stack as parallel lines. */
+/* Suppress border + margin when followed by h2 — h2 has its own
+   gradient stripe (see typography.css) and we don't want stacked dividers. */
 .workshop-meta:has(+ h2) {
   border-bottom: none;
   padding-bottom: 0.5rem;
@@ -657,9 +631,7 @@
   box-shadow: 0 0 16px var(--color-accent);
 }
 
-/* ---- Search trigger (header pill) ----
-   Reads as a BUTTON, not an input — body font for the label, brand-pink icon,
-   gradient ring on hover (like the primary CTAs). Click opens the modal. */
+/* ---- Search trigger (header pill — opens modal on click) ---- */
 .site-search-trigger {
   position: relative;
   display: inline-flex;
@@ -679,7 +651,7 @@
   min-width: 13.5rem;
   isolation: isolate;
 }
-/* Gradient ring on hover — same energy as the .card and .btn--primary effects */
+/* Gradient ring on hover (same trick as .card::before). */
 .site-search-trigger::before {
   content: "";
   position: absolute;
@@ -908,10 +880,7 @@
 .lightbox__close:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .lightbox__close svg { width: 1.25rem; height: 1.25rem; }
 
-/* ---- Keyboard-shortcuts help overlay ---------------------------------------
-   Triggered by the `?` key in keyboard-nav.js. Same backdrop / panel pattern
-   as `.site-search`, just sized for a static dialog. The `[hidden]` attribute
-   is the visibility hook; toggling it open/close is the JS's job. */
+/* ---- Keyboard-shortcuts help overlay (triggered by `?` in keyboard-nav.js). */
 .kbd-help[hidden] { display: none; }
 .kbd-help {
   position: fixed;
@@ -982,12 +951,8 @@
 }
 .kbd-help__close:hover { color: var(--color-ink); border-color: var(--color-border-strong); }
 
-/* The `P P` (presenter toggle) shortcut is internal to facilitators —
-   attendees should never see it advertised. Hide the row by default,
-   reveal only when presenter mode is currently active (presenter.js
-   sets data-presenter="true" on the root). The selectors need at
-   least (0,2,0) specificity to beat `.kbd-help__list > div`'s
-   `display: grid` cascade (0,1,1) — without that, the hide rule
-   loses to the parent grid rule and the row stays visible. */
+/* `P P` (presenter toggle) — facilitator-only, hidden unless presenter
+   mode is active. Selector specificity (0,2,0) beats the parent grid
+   rule's `display: grid` cascade — necessary to win. */
 .kbd-help__list .kbd-help__row--presenter { display: none; }
 [data-presenter="true"] .kbd-help__list .kbd-help__row--presenter { display: grid; }

@@ -190,13 +190,6 @@ pre code { background: transparent !important; padding: 0 !important; border: 0 
 
 /* ===== Splunk syntax theme — light ===== */
 :root {
-  /* Cool neutral grays — break the code surface out of the warm beige
-     family the rest of the light palette uses (paper, surface, border),
-     so the code block reads as a distinct first-class element against
-     the page paper rather than blending into it. Mirrors how dark mode's
-     code-bg sits a step deeper than its surrounding navy. */
-  --code-bg:        #EDF0F4;
-  --code-header-bg: #DEE4EC;
   --code-fg:        #1f2733;
   --code-comment:   #8a8b91;
   --code-keyword:   #FF007F;   /* Splunk Magenta 50 — official brand pink */
@@ -209,8 +202,6 @@ pre code { background: transparent !important; padding: 0 !important; border: 0 
   --code-op:        #4B4D52;
 }
 [data-theme="dark"] {
-  --code-bg:        #0A1322;
-  --code-header-bg: #131E33;
   --code-fg:        #d6d9df;
   --code-comment:   #6e7891;
   --code-keyword:   #FF007F;   /* Splunk Magenta 50 — same in both modes */

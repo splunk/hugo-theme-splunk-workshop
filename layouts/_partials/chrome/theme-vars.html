@@ -57,6 +57,14 @@
     --color-border:        {{ $p.colorBorder        | default "#E5E2DA" }};
     --color-border-strong: {{ $p.colorBorderStrong  | default "#D6D2C8" }};
 
+    /* Code-block surfaces — background of the code body and the header
+       strip. Other code tokens (fg, comment, keyword, etc.) stay in
+       code.css since they're a syntax-highlight palette tuned together. */
+    --code-bg:             {{ $p.codeBg             | default "#F5F5F5" }};
+    --code-header-bg:      {{ $p.codeHeaderBg       | default "#F2F2F2" }};
+    --code-bg-dark:        {{ $p.codeBgDark         | default "#0A1322" }};
+    --code-header-bg-dark: {{ $p.codeHeaderBgDark   | default "#131E33" }};
+
     /* Dark-tier tokens emitted at :root so components that are always dark
        (e.g. the site footer) can reference them regardless of theme mode. */
     --color-ink-dark:           {{ $p.colorInkDark           | default "#F4F1EA" }};
@@ -124,5 +132,7 @@
     --color-border:        var(--color-border-dark);
     --color-border-strong: var(--color-border-strong-dark);
     --color-accent-text:   {{ $p.colorAccentTextDark    | default "#FF7DBA" }};
+    --code-bg:             var(--code-bg-dark);
+    --code-header-bg:      var(--code-header-bg-dark);
   }
 </style>

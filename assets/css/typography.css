@@ -99,6 +99,9 @@ ol > li::marker { font-family: var(--font-mono); font-weight: 500; }
 
 /* ---- Strong, em, small ---- */
 strong, b { font-weight: 650; color: var(--color-ink); }
+/* Bold inside a link must inherit the link's color so the gradient-text
+   hover (and the rest-state accent) survives `**[link](url)**` markup. */
+a strong, a b { color: inherit; }
 em, i { font-style: italic; }
 small { font-size: var(--fs-sm); }
 
@@ -108,13 +111,13 @@ small { font-size: var(--fs-sm); }
   font-size: 0.875em;
   padding: 0.15em 0.4em;
   background: var(--color-surface-alt);
-  color: var(--color-accent-text);           /* AA-contrast Magenta 60 (light) / 30 (dark) */
+  color: var(--color-ink);
   border-radius: 4px;
   border: 1px solid var(--color-border);
   font-feature-settings: "calt" 0;
 }
 [data-theme="dark"] :not(pre):not(.terminal__body) > code {
-  color: var(--color-accent-text);
+  color: var(--color-ink);
   background: var(--color-surface);
 }
 /* Terminal's <code> wrapper must inherit cleanly */

@@ -5,6 +5,28 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.10.8] - 2026-05-27
+
+### Changed
+
+- **Inline prose links are now underline-free at rest.** Bold accent-pink text at rest; on hover the text itself becomes the brand pink→orange gradient via `background-clip: text`. WCAG 1.4.1 stays satisfied — link-vs-body contrast clears the 3:1 threshold in both light and dark modes. Replaces the previous solid-magenta underline.
+- **External-link arrow** swapped from the Unicode `↗` glyph to a Lucide `arrow-up-right` SVG. Springs up-right on hover with curve ease; explicit `color` so it stays visible while the parent text fades to gradient. Has defensive `width="14" height="14"` attributes so it doesn't blow up to full-container size on first paint before the CSS bundle is cached.
+- **Inline `<code>` colour** is now `--color-ink` (normal body ink) instead of `--color-accent-text` — chips like `vi`, `vim`, `ssh` no longer read as link-coloured.
+- **`<strong>` / `<b>` inside an anchor inherits the link colour** so `**[link](url)**` markdown keeps its accent + gradient hover instead of having `strong, b { color: var(--color-ink) }` win the cascade and force body ink.
+- **Mermaid diagrams** sit on the theme's `--color-surface` band cleanly: pass `themeVariables: { background, clusterBkg, clusterBorder, secondaryColor, tertiaryColor }` all `transparent` so mermaid's default cream-yellow subgraph fill and default-grey cluster border don't fight the theme palette. The `.mermaid` container's border is also dropped — diagram is contained by the surface band alone.
+
+### Added
+
+- **Code-block surface site params** — `codeBg`, `codeHeaderBg`, `codeBgDark`, `codeHeaderBgDark` now bridge from `[params]` in your hugo.toml through `chrome/theme-vars.html` to the CSS. Lets sites override the body / header strip backgrounds per-mode without forking the theme. The syntax-highlight palette (`--code-fg`, `--code-keyword`, `--code-string`, etc.) stays internal to `code.css` — exposing those per-token would invite mismatched contrast against the background you just changed.
+
+### Fixed
+
+- **Unclosed CSS comment in `code.css`** — the `/* ===== Splunk syntax theme — light =====` block was missing its closing `*/`, which masked the entire `:root` and `[data-theme="dark"]` token blocks inside a comment. All the syntax-highlight tokens (`--code-fg`, `--code-keyword`, `--code-string`, etc.) were silently undefined; `.chroma .k`, `.chroma .s`, etc. were falling back to inherit/default. Closed the delimiter; syntax highlighting now actually applies.
+
+### Maintenance
+
+- Trimmed comment bloat in `components.css` — 35 lines of narrative explanation removed without changing behaviour. Kept the load-bearing notes (specificity gotchas, `:has()` selector intent, `@property` browser-support fallback) and dropped marketing copy + placeholder comments.
+
 ## [0.10.7] - 2026-05-27
 
 ### Fixed

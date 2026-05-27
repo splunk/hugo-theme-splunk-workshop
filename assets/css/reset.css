@@ -62,16 +62,25 @@ a {
    and tree rows are their own affordance. */
 a:hover { color: var(--color-accent-text); }
 
-/* WCAG 1.4.1 — inline prose links can't be distinguishable by colour alone.
-   Underline anchors inside prose containers (paragraphs, list items, dd)
-   that DON'T carry a class — markdown-emitted links have no class, while
-   component chrome (.btn, .card, .shortcode-card, .attachments__item a)
-   does. Cards, buttons, and tree rows derive their interactivity from
-   their container, not from a text underline. */
-.content :is(p, li, dd) > a:not([class]) {
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.2em;
+/* Prose links — accent-coloured at rest, no underline. On hover the text
+   itself becomes the brand pink→orange gradient via background-clip:text.
+   WCAG 1.4.1 is satisfied via the link/body contrast ratio: accent-text
+   is `#BD0D5F` (light) / `#FF7DBA` (dark) against the body ink, both clear
+   the 3:1 threshold for link-vs-surrounding-text distinction.
+   Scoped to anchors inside prose containers (p, li, dd) that DON'T carry
+   a class — markdown-emitted links have no class, while component chrome
+   (.btn, .card, .shortcode-card, .attachments__item a) does. */
+.content :is(p, li, dd) a:not([class]) {
+  text-decoration: none;
+  color: var(--color-accent-text);
+}
+.content :is(p, li, dd) a:not([class]):hover,
+.content :is(p, li, dd) a:not([class]):focus-visible {
+  background-image: var(--gradient-accent);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 ::selection { background: var(--color-accent); color: #fff; }

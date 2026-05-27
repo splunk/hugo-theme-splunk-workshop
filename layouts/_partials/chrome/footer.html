@@ -87,7 +87,26 @@
     const themeFor = () => document.documentElement.dataset.theme === "dark" ? "dark" : "default";
     // `antiscript` matches relearn; allows <br>/<strong>/&nbsp; in labels
     // while still blocking <script> + click handlers.
-    const init = () => mermaid.initialize({ startOnLoad: false, theme: themeFor(), securityLevel: "antiscript" });
+    // themeVariables overrides:
+    //   background  — mermaid's SVG canvas (mostly white in default)
+    //   clusterBkg  — subgraph fill; default is cream-yellow #fff5ad which
+    //                 clashes with the cool-gray .mermaid container
+    //   secondaryColor / tertiaryColor — additional surface defaults
+    // All set transparent so the .mermaid container's --color-surface shows
+    // through. Node/edge colors stay theme-driven by mermaid's default/dark
+    // palette; classDef overrides in author content still win.
+    const init = () => mermaid.initialize({
+      startOnLoad: false,
+      theme: themeFor(),
+      securityLevel: "antiscript",
+      themeVariables: {
+        background:     "transparent",
+        clusterBkg:     "transparent",
+        clusterBorder:  "transparent",
+        secondaryColor: "transparent",
+        tertiaryColor:  "transparent",
+      },
+    });
 
     // Replace `lucide:NAME` and legacy `fa:fa-NAME` tokens in label text
     // with inline SVG. Done before the source stash so theme re-renders
