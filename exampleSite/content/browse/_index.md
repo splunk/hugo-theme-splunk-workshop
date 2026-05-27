@@ -6,8 +6,8 @@ weight: 5
 menu:
   main:
     weight: 5
-# Optional: pick/order categories explicitly. Omit to show all top-level
-# sections. Here we surface workshops + docs and skip snippets.
+# Optional ordered list of top-level sections to show as rows. Omit to
+# include every visible top-level section.
 browse_sections:
   - workshops
   - docs

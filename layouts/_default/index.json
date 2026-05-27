@@ -1,28 +1,24 @@
 {{- /*
-  Search index — emitted at /index.json on the home page.
-  Used by assets/js/search.js to power the in-header search box.
+  Search + browse index — emitted at /index.json on the home page.
+  Shape: { "pages": [...], "workshops": [...] }
 
-  The summary field uses .Content piped through plainify rather than
-  .Plain so that text emitted by shortcodes (tabs, cards, exercise,
-  terminal, …) is searchable. .Plain only covers raw markdown.
+  - pages:     per-page search entries (assets/js/search.js scoring).
+  - workshops: section-level browse entries grouped data for the search
+               overlay's empty-state "browse all" list and any future
+               consumer. Mirrors the browse page's category→workshop walk.
 
-  Performance: we truncate `.Content` (still HTML) to a generous
-  10000-char window BEFORE plainify so `plainify` only processes the
-  head of each page instead of the full rendered content. The
-  outer `truncate 4000 ""` then trims to the target plain-text size.
-  Trade-off: content past ~6KB of plain text isn't searchable. For
-  typical workshop pages (≤ 5KB prose) this matches the previous
-  output exactly; for very long pages it bounds the build cost
-  rather than scaling linearly with page length.
+  search.js stays backward-compatible: a bare array (older index) is read
+  as `pages`, an empty `workshops`.
+
+  Performance note on `summary`: `.Content` is truncated to a 10000-char
+  HTML window BEFORE plainify so plainify only processes the head of each
+  page; the outer `truncate 4000` trims to the target plain-text size.
 */ -}}
 {{- $pages := where site.RegularPages "Params.hidden" "!=" true -}}
-{{- $idx := slice -}}
+{{- $pageIdx := slice -}}
 {{- range $pages -}}
   {{- $section := "" -}}
   {{- with .CurrentSection }}{{ $section = .Title | markdownify | plainify }}{{ end -}}
-  {{- /* Search hits render the index entry as plain text. Pipe titles
-         through `markdownify | plainify` so markdown markers in titles
-         (e.g. `*foo*`) don't show as literal asterisks in results. */ -}}
   {{- $entry := dict
     "title"       ((.Title | default .LinkTitle) | markdownify | plainify)
     "linkTitle"   (.LinkTitle | markdownify | plainify)
@@ -32,6 +28,40 @@
     "tags"        (.Params.tags | default slice)
     "summary"     (.Content | truncate 10000 "" | plainify | truncate 4000 "")
   -}}
-  {{- $idx = $idx | append $entry -}}
+  {{- $pageIdx = $pageIdx | append $entry -}}
 {{- end -}}
-{{- $idx | jsonify -}}
+
+{{- /* Workshops: the site's top-level workshop collections (categories) —
+       NOT their inner workshops or pages. Mirrors the browse page and
+       honours the same `browse_sections`. Each entry's `lastmod` is the
+       latest git Lastmod among the workshops it contains, and `count` is
+       how many workshops it holds. Used by the search overlay's empty
+       state as a jump-to-area list. */ -}}
+{{- $browse := false -}}
+{{- range site.Pages -}}{{- if eq .Layout "browse" -}}{{- $browse = . -}}{{- end -}}{{- end -}}
+{{- $categories := slice -}}
+{{- with $browse -}}
+  {{- with .Params.browse_sections -}}
+    {{- range . -}}{{- with site.GetPage (printf "/%s" .) -}}{{- $categories = $categories | append . -}}{{- end -}}{{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- if not $categories -}}
+  {{- $categories = partial "workshop/visible-pages.html" site.Home.Sections -}}
+{{- end -}}
+{{- $wsIdx := slice -}}
+{{- range $cat := $categories -}}
+  {{- $roots := partial "browse/roots-in.html" $cat -}}
+  {{- $latest := $cat.Lastmod -}}
+  {{- range $roots -}}{{- if .Lastmod.After $latest }}{{ $latest = .Lastmod }}{{ end -}}{{- end -}}
+  {{- $ws := dict
+    "title"       ($cat.LinkTitle | markdownify | plainify)
+    "description" $cat.Description
+    "url"         $cat.RelPermalink
+    "lastmod"     $latest.Unix
+    "icon"        ($cat.Params.icon | default "")
+    "count"       (len $roots)
+  -}}
+  {{- $wsIdx = $wsIdx | append $ws -}}
+{{- end -}}
+
+{{- dict "pages" $pageIdx "workshops" $wsIdx | jsonify -}}

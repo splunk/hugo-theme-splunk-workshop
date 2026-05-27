@@ -1,0 +1,28 @@
+{{- /*
+  Collect workshop-root sections within a given section, at any depth.
+  A "workshop root" is the topmost NON-hero section in a branch — the unit
+  that opens a sidebar + pager scope (same definition as
+  workshop/workshop-root.html). Hero sections (`layout = "hero"` or legacy
+  `hub = true`) are category hubs: we descend through them and keep
+  looking; the first non-hero section IS a workshop and we stop (we do
+  NOT list its inner pages — that's the workshop's content).
+
+  Recursive: calls itself to walk through nested hero hubs (e.g.
+  ninja-workshops → foundations → … → a workshop). Returns a flat slice
+  of workshop-root pages.
+
+  Usage:  {{ $roots := partial "browse/roots-in.html" $categorySection }}
+*/ -}}
+{{- $section := . -}}
+{{- $out := slice -}}
+{{- range $section.Sections -}}
+  {{- if ne (.Params.hidden | default false) true -}}
+    {{- $isHero := or (eq .Layout "hero") (eq (.Params.hub | default false) true) -}}
+    {{- if $isHero -}}
+      {{- range (partial "browse/roots-in.html" .) -}}{{- $out = $out | append . -}}{{- end -}}
+    {{- else -}}
+      {{- $out = $out | append . -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $out -}}

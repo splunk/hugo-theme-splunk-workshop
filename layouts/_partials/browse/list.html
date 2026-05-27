@@ -1,20 +1,21 @@
 {{- /*
-  Browse ("See all") body — a single directory of every workshop,
-  grouped by category, driven by the same card-parsing logic the home
-  grid uses (workshop/visible-pages.html). Rendered as rows, not cards.
+  Browse ("See all") body — a directory of the site's top-level workshop
+  collections (categories), each as one high-level row: title, description,
+  workshop count, and latest activity. It does NOT drill into a section to
+  list its workshops or pages; each row links to the section hub where the
+  existing card grid takes over.
 
   Front matter on the browse page:
-    browse_sections = ["ninja-workshops", "scenarios", …]
-        Optional. Explicit ordered category paths. Falls back to all
-        visible top-level sections. Mirrors `home_sections`.
+    browse_sections = ["workshops", "scenarios", …]
+        Optional ordered list of top-level sections to show. Omit to show
+        every visible top-level section.
 
-  Recency: a "Recently updated" rail (top 3 by git Lastmod) leads; each
-  row also carries its own Updated-age. All recency keys off Lastmod,
-  never front-matter dates.
+  Recency: a "Recently updated" rail surfaces the few workshops that
+  changed most recently (a jump shortcut), keyed off git Lastmod — never
+  front-matter dates. Each row's own age is the latest Lastmod within it.
 */ -}}
 {{- $p := site.Params -}}
 
-{{- /* Categories: explicit browse_sections, else all visible top sections. */ -}}
 {{- $categories := slice -}}
 {{- with .Params.browse_sections -}}
   {{- range . -}}
@@ -24,14 +25,13 @@
   {{- $categories = partial "workshop/visible-pages.html" site.Home.Sections -}}
 {{- end -}}
 
-{{- /* Per-category workshop items (mirrors cards-auto-grid: .Sections when
-       the category sets `subsections`, else .Pages). Flatten for the rail. */ -}}
-{{- $all := slice -}}
+{{- /* All workshops (leaf roots) across the listed categories — for the
+       recency rail and per-category counts/latest-activity. */ -}}
+{{- $allRoots := slice -}}
 {{- range $categories -}}
-  {{- $src := cond (eq (.Params.subsections | default false) true) .Sections .Pages -}}
-  {{- range (partial "workshop/visible-pages.html" $src) -}}{{- $all = $all | append . -}}{{- end -}}
+  {{- range (partial "browse/roots-in.html" .) -}}{{- $allRoots = $allRoots | append . -}}{{- end -}}
 {{- end -}}
-{{- $recent := first 3 (sort $all "Lastmod" "desc") -}}
+{{- $recent := first 3 (sort $allRoots "Lastmod" "desc") -}}
 
 <main>
   <div class="page page--narrow page--small-pad-top">
@@ -39,12 +39,12 @@
       <div class="browse__head">
         <div class="browse__title-row">
           <h1 class="browse__title">{{ .Title }}</h1>
-          <span class="browse__count">{{ i18n "browseCount" (dict "Workshops" (len $all) "Categories" (len $categories)) | default (printf "%d workshops · %d categories" (len $all) (len $categories)) }}</span>
+          <span class="browse__count">{{ i18n "browseCount" (dict "Workshops" (len $allRoots) "Categories" (len $categories)) | default (printf "%d workshops · %d categories" (len $allRoots) (len $categories)) }}</span>
         </div>
         {{- with .Content }}<div class="browse__intro">{{ . }}</div>{{ end }}
         <label class="browse__filter">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="search" data-browse-filter placeholder="{{ i18n "browseFilter" | default "Filter workshops by name, topic, or difficulty…" }}" aria-label="{{ i18n "browseFilter" | default "Filter workshops" }}">
+          <input type="search" data-browse-filter placeholder="{{ i18n "browseFilter" | default "Filter…" }}" aria-label="{{ i18n "browseFilter" | default "Filter" }}">
         </label>
       </div>
 
@@ -58,30 +58,21 @@
           {{- range $recent }}
           <a class="recent__chip" href="{{ .RelPermalink }}">
             <span class="recent__chip-title">{{ .LinkTitle }}</span>
-            <span class="recent__chip-meta">{{ with .CurrentSection }}{{ .LinkTitle }} · {{ end }}{{ i18n "updatedLabel" | default "Updated" | lower }} {{ partial "browse/reltime.html" .Lastmod }}</span>
+            <span class="recent__chip-meta">{{ with .FirstSection }}{{ .LinkTitle }} · {{ end }}{{ i18n "updatedLabel" | default "Updated" | lower }} {{ partial "browse/reltime.html" .Lastmod }}</span>
           </a>
           {{- end }}
         </div>
       </div>
       {{- end }}
 
-      {{- range $cat := $categories }}
-        {{- $src := cond (eq ($cat.Params.subsections | default false) true) $cat.Sections $cat.Pages -}}
-        {{- $items := partial "workshop/visible-pages.html" $src -}}
-        {{- if $items }}
-        <section class="cat" data-browse-cat>
-          <div class="cat__head">
-            <span class="cat__dot" aria-hidden="true"></span>
-            <h2 class="cat__name">{{ $cat.LinkTitle }}</h2>
-            <span class="cat__count">{{ i18n "pagesCount" (dict "Count" (len $items)) }}</span>
-          </div>
-          {{- with $cat.Description }}<p class="cat__desc">{{ . }}</p>{{ end }}
-          {{- range $items }}
-            {{ partial "browse/row.html" (dict "page" .) }}
-          {{- end }}
-        </section>
+      <div class="browse__list" data-browse-list>
+        {{- range $cat := $categories }}
+          {{- $roots := partial "browse/roots-in.html" $cat -}}
+          {{- $latest := $cat.Lastmod -}}
+          {{- range $roots }}{{- if .Lastmod.After $latest }}{{ $latest = .Lastmod }}{{ end -}}{{- end }}
+          {{ partial "browse/row.html" (dict "page" $cat "count" (len $roots) "lastmod" $latest) }}
         {{- end }}
-      {{- end }}
+      </div>
 
       <p class="browse__empty" data-browse-empty hidden>{{ i18n "searchEmpty" | default "No matches" }}</p>
     </div>

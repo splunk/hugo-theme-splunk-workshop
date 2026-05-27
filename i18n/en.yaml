@@ -34,6 +34,10 @@
   translation: "Filter workshops by name, topic, or difficulty…"
 - id: browseCount
   translation: "{{ .Workshops }} workshops · {{ .Categories }} categories"
+- id: workshopsCount
+  translation:
+    one: "{{ .Count }} workshop"
+    other: "{{ .Count }} workshops"
 - id: pagesCount
   translation:
     one: "{{ .Count }} page"
