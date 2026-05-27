@@ -5,6 +5,12 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.10.6] - 2026-05-27
+
+### Fixed
+
+- **Mermaid diagrams inside `{{% notice %}}` (and any other percent-form callout) double-encoded their arrows**, producing `Lexical error … unexpected token --&gt;` at runtime. Goldmark runs callouts' inner content through a second markdown pass via `.Page.RenderString` (so authors can use inline markdown inside callouts). When the rendered `<pre class="mermaid">` block contained a blank line, Goldmark terminated the type-1 HTML block at the gap — a known divergence from CommonMark, which says type-1 blocks (`<pre>`, `<script>`, `<style>`, `<textarea>`) continue until the matching closing tag. The diagram content after the blank line then got re-parsed as an indented code block, wrapping it in a fresh `<pre><code>` and HTML-escaping it a second time. `--&gt;` became `--&amp;gt;` and mermaid's lexer saw the literal entity instead of an arrow. Fix: both `layouts/_default/_markup/render-codeblock.html` and `layouts/shortcodes/mermaid.html` now collapse consecutive newlines in the diagram source (`replaceRE \n\s*\n → \n`). Mermaid treats blank lines as no-ops so the diagram renders identically — only the rendered HTML changes. Existing diagrams keep their authoring whitespace intact in source; the collapse happens only in the emitted HTML.
+
 ## [0.10.5] - 2026-05-27
 
 ### Added

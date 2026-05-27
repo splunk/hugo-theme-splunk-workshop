@@ -11,6 +11,9 @@
   from textContent and breaking mermaid's parser. Same approach as relearn.
 */ -}}
 {{- .Page.Store.Set "_needs_mermaid" true -}}
+{{- /* Collapse blank lines — see layouts/_default/_markup/render-codeblock.html
+       for why (Goldmark's second-pass HTML-block parser terminates at one). */ -}}
+{{- $inner := trim .Inner "\n\r" | replaceRE `\n\s*\n` "\n" -}}
 <pre class="mermaid">
-{{- trim .Inner "\n\r" | htmlEscape | safeHTML -}}
+{{- $inner | htmlEscape | safeHTML -}}
 </pre>

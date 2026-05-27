@@ -7,11 +7,11 @@
 {{- $lang := or .Type "text" -}}
 
 {{- if eq $lang "mermaid" -}}
-  {{- /* Output shape mirrors layouts/shortcodes/mermaid.html — see there
-         for the htmlEscape rationale. */ -}}
+
   {{- .Page.Store.Set "_needs_mermaid" true -}}
+  {{- $inner := trim .Inner "\n\r" | replaceRE `\n\s*\n` "\n" -}}
 <pre class="mermaid">
-{{- trim .Inner "\n\r" | htmlEscape | safeHTML -}}
+{{- $inner | htmlEscape | safeHTML -}}
 </pre>
 {{- else -}}
   {{- $file := .Attributes.file -}}
