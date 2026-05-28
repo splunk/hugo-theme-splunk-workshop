@@ -96,10 +96,39 @@ Hugo doesn't validate the URLs — if you ship a typo, the icon still renders bu
 
 ## OG / Twitter card image
 
-The theme auto-emits OpenGraph and Twitter card meta tags using your site title and description. To set a social-share image, drop one at `static/images/og.png` (1200×630 is the canonical size) and override `_partials/head.html` to add:
+The theme auto-emits OpenGraph and Twitter card meta tags using your site title and description. To set a social-share image, drop one at `static/images/og.png` (1200×630 is the canonical size) and add a `custom-header.html` override (see below) that emits:
 
 ```html
 <meta property="og:image" content="{{ "images/og.png" | absURL }}">
 ```
 
 This isn't wired by default because OG images are usually per-page; future versions of the theme will probably expose `params.ogImage` for site-wide and `params.image` per-page.
+
+## Injecting tags into `<head>`
+
+For analytics scripts, RUM agents, extra meta tags, or anything else you'd normally paste into `<head>`, the theme provides a single override hook:
+
+```text
+layouts/_partials/custom-header.html
+```
+
+Create this file in your **own** site (not the theme), at exactly that path — `_partials/`, **not** `_partials/chrome/`. The theme's bundled [`layouts/_partials/chrome/head.html`](https://github.com/splunk/hugo-theme-splunk-workshop/blob/main/layouts/_partials/chrome/head.html) calls `{{ partial "custom-header.html" . }}` near the end of `<head>`, after the theme's own CSS/JS but before `</head>`, so your tags fire on every page without you having to fork `head.html`.
+
+```html
+{{/* layouts/_partials/custom-header.html in your own site */}}
+
+<!-- Splunk RUM -->
+<script src="https://cdn.signalfx.com/o11y-gdi-rum/v1.4.0/splunk-otel-web.js" crossorigin="anonymous"></script>
+<script>
+  SplunkRum.init({ realm: "us0", rumAccessToken: "{{ getenv "RUM_TOKEN" }}", applicationName: "{{ site.Title }}" });
+</script>
+
+<!-- OG image -->
+<meta property="og:image" content="{{ "images/og.png" | absURL }}">
+```
+
+The partial receives the current page as its context (`.`), so you can branch on URL, language, kind, or any front-matter param — useful for per-page OG images, scoping a script to a single section, etc. If the file doesn't exist in your site, Hugo silently emits nothing — no warnings, no errors.
+
+{{< notice warning "Path matters" >}}
+The hook is **`_partials/custom-header.html`**, not `_partials/chrome/custom-header.html`. A file at the latter path will not be picked up. Earlier theme versions documented the wrong path — if you have an existing override at `chrome/custom-header.html` that "stopped working", move it up one level.
+{{< /notice >}}

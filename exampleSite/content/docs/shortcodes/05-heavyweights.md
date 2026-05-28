@@ -43,15 +43,67 @@ graph LR
   C --> D[Dashboard]
 {{< /mermaid >}}
 
+Three equivalent ways to author a diagram:
+
 ```markdown
 {{</* mermaid */>}}
 graph LR
   A[Forwarder] --> B[Indexer]
-  B --> C[Search Head]
 {{</* /mermaid */>}}
 ```
 
-Mermaid auto-rerenders when you toggle light/dark mode — a `MutationObserver` on `data-theme` triggers a re-init. Same lazy-load pattern: only pages using the shortcode pull the module.
+```markdown
+{{%/* mermaid */%}}
+graph LR
+  A[Forwarder] --> B[Indexer]
+{{%/* /mermaid */%}}
+```
+
+````markdown
+```mermaid
+graph LR
+  A[Forwarder] --> B[Indexer]
+```
+````
+
+The angle-bracket shortcode (`{{</* mermaid */>}}`) is the most predictable form — Hugo passes `.Inner` through untouched. The percent form (`{{%/* mermaid */%}}`) lets the inner block participate in markdown so it survives being nested inside other percent-form shortcodes (e.g. `{{%/* notice */%}}`); the theme strips the blank lines Goldmark would otherwise treat as HTML-block terminators. The fenced `​```mermaid` block is registered through the theme's code-block render hook — convenient if your editor highlights mermaid in fenced blocks and you prefer to avoid shortcode syntax altogether.
+
+Mermaid auto-rerenders when you toggle light/dark mode — a `MutationObserver` on `data-theme` triggers a re-init. Same lazy-load pattern: only pages using one of the three forms pull the module.
+
+### Icons inside diagrams
+
+Labels can reference any icon in [`data/icons.toml`](https://github.com/splunk/hugo-theme-splunk-workshop/blob/main/data/icons.toml) using a `lucide:NAME` token. The theme substitutes the token with inline SVG before mermaid renders, so the diagram ships with vector icons without any external font load.
+
+{{< mermaid >}}
+graph LR
+  A["lucide:download Collector"] --> B["lucide:cpu Processor"]
+  B --> C["lucide:upload Backend"]
+{{< /mermaid >}}
+
+```markdown
+{{</* mermaid */>}}
+graph LR
+  A["lucide:download Collector"] --> B["lucide:cpu Processor"]
+  B --> C["lucide:upload Backend"]
+{{</* /mermaid */>}}
+```
+
+For migrating diagrams that still use Font Awesome syntax, the same substitution accepts `fa:fa-NAME` and maps a small set of common aliases (`fa-download` → `download`, `fa-upload` → `upload`, `fa-microchip` → `cpu`, `fa-route` → `route`). Unknown FA names pass through untouched; the diagram still renders, just without the icon.
+
+Tune the icon size site-wide via:
+
+```toml
+[params]
+  mermaidIconSize = 24   # default; pixels
+```
+
+### Security mode and HTML in labels
+
+The theme sets mermaid's `securityLevel: "antiscript"`. This matches relearn's default and allows `<br>`, `<strong>`, `<em>`, `&nbsp;`, and similar inline HTML in node labels (useful for line breaks and emphasis inside diagrams) while still blocking `<script>` tags and click handlers via mermaid's bundled DOMPurify. If you need a stricter or looser mode, the only place to change it is in [`layouts/_partials/chrome/footer.html`](https://github.com/splunk/hugo-theme-splunk-workshop/blob/main/layouts/_partials/chrome/footer.html) — there's no site param for it (mermaid only sets the policy once at init time, so swapping it dynamically per page isn't useful).
+
+### Background and theming
+
+Mermaid normally paints its own canvas (white in default theme, dark slate in dark) plus a cream-yellow cluster fill (`#fff5ad`) for subgraphs. The theme overrides all four surface tokens (`background`, `clusterBkg`, `clusterBorder`, `secondaryColor`, `tertiaryColor`) to `transparent` so the diagram sits on the page's own `--color-surface` rather than introducing a fifth surface tint. Node and edge colors stay theme-driven by mermaid's default/dark palette; your `classDef` overrides in author content still win.
 
 ## Embedded video
 

@@ -1,4 +1,21 @@
 {{ define "main" }}
+{{- /* Opt-in legacy redirect: catches `/…/latest/<rest>` URLs that 404 today
+       (from an older version of the site that used a `/latest/` segment)
+       and rewrites them to the canonical path. Runs FIRST so the redirect
+       fires before the 404 content paints. Gated on a site param so a
+       brand-new site with no legacy URLs pays nothing.
+       Single replacement (not /g) — a real page whose path coincidentally
+       contains "/latest/" downstream is left alone. */ -}}
+{{ if site.Params.legacyLatestRedirect }}
+<script>
+  (function () {
+    var p = location.pathname;
+    if (p.indexOf("/latest/") !== -1) {
+      location.replace(p.replace("/latest/", "/") + location.search + location.hash);
+    }
+  })();
+</script>
+{{ end }}
 <main class="page page--narrow" style="text-align:center; padding-top:8rem; padding-bottom:6rem;">
   <p class="eyebrow eyebrow--center">{{ i18n "notFoundEyebrow" }}</p>
   <h1 class="hero__title gradient-text not-found__title">{{ i18n "notFoundTitle" }}</h1>

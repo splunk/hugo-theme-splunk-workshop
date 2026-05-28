@@ -96,3 +96,35 @@ Then:
 That's the entire model.
 
 {{< checkpoint "You can predict where any page appears in the nav" >}}
+
+## Opt-in: a "See all" directory page
+
+For sites with many workshops across several categories, a single browse page at `/browse/` lists every workshop in one place — grouped by top-level category, with title + description + last-updated time per workshop, a "Recently updated" rail at the top, and a live client-side filter. Each row links to the workshop itself; chapter pages stay hidden behind that link (clicking enters the workshop where the existing pager takes over).
+
+Create `content/<lang>/browse/_index.md` (or `content/browse/_index.md` on a single-language site):
+
+```toml
++++
+title       = "All Workshops"   # markdownified — `All *Workshops*` renders the italic word as gradient
+description = "Every workshop in one place."
+layout      = "browse"
+weight      = 5
+[menu.main]
+  weight = 5
+
+# Optional: nominate which top-level sections to surface (and in what order).
+# Omit to auto-include every visible top-level section that contains at
+# least one workshop.
+browse_sections = ["workshops", "scenarios", "docs"]
++++
+```
+
+`layout = "browse"` is what activates the directory view; without it, the page falls back to the normal section layout. The `[menu.main]` block adds it to the header navigation.
+
+**Granularity.** A "workshop" here means a leaf workshop root — the topmost non-hero section in a branch. Category hubs (`layout = "hero"`) are descended through; their child workshops surface as rows. Chapter pages within a workshop are never listed individually.
+
+**Recently updated rail.** The three most recently changed workshops (by git Lastmod) show as chips at the top. This requires `enableGitInfo = true` in your `hugo.toml` — without it, every page reports the same zero timestamp and the rail picks arbitrary entries.
+
+**Search overlay integration.** The header's `/` search overlay reads the same data: with no query, its empty state shows the same categories as a jump-to-area list.
+
+**Excluded automatically.** Sections with `layout = "browse"` (the See-all page itself) and sections that contain zero workshops are skipped from the auto-detected category list, so you never see an empty heading or a self-reference.
