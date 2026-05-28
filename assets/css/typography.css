@@ -269,12 +269,20 @@ dd { margin-inline-start: 1rem; color: var(--color-ink-muted); }
   max-width: 42ch;
 }
 
-/* ---- Gradient text utility ---- */
+/* ---- Gradient text utility ----
+   `padding-bottom: 0.1em`: with text-fill-color transparent and
+   background-clip:text, descenders (g, p, y, q, j) that extend below the
+   element's padding box render invisible — the gradient isn't painted
+   there, so there's no fill to reveal. Extending the paint area down by
+   0.1em covers every common descender at every font size without
+   visibly affecting layout. For inline usages padding-bottom doesn't
+   participate in line-box height calc so neighbours don't shift. */
 .gradient-text {
   background: var(--gradient-accent);
   -webkit-background-clip: text;
           background-clip: text;
   -webkit-text-fill-color: transparent;
+  padding-bottom: 0.1em;
 }
 
 /* Italics inside DISPLAY headings get the brand gradient — the same accent
@@ -298,7 +306,13 @@ dd { margin-inline-start: 1rem; color: var(--color-ink-muted); }
           background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: 500;
+  /* padding-right covers the italic slant of the trailing letter
+     ("Workshops" → s); padding-bottom covers descenders (italic g/p/y/q
+     extend below baseline, otherwise clip when text-fill-color is
+     transparent). Negative margin pulls the next sibling back so visual
+     spacing stays unchanged on inline use. */
   padding-right: 0.2em;
+  padding-bottom: 0.1em;
   margin-right: -0.15em;
 }
 

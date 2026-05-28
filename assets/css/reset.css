@@ -81,6 +81,11 @@ a:hover { color: var(--color-accent-text); }
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
+  /* descenders (g, p, y, q, j) clip when text-fill-color is transparent
+     because the gradient isn't painted below the padding box. Small
+     padding-bottom on hover covers them without shifting line layout
+     (inline padding doesn't participate in line-box height). */
+  padding-bottom: 0.05em;
 }
 
 ::selection { background: var(--color-accent); color: #fff; }

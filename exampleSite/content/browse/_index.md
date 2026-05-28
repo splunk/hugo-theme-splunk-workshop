@@ -1,5 +1,6 @@
 ---
-title: All Workshops
+title: All *Workshops*
+linkTitle: All Workshops
 description: Every workshop in one place — grouped by category, newest changes first.
 layout: browse
 weight: 5
