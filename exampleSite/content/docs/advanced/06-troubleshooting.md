@@ -48,7 +48,7 @@ After a build, `index.json` should exist at the published site root. Hit it dire
 
 **Cause.** The `<script>` that reads the persisted theme preference from localStorage runs too late — after the CSS has already applied the default-light tokens.
 
-**Fix.** The bundled `layouts/_partials/head.html` puts the theme-init script *before* the stylesheet `<link>` to avoid this. If you've overridden `head.html` in your own site, replicate that order:
+**Fix.** The bundled `layouts/_partials/chrome/head.html` puts the theme-init script *before* the stylesheet `<link>` to avoid this. If you've overridden `head.html` in your own site, replicate that order:
 
 ```html
 <script>
@@ -128,6 +128,42 @@ See [Authoring › Front matter › Home page hero](../../authoring/01-front-mat
 **Cause.** The print stylesheet is loaded but a downstream override or a custom partial is forcing `display` values that survive the print media query.
 
 **Fix.** The bundled `assets/css/print.css` hides `.site-header`, `.sidebar`, `.toc`, `.pager`, `.site-search-trigger`, and `.site-footer__social`. If you've added your own UI chrome, add a `@media print { .your-class { display: none !important; } }` rule.
+
+## Bookmarked `/latest/…` URLs from an older site version 404
+
+**Symptom.** A user follows an external link like `https://example.com/repo/latest/en/foo/` and lands on the themed 404 page. Removing `/latest/` from the URL (so `https://example.com/repo/en/foo/`) works.
+
+**Cause.** A previous version of the site used a `/latest/` segment in the URL scheme (e.g. for a versioned-docs setup) that the current site doesn't. External bookmarks and search-engine results still point at the old paths.
+
+**Fix.** Opt into the bundled 404-page redirect that detects `/…/latest/<rest>` paths and `location.replace`s to `/…/<rest>`:
+
+```toml
+[params]
+  legacyLatestRedirect = true
+```
+
+Then re-deploy. The redirect lives inside `layouts/404.html`, runs immediately on script parse (before the 404 content paints), and is gated on this param so sites without legacy `/latest/` URLs pay nothing. The substitution is a single `String.replace("/latest/", "/")` — a real page whose path coincidentally contains `/latest/` further down (`/x/latest/y/`) is left alone.
+
+The 404 page is GitHub Pages' standard catch-all (it's served for any unknown path under your repo), so this approach handles every legacy URL with one file — no per-page `aliases:` front matter required.
+
+## Themed 404 doesn't show on `/<lang>/something-bogus` (multilingual + subdir)
+
+**Symptom.** Visiting `https://owner.github.io/repo/en/foo` (an unknown path under a language prefix) shows the platform's plain `text/plain` 404 fallback. Locally, `hugo server` renders the themed 404 fine. `https://owner.github.io/repo/en/404.html` (the direct URL) also works.
+
+**Cause.** On a site with `defaultContentLanguageInSubdir = true`, Hugo emits `/en/404.html` and `/ja/404.html` (one per language) but **no** language-neutral `/404.html` at the site root. GitHub Pages, Netlify, Cloudflare Pages, and the like only serve the catch-all 404 from the root of the published site — they don't know to look at `/en/404.html` for an unknown path under `/en/`.
+
+**Fix.** Add a post-build step that copies one language's 404 to the root:
+
+```yaml
+- name: Promote themed 404 to repo root
+  run: cp public/en/404.html public/404.html
+```
+
+The themed page references its assets via absolute paths (`/<repo>/css/…`), so the copy renders correctly from the root and looks identical to the per-language pages. Pick the language that best fits a fallback for unknown URLs (English is the usual choice).
+
+{{< notice warning "Never add `404.<lang>.html`" >}}
+A file at `layouts/404.en.html` or `layouts/404.ja.html` is **not** the way to customise the 404. Hugo treats those as per-language overrides and they don't change the root-404 problem; worse, an editor accidentally creating one of them can suppress the page entirely. Keep `layouts/404.html` as the only template and fix the root file at the build step.
+{{< /notice >}}
 
 ## Need more help?
 

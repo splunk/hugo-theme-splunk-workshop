@@ -32,7 +32,7 @@
        enough visual weight on their own; semantic heading status is
        unnecessary and would clutter both the page outline and the
        right-rail TOC. */ -}}
-<p class="step__title">{{ $title }}</p>
+<p class="step__title">{{ $title | markdownify }}</p>
 {{- with $time }}<span class="step__time">{{ . }}</span>{{ end }}
 </header>
 <div class="step__body">{{ $body }}</div>

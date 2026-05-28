@@ -24,6 +24,20 @@
   translation: "Keyboard shortcuts"   # header `?` button label + dialog title
 - id: categoryOther
   translation: "Other"                # cards-by-category fallback bucket title
+- id: recentlyUpdated
+  translation: "Recently updated"      # browse page — rail heading
+- id: updatedLabel
+  translation: "Updated"               # browse row — git-Lastmod recency badge/age
+- id: newLabel
+  translation: "New"                   # browse row — opt-in `new = true` badge
+- id: browseFilter
+  translation: "Filter workshops by name, topic, or difficulty…"
+- id: browseCount
+  translation: "{{ .Workshops }} workshops · {{ .Categories }} categories"
+- id: workshopsCount
+  translation:
+    one: "{{ .Count }} workshop"
+    other: "{{ .Count }} workshops"
 - id: pagesCount
   translation:
     one: "{{ .Count }} page"

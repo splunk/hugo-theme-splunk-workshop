@@ -31,6 +31,14 @@ Steps are the backbone of any procedure...
 
 The third positional arg is an optional time hint that renders next to the step title. Omit it for steps that aren't time-bounded.
 
+The title accepts inline markdown — `**bold**`, `*emphasis*`, `` `code` ``, and links — so you can format file names or commands directly in the title:
+
+```markdown
+{{</* step "Open **agent.yaml** and add a `batch` processor" "3" "2 min" */>}}
+…
+{{</* /step */>}}
+```
+
 ## Exercise + Solution
 
 The `exercise` shortcode is the canonical way to mark a hands-on task. It renders a scoped frame with a full-bleed pink→orange gradient header bar — `◎ EXERCISE · Title` in mono caps — over a panel containing the task itself. The gradient bar is the brand-marker; no left-border accent needed. Visually distinct from a `notice` (which is informational only): the gradient bar reads as "do this thing" before the reader even gets to the title. Use it when the section *is something the reader does*.

@@ -74,6 +74,32 @@ Every light token has a `…Dark` counterpart that takes effect when `data-theme
 | `colorBorderDark` | `#1F2C44` |
 | `colorBorderStrongDark` | `#2A3A56` |
 
+## Code-block surfaces
+
+Fenced code blocks render inside a chrome with a header bar (language label or `file=…` attribute, plus the Copy button) over the highlighted body. Each surface is its own param so you can match the rest of your design.
+
+```toml
+[params]
+  codeBg           = "#F5F5F5"   # body background, light
+  codeHeaderBg     = "#F2F2F2"   # header bar background, light
+  codeBgDark       = "#0A1322"   # body background, dark
+  codeHeaderBgDark = "#131E33"   # header bar background, dark
+```
+
+The defaults sit one step off the page paper / surface tokens so a code block reads as "embedded panel" rather than blending into the page. If you want them flatter, set them to your `colorSurface` and `colorSurfaceAlt` values; for sharper contrast, push them further from paper.
+
+## Italic in display headings becomes the brand gradient
+
+Markdown emphasis inside the hero title, the browse-page h1, and the See-all category names renders as the pink→orange gradient instead of plain italic. So a front-matter title like:
+
+```toml
+hero_title = "Observability *Workshops*."
+```
+
+…outputs `Observability` in normal weight and `Workshops` in lighter italic gradient. The pattern is reserved for **display** headings (decorative, large-type) — workshop body `##` / `###` headings still treat `*italic*` as plain emphasis so authors can use it for file names, technical terms, etc., without the brand colour overriding them.
+
+Templates that want this opt in by piping the title through `markdownify`. The bundled `hero.html`, `browse/list.html`, and `browse/row.html` already do.
+
 ## Worked example: rebrand to a teal/charcoal palette
 
 ```toml
@@ -105,8 +131,8 @@ Run your accent through [oklch.com](https://oklch.com) or Tailwind's color palet
 The flow is:
 
 1. Param value lives in `hugo.toml` (this is what you edit).
-2. `layouts/_partials/theme-vars.html` reads the param and emits a `<style>` block with `--color-…` custom properties.
+2. `layouts/_partials/chrome/theme-vars.html` reads the param and emits a `<style>` block with `--color-…` custom properties.
 3. Every CSS file in `assets/css/` references `var(--color-…)`.
 4. Dark mode flips the values via `[data-theme="dark"]` selectors.
 
-If you want to add a new color, add the param + a default in `theme-vars.html`, then reference `var(--color-mything)` from CSS.
+If you want to add a new color, add the param + a default in `chrome/theme-vars.html`, then reference `var(--color-mything)` from CSS.

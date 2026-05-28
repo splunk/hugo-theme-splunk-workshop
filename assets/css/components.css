@@ -169,14 +169,13 @@ a:focus-visible .link-ext { opacity: 1; transform: translate(2px, -2px); }
   margin: 0.75rem 0 1.5rem;
   animation: reveal-up 580ms var(--ease) 80ms both;
 }
+/* Hero-size padding override — base gradient + weight come from
+   typography.css's `.hero__title em` rule. Hero type is much larger,
+   so the slanted trailing letter overflows further; override just the
+   `padding-right` + compensating `margin-right`. */
 .hero__title em {
-  font-style: italic;
-  font-weight: 500;
-  background: var(--gradient-accent);
-  -webkit-background-clip: text;
-          background-clip: text;
-  -webkit-text-fill-color: transparent;
-  padding-right: 0.05em;
+  padding-right: 0.25em;
+  margin-right: -0.2em;
 }
 .hero__lead {
   font-size: var(--fs-lg);
@@ -747,6 +746,38 @@ a:focus-visible .link-ext { opacity: 1; transform: translate(2px, -2px); }
   color: var(--color-ink-muted);
   font-family: var(--font-mono);
   font-size: 0.85rem;
+}
+
+/* Empty-query browse state — category dividers + a hint line, plus the
+   New/Updated recency badges carried over from the browse page. */
+.site-search__hint {
+  padding: 0.5rem 0.95rem 0.35rem;
+  font-family: var(--font-mono); font-size: 0.7rem;
+  color: var(--color-ink-muted); letter-spacing: 0.02em;
+}
+.site-search__cat {
+  display: flex; align-items: center; gap: 0.45rem;
+  padding: 0.7rem 0.95rem 0.3rem;
+  font-family: var(--font-mono); font-size: 0.62rem; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+.site-search__cat::before {
+  content: ""; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--gradient-accent);
+}
+.site-search__result-title {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+}
+.site-search__badge {
+  font-family: var(--font-mono); font-size: 0.55rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  border-radius: 999px; padding: 0.08rem 0.45rem;
+}
+.site-search__badge--new { color: #fff; background: var(--gradient-accent); }
+.site-search__badge--updated {
+  color: var(--color-accent-text);
+  border: 1px solid color-mix(in oklab, var(--color-accent) 45%, transparent);
 }
 
 .site-search__footer {

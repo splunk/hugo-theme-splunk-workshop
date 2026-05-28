@@ -1,0 +1,17 @@
+{{- /*
+  Relative-time string from a time value. Input is `.` (a time.Time,
+  typically `.Lastmod` which comes from git when enableGitInfo is on —
+  format-independent, unlike front-matter dates). Returns a short label:
+  today / yesterday / N days ago / Nw ago / Nmo ago / Ny ago.
+
+  Usage:  {{ partial "browse/reltime.html" .Lastmod }}
+*/ -}}
+{{- $hours := (now.Sub .).Hours -}}
+{{- $days := int (div $hours 24) -}}
+{{- if lt $days 1 -}}today
+{{- else if eq $days 1 -}}yesterday
+{{- else if lt $days 7 -}}{{ $days }} days ago
+{{- else if lt $days 30 -}}{{ int (div $days 7) }}w ago
+{{- else if lt $days 365 -}}{{ int (div $days 30) }}mo ago
+{{- else -}}{{ int (div $days 365) }}y ago
+{{- end -}}

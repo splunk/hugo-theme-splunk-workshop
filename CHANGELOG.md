@@ -5,6 +5,29 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.11.0] - 2026-05-28
+
+### Added
+
+- **"See all" workshop directory page** (closes #3). Opt in by creating `content/<lang>/browse/_index.md` with `layout: browse` and (optionally) `browse_sections` to nominate which top-level sections to surface and in what order. The page groups every workshop by category — title + description + last-updated time per workshop, a "Recently updated" rail at the top, and a live client-side filter. Granularity: a "workshop" is a leaf workshop-root (hero hubs are descended through). Chapter pages stay hidden behind the workshop link. The header's `/` search overlay reads the same data: with no query, its empty state shows the categories as a jump-to-area list.
+- **Italic gradient on display headings.** Markdown `*italic*` inside the hero title, the See-all browse h1, and category names renders as the pink→orange gradient instead of plain italic. Scoped to display headings only — workshop body `##` / `###` keep emphasis as plain italic so file names like `*agent.yaml*` aren't recoloured. Titles must pipe through `markdownify` to opt in (`hero.html`, `browse/list.html`, `browse/row.html` already do); the `step` shortcode now does the same for step titles.
+- **`legacyLatestRedirect` site param.** Opt-in on the themed 404 page: detects `/…/latest/<rest>` URLs (from sites that previously used a `/latest/` segment in their URL scheme) and `location.replace`s to `/…/<rest>` before the 404 content paints. One file catches every legacy URL — no per-page `aliases:` front matter required. Gated on a param so brand-new sites pay nothing.
+- **Code-block surface params** (`codeBg`, `codeHeaderBg`, `codeBgDark`, `codeHeaderBgDark`). Each code-block surface (body, header bar, dark variants) is now a Hugo param so consumers can match their own design without forking CSS. Defaults sit one step off the page paper / surface tokens so a code block reads as "embedded panel" rather than blending into the page.
+
+### Documentation
+
+- **Mermaid section rewrite** (`shortcodes/05-heavyweights.md`). Documents the three authoring forms (`{{< mermaid >}}`, `{{% mermaid %}}`, fenced ` ```mermaid `), the `lucide:NAME` + `fa:fa-NAME` icon substitution, the `mermaidIconSize` param, the `securityLevel: "antiscript"` policy, and the transparent surface overrides.
+- **`custom-header.html` override hook** is now documented (`customizing/03-logos.md`), with a warning callout about the canonical path (`_partials/custom-header.html`, NOT `_partials/chrome/…`).
+- **See-all browse page** documented in `authoring/03-navigation.md`.
+- **Two new troubleshooting entries**: missing themed 404 on `defaultContentLanguageInSubdir` sites (needs a CI `cp public/<lang>/404.html public/404.html` step — GitHub Pages only serves the catch-all from repo root) and the legacy `/latest/…` URL pattern.
+- **Stale partial paths fixed** in `colors.md`, `fonts.md`, `logos.md`, and `troubleshooting.md` (paths gained the `chrome/` subdir in earlier releases; docs didn't follow).
+
+### Fixed
+
+- **Browse-page filter silently did nothing.** `.ws-row { display: grid }` was beating the UA `[hidden] { display: none }` rule, so `r.hidden = true` left rows visible. Added an explicit `.ws-row[hidden] { display: none }` override.
+- **Row descriptions ignored `max-width`.** The markup is `<span>` (kept inline so it stays inside the wrapping `<a>`); `max-width` only applies to blocks. Set `display: block` so the constraint takes effect. Both `.cat__desc` and `.ws-row__desc` now wrap at 70ch.
+- **Italic letters clipped by `background-clip:text`.** Italic glyphs slant past their inline box; the trailing letter (e.g. the "s" in "Workshops") got cut. Pad the box wider and pull the next sibling back with negative margin so visual spacing is unchanged.
+
 ## [0.10.10] - 2026-05-27
 
 ### Changed

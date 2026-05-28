@@ -14,6 +14,7 @@
 import { lock, unlock } from "./scroll-lock.js";
 
 let INDEX = null;
+let WORKSHOPS = [];
 let INDEX_LOADING = null;
 
 async function loadIndex() {
@@ -28,11 +29,33 @@ async function loadIndex() {
   const url = document.querySelector('meta[name="search-index-url"]')?.content
               || "/index.json";
   INDEX_LOADING = fetch(url, { credentials: "same-origin" })
-    .then(r => r.ok ? r.json() : [])
-    .then(data => { INDEX = Array.isArray(data) ? data : []; return INDEX; })
-    .catch(() => { INDEX = []; return INDEX; });
+    .then(r => r.ok ? r.json() : {})
+    .then(data => {
+      // New shape: { pages, workshops }. Old shape: a bare array (= pages).
+      if (Array.isArray(data)) { INDEX = data; WORKSHOPS = []; }
+      else {
+        INDEX = Array.isArray(data.pages) ? data.pages : [];
+        WORKSHOPS = Array.isArray(data.workshops) ? data.workshops : [];
+      }
+      return INDEX;
+    })
+    .catch(() => { INDEX = []; WORKSHOPS = []; return INDEX; });
   return INDEX_LOADING;
 }
+
+// Relative time from a Unix-seconds timestamp (workshop .lastmod). Mirrors
+// the browse/reltime.html partial so the overlay and page agree.
+function relTime(unix) {
+  if (!unix) return "";
+  const days = Math.floor((Date.now() / 1000 - unix) / 86400);
+  if (days < 1) return "today";
+  if (days === 1) return "yesterday";
+  if (days < 7) return days + " days ago";
+  if (days < 30) return Math.floor(days / 7) + "w ago";
+  if (days < 365) return Math.floor(days / 30) + "mo ago";
+  return Math.floor(days / 365) + "y ago";
+}
+const isRecent = (unix) => unix && (Date.now() / 1000 - unix) < 14 * 86400;
 
 function tokenize(q) {
   return q.toLowerCase().split(/\s+/).filter(Boolean);
@@ -143,7 +166,9 @@ export function initSearch() {
       modal.addEventListener("click", (e) => { if (e.target === modal) close(); });
     }
     lastTrigger = trigger || document.activeElement;
-    loadIndex();
+    // Once the index resolves, render the browse-all list if the user
+    // hasn't started typing — the empty state is a workshop directory.
+    loadIndex().then(() => { if (isOpen && !input.value.trim()) renderEmptyState(); });
     modal.classList.add("is-open");
     input.setAttribute("aria-expanded", "true");
     lock();
@@ -181,14 +206,36 @@ export function initSearch() {
     }
   };
 
+  // Empty-query state = "browse all areas" — the top-level workshop
+  // collections (categories), one per row, as a jump-to-area shortcut.
+  // Reuses `.site-search__result` so arrow-key nav + Enter work unchanged.
+  const renderEmptyState = () => {
+    empty.hidden = true;
+    if (!WORKSHOPS.length) { results.innerHTML = ""; return; }
+    let html = `<li class="site-search__hint" role="presentation">Browse all areas — type to search every page</li>`;
+    WORKSHOPS.forEach((w, i) => {
+      const badge = isRecent(w.lastmod)
+        ? `<span class="site-search__badge site-search__badge--updated">Updated</span>` : "";
+      const count = w.count ? `${w.count} workshop${w.count === 1 ? "" : "s"} · ` : "";
+      html += `
+        <li>
+          <a class="site-search__result ${i === 0 ? "is-active" : ""}" href="${w.url}" id="site-search-opt-${i}" role="option" aria-selected="${i === 0 ? "true" : "false"}">
+            <span class="site-search__result-title">${escapeHtml(w.title)}${badge}</span>
+            <span class="site-search__result-section">${count}updated ${relTime(w.lastmod)}</span>
+            ${w.description ? `<span class="site-search__result-desc">${escapeHtml(w.description)}</span>` : ""}
+          </a>
+        </li>`;
+    });
+    results.innerHTML = html;
+    activeIdx = 0;
+    const first = results.querySelector(".site-search__result");
+    if (first) input.setAttribute("aria-activedescendant", first.id);
+  };
+
   const onQuery = (q) => {
     const terms = tokenize(q);
+    if (!q.trim()) { renderEmptyState(); return; }
     lastResults = search(q);
-    if (!q.trim()) {
-      results.innerHTML = "";
-      empty.hidden = true;
-      return;
-    }
     if (!lastResults.length) {
       results.innerHTML = "";
       empty.hidden = false;
