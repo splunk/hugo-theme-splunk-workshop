@@ -51,11 +51,17 @@
 - id: chapter
   translation: "Chapter"
 - id: notFoundTitle
-  translation: "Not found."
+  translation: "This page has no trace."
 - id: notFoundLead
-  translation: "The page you’re looking for slipped through the index. Try the workshops list."
+  translation: "We searched every metric, log, and span for this URL — nothing matched. The workshops list, however, is well-instrumented."
 - id: notFoundEyebrow
-  translation: "404 · Lost in the data stream"
+  translation: "404 · No span found"
+- id: notFoundQueryLabel
+  translation: "query"                 # 404 page — left column of the fake-query panel
+- id: notFoundResultLabel
+  translation: "result"
+- id: notFoundResultValue
+  translation: "0 events in the last 30 days"
 - id: takeMeHome
   translation: "Take me home"
 - id: browseWorkshops
