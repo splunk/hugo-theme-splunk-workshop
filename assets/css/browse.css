@@ -97,6 +97,7 @@
 .cat__name a:hover {
   background: var(--gradient-accent); -webkit-background-clip: text;
   background-clip: text; -webkit-text-fill-color: transparent;
+  padding-bottom: 0.08em;  /* covers descender clip on hover (e.g. "Topology") */
 }
 .cat__count { font-family: var(--font-mono); font-size: 0.72rem; color: var(--color-ink-muted); }
 .cat__desc { padding: 0 1.75rem 0.5rem; color: var(--color-ink-muted); font-size: 0.88rem; max-width: 70ch; margin: 0; }
@@ -135,6 +136,7 @@
 .ws-row:hover .ws-row__title {
   background: var(--gradient-accent); -webkit-background-clip: text;
   background-clip: text; -webkit-text-fill-color: transparent;
+  padding-bottom: 0.08em;  /* covers descender clip on hover (e.g. "Lambda Tracing") */
 }
 .ws-row__badge {
   font-family: var(--font-mono); font-size: 0.6rem; font-weight: 700;
