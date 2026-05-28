@@ -5,6 +5,16 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.11.3] - 2026-05-28
+
+### Fixed
+
+- **Descender clipping on every gradient-clip-text surface.** `background-clip: text` with `text-fill-color: transparent` only paints the gradient inside the element's padding box. Descenders (g, p, y, q, j) that extend below the baseline render invisible — the gradient isn't there to reveal, the glyph itself is transparent, so the bottom of the letter looks cropped. Reported on the new 404 page heading ("This page has no trace." — the `g` in "page" was clipped). Audit found four other rules with the same latent bug: `.hero__title em` / `.browse__title em` / `.cat__name em` (italic gradient on display headings), `.cat__name a:hover` (browse category hover), `.ws-row:hover .ws-row__title` (browse workshop hover), and the prose link hover. All five now have a small `padding-bottom` (0.05–0.1em depending on context) so the painted area covers descenders. Padding-bottom on inline elements doesn't participate in line-box height, so neighbouring text doesn't shift on hover.
+
+### Changed
+
+- `exampleSite/content/browse/_index.md` now uses the italic-gradient pattern (`title: "All *Workshops*"` + `linkTitle: "All Workshops"`) to demo the v0.11.0 italic-display-heading feature in the bundled example. The menu entry keeps the plain-text name via `linkTitle`.
+
 ## [0.11.2] - 2026-05-28
 
 ### Added
