@@ -5,6 +5,12 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.11.1] - 2026-05-28
+
+### Fixed
+
+- **Header menu produced doubled URLs for page-backed entries on subpath baseURLs.** A menu entry added via a page's front-matter `[menu.main]` block (introduced for the new `/browse/` page in 0.11.0) reports `.URL` as the page's `RelPermalink` — which is already an absolute path including the baseURL prefix and language subdir. The header template was piping that through `site-href.html`, which stripped the leading slash and re-applied `relLangURL`, producing URLs like `/<basepath>/<lang>/<basepath>/<lang>/<page>/` — a 404 on the production deploy. Now switches on `.Page` presence: `.RelPermalink` directly for page-backed entries, site-href only for URL-only entries (defined in `hugo.toml` with `url =`). Surfaces on any consuming site with a non-root baseURL (GitHub Pages project pages, any subpath deploy). The exampleSite uses a root baseURL, which is why local testing didn't catch it.
+
 ## [0.11.0] - 2026-05-28
 
 ### Added
