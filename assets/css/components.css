@@ -149,6 +149,48 @@ a:focus-visible .link-ext { opacity: 1; transform: translate(2px, -2px); }
 .not-found__lead { margin-inline: auto; }
 .not-found__cta  { margin-top: 2rem; }
 
+/* Fake "query result" panel — populated by the inline JS in layouts/404.html.
+   Visual treatment is the code-block surface (--code-bg/--code-header-bg)
+   so it reads as a console output, not chrome. Inline-grid + max-width
+   keeps it from stretching across the centered page. */
+.not-found__query {
+  display: inline-grid;
+  gap: 0.35rem 1.25rem;
+  margin: 2rem auto 0;
+  padding: 0.85rem 1.25rem;
+  background: var(--code-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  text-align: start;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.4;
+  max-width: min(48rem, 90vw);
+}
+.not-found__query-row {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 1rem;
+  align-items: baseline;
+}
+.not-found__query-key {
+  color: var(--color-ink-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.72rem;
+}
+.not-found__query-val {
+  margin: 0;
+  color: var(--color-ink);
+  word-break: break-all;     /* long paths shouldn't blow out the panel */
+}
+.not-found__query-val code {
+  background: none;
+  padding: 0;
+  color: var(--color-accent-text);
+  font-size: inherit;
+}
+
 /* ---- Hero (home/section landing) ---- */
 .hero {
   position: relative;
