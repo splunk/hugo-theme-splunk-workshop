@@ -46,11 +46,15 @@
   {{- end -}}
 {{- end -}}
 {{- if not $categories -}}
-  {{- $categories = partial "workshop/visible-pages.html" site.Home.Sections -}}
+  {{- range (partial "workshop/visible-pages.html" site.Home.Sections) -}}
+    {{- if and (ne .Layout "browse") (gt (len (partialCached "browse/roots-in.html" . .Path)) 0) -}}
+      {{- $categories = $categories | append . -}}
+    {{- end -}}
+  {{- end -}}
 {{- end -}}
 {{- $wsIdx := slice -}}
 {{- range $cat := $categories -}}
-  {{- $roots := partial "browse/roots-in.html" $cat -}}
+  {{- $roots := partialCached "browse/roots-in.html" $cat $cat.Path -}}
   {{- $latest := $cat.Lastmod -}}
   {{- range $roots -}}{{- if .Lastmod.After $latest }}{{ $latest = .Lastmod }}{{ end -}}{{- end -}}
   {{- $ws := dict

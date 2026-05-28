@@ -16,7 +16,9 @@
 {{- $section := . -}}
 {{- $out := slice -}}
 {{- range $section.Sections -}}
-  {{- if ne (.Params.hidden | default false) true -}}
+  {{- /* `layout: browse` is the See-all page itself — never list it as a
+         workshop. `hidden: true` opts pages out site-wide. */ -}}
+  {{- if and (ne (.Params.hidden | default false) true) (ne .Layout "browse") -}}
     {{- $isHero := or (eq .Layout "hero") (eq (.Params.hub | default false) true) -}}
     {{- if $isHero -}}
       {{- range (partial "browse/roots-in.html" .) -}}{{- $out = $out | append . -}}{{- end -}}

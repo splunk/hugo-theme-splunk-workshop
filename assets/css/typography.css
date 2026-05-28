@@ -277,6 +277,31 @@ dd { margin-inline-start: 1rem; color: var(--color-ink-muted); }
   -webkit-text-fill-color: transparent;
 }
 
+/* Italics inside DISPLAY headings get the brand gradient — the same accent
+   treatment as the hero ("Observability *Workshops*."). Scoped to specific
+   display headings so workshop body `##`/`###` headings that happen to
+   contain italics (e.g. file names) keep emphasis without the brand color
+   overriding it. Templates pipe titles through `markdownify` so authors
+   can write `*Workshops*` in front matter.
+   `font-weight: 500` is the only weight override (em is already italic by
+   UA default — no need to re-state). `padding-right` + negative
+   `margin-right`: italic glyphs slant past their inline box, and
+   `background-clip: text` only paints inside the element box; without the
+   pad, the trailing letter's right edge (the curve of "s" in "Workshops")
+   gets clipped. The negative margin pulls the next sibling back so visual
+   spacing stays unchanged. */
+.hero__title em,
+.browse__title em,
+.cat__name em {
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 500;
+  padding-right: 0.2em;
+  margin-right: -0.15em;
+}
+
 /* ---- Eyebrow / kicker ---- */
 .eyebrow {
   display: inline-flex;

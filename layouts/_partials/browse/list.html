@@ -1,9 +1,10 @@
 {{- /*
-  Browse ("See all") body — a directory of the site's top-level workshop
-  collections (categories), each as one high-level row: title, description,
-  workshop count, and latest activity. It does NOT drill into a section to
-  list its workshops or pages; each row links to the section hub where the
-  existing card grid takes over.
+  Browse ("See all") body — a directory of the site's workshops, grouped by
+  top-level category. Each category is a heading + list of its workshops
+  (title, description, last activity). Workshops are LEAF workshop-roots
+  (workshop/workshop-root.html's definition): the topmost non-hero section
+  in a branch. We deliberately do NOT list chapter pages within a workshop
+  — clicking a row enters the workshop where the existing pager takes over.
 
   Front matter on the browse page:
     browse_sections = ["workshops", "scenarios", …]
@@ -12,33 +13,45 @@
 
   Recency: a "Recently updated" rail surfaces the few workshops that
   changed most recently (a jump shortcut), keyed off git Lastmod — never
-  front-matter dates. Each row's own age is the latest Lastmod within it.
+  front-matter dates.
 */ -}}
 {{- $p := site.Params -}}
 
 {{- $categories := slice -}}
 {{- with .Params.browse_sections -}}
+  {{- /* Explicit author list — respect ordering and include empty sections
+         (the author asked). Only skip the /browse/ page itself, which
+         would be a degenerate self-reference. */ -}}
   {{- range . -}}
-    {{- with site.GetPage (printf "/%s" .) -}}{{- $categories = $categories | append . -}}{{- end -}}
+    {{- with site.GetPage (printf "/%s" .) -}}
+      {{- if ne .Layout "browse" -}}{{- $categories = $categories | append . -}}{{- end -}}
+    {{- end -}}
   {{- end -}}
 {{- else -}}
-  {{- $categories = partial "workshop/visible-pages.html" site.Home.Sections -}}
+  {{- /* Auto-include all visible top-level sections; skip the /browse/
+         page itself so the See-all directory doesn't list itself, and
+         skip sections that contain no workshops (roots-in returns []). */ -}}
+  {{- range (partial "workshop/visible-pages.html" site.Home.Sections) -}}
+    {{- if and (ne .Layout "browse") (gt (len (partialCached "browse/roots-in.html" . .Path)) 0) -}}
+      {{- $categories = $categories | append . -}}
+    {{- end -}}
+  {{- end -}}
 {{- end -}}
 
 {{- /* All workshops (leaf roots) across the listed categories — for the
        recency rail and per-category counts/latest-activity. */ -}}
 {{- $allRoots := slice -}}
 {{- range $categories -}}
-  {{- range (partial "browse/roots-in.html" .) -}}{{- $allRoots = $allRoots | append . -}}{{- end -}}
+  {{- range (partialCached "browse/roots-in.html" . .Path) -}}{{- $allRoots = $allRoots | append . -}}{{- end -}}
 {{- end -}}
 {{- $recent := first 3 (sort $allRoots "Lastmod" "desc") -}}
 
 <main>
-  <div class="page page--narrow page--small-pad-top">
+  <div class="page page--narrow">
     <div class="browse">
       <div class="browse__head">
         <div class="browse__title-row">
-          <h1 class="browse__title">{{ .Title }}</h1>
+          <h1 class="browse__title">{{ .Title | markdownify }}</h1>
           <span class="browse__count">{{ i18n "browseCount" (dict "Workshops" (len $allRoots) "Categories" (len $categories)) | default (printf "%d workshops · %d categories" (len $allRoots) (len $categories)) }}</span>
         </div>
         {{- with .Content }}<div class="browse__intro">{{ . }}</div>{{ end }}
@@ -66,11 +79,23 @@
       {{- end }}
 
       <div class="browse__list" data-browse-list>
+        {{- /* Roots come back in section iteration order (by weight, the
+               normal Hugo default) — same ordering used in card grids and
+               sidebars, so authors who set `weight:` on a workshop see it
+               applied here too. */ -}}
         {{- range $cat := $categories }}
-          {{- $roots := partial "browse/roots-in.html" $cat -}}
-          {{- $latest := $cat.Lastmod -}}
-          {{- range $roots }}{{- if .Lastmod.After $latest }}{{ $latest = .Lastmod }}{{ end -}}{{- end }}
-          {{ partial "browse/row.html" (dict "page" $cat "count" (len $roots) "lastmod" $latest) }}
+          {{- $roots := partialCached "browse/roots-in.html" $cat $cat.Path }}
+          <section class="cat" data-browse-cat>
+            <header class="cat__head">
+              <span class="cat__dot" aria-hidden="true"></span>
+              <h2 class="cat__name"><a href="{{ $cat.RelPermalink }}">{{ $cat.LinkTitle }}</a></h2>
+              <span class="cat__count">{{ i18n "workshopsCount" (dict "Count" (len $roots)) | default (printf "%d workshops" (len $roots)) }}</span>
+            </header>
+            {{- with $cat.Description }}<p class="cat__desc">{{ . }}</p>{{ end }}
+            {{- range $roots }}
+              {{ partial "browse/row.html" (dict "page" . "lastmod" .Lastmod) }}
+            {{- end }}
+          </section>
         {{- end }}
       </div>
 

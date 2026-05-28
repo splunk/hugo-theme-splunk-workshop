@@ -1,18 +1,16 @@
 {{- /*
-  One row in the browse ("See all") list. A row is a top-level SECTION
-  (a category / workshop collection) — title, description, how many
-  workshops it contains, and when it last changed. We never drill into a
-  section to list its workshops or pages — the row links to the section's
-  own hub where the existing card grid takes over.
+  One row in the browse ("See all") list. Renders a workshop entry — title,
+  description, and last activity — linking to the workshop's own root. When
+  used for a category index row, pass `count` to surface a "N workshops"
+  meta line.
 
   Args (dict):
-    page    (required) — the section page.
-    count   (required) — number of workshops within (browse/roots-in.html).
-    lastmod (required) — latest activity in the section (a time.Time;
-                         max Lastmod across its workshops, git-derived).
+    page    (required) — the page to render (workshop root or section).
+    lastmod (required) — last-activity time.Time (git-derived).
+    count   (optional) — number of workshops within; omit/0 to hide.
 */ -}}
 {{- $page := .page -}}
-{{- $count := .count -}}
+{{- $count := .count | default 0 -}}
 {{- $lastmod := .lastmod -}}
 {{- $recentlyUpdated := lt (int (div (now.Sub $lastmod).Hours 24)) 14 -}}
 <a class="ws-row" href="{{ $page.RelPermalink }}">
@@ -25,9 +23,11 @@
       {{- if $recentlyUpdated }}<span class="ws-row__badge ws-row__badge--updated">{{ i18n "updatedLabel" | default "Updated" }}</span>{{ end }}
     </span>
     {{- with $page.Description }}<span class="ws-row__desc">{{ . }}</span>{{ end }}
+    {{- if gt $count 0 }}
     <span class="ws-row__meta">
-      {{- if gt $count 0 }}<span>{{ i18n "workshopsCount" (dict "Count" $count) | default (printf "%d workshops" $count) }}</span>{{ end }}
+      <span>{{ i18n "workshopsCount" (dict "Count" $count) | default (printf "%d workshops" $count) }}</span>
     </span>
+    {{- end }}
   </span>
   <span class="ws-row__updated">{{ i18n "updatedLabel" | default "Updated" }} <strong>{{ partial "browse/reltime.html" $lastmod }}</strong></span>
 </a>

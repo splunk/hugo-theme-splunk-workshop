@@ -169,14 +169,13 @@ a:focus-visible .link-ext { opacity: 1; transform: translate(2px, -2px); }
   margin: 0.75rem 0 1.5rem;
   animation: reveal-up 580ms var(--ease) 80ms both;
 }
+/* Hero-size padding override — base gradient + weight come from
+   typography.css's `.hero__title em` rule. Hero type is much larger,
+   so the slanted trailing letter overflows further; override just the
+   `padding-right` + compensating `margin-right`. */
 .hero__title em {
-  font-style: italic;
-  font-weight: 500;
-  background: var(--gradient-accent);
-  -webkit-background-clip: text;
-          background-clip: text;
-  -webkit-text-fill-color: transparent;
-  padding-right: 0.05em;
+  padding-right: 0.25em;
+  margin-right: -0.2em;
 }
 .hero__lead {
   font-size: var(--fs-lg);
