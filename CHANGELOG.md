@@ -5,6 +5,14 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.11.2] - 2026-05-28
+
+### Added
+
+- **404 page reframed in observability language.** Title is now `This page has no trace.` (was `Not found.`), eyebrow is `404 · No span found`, lead reads `We searched every metric, log, and span for this URL — nothing matched. The workshops list, however, is well-instrumented.` Jargon is limited to "trace" / "span" — they read as English even to a non-observability visitor, so the joke doesn't lock out casual users.
+- **Fake-query result panel on the 404 page.** A small monospaced panel under the lead surfaces the visitor's actual path as a "query" that returned `0 events in the last 30 days`. Path is populated by an inline 4-line script (`location.pathname + location.search`); panel is `hidden` at first paint and unhides only once filled, so without JS the page just shows heading + lead + CTA — no awkward empty panel. Uses the existing `--code-bg` / `--color-border` tokens so consuming sites inherit their own code-block colours automatically.
+- **Three new i18n keys** (`notFoundQueryLabel`, `notFoundResultLabel`, `notFoundResultValue`) so consumers can override the joke or translate the panel without forking the template.
+
 ## [0.11.1] - 2026-05-28
 
 ### Fixed
