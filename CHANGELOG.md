@@ -5,6 +5,28 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.11.4] - 2026-05-29
+
+### Security
+
+- **`badge` shortcode: allow-list custom `color=` values before inline-style interpolation.** `safeCSS` marks a value as trusted but doesn't validate it; an unguarded `color="red;background:url(evil)"` would inject extra CSS declarations into the badge's `style` attribute. Now restricted to a conservative char-set (hex, named colours, `rgb()` / `hsl()` / `var()` / `calc()` syntax) — failing values fall back to `currentColor` so the badge degrades safely instead of rendering attacker-controlled CSS. Same defence as `textcolor.html`.
+
+### Fixed
+
+- **Quiz option markers stopped at F.** The `quiz` shortcode used a hard-coded `slice "A" "B" "C" "D" "E" "F"` to label options, so a 7th option rendered an empty marker. Now generates the letter from the index (`printf "%c" (add 65 $i)`) — quizzes scale to any reasonable number of options.
+
+### Accessibility
+
+- **Browse-page filter empty state is announced to screen readers.** `.browse__empty` now carries `role="status" aria-live="polite"`, so when a query goes from hits to no-hits, assistive tech announces "No matches" instead of silently leaving the user wondering whether the input was registered. Sighted users see no visual change.
+
+### Documentation
+
+- **i18n catalog updated** with the new `notFound*` keys introduced in 0.11.2 — `notFoundEyebrow`, `notFoundQueryLabel`, `notFoundResultLabel`, `notFoundResultValue` — plus a short paragraph on what each drives so consumers know what they're overriding when they retheme the 404.
+- **Tabs**: documented the label / `icon=` arguments on `tab` (the per-tab affordances, not just the wrapping `tabs` block).
+- **Math**: documented the `align="left|center|right"` argument on the `math` shortcode.
+- **Utilities**: rounded out `attachments` / `children` / `include` / `textcolor` docs (sort and icon args on `attachments`; `type` / `image` / `showhidden` / `notime` on `children`; `hidefirstheading` on `include`; `font` / `weight` plus the input-validation note on `textcolor`).
+- **`otel-version`**: corrected the param location — reads `Site.Params.stableOtelVersion` (top-level `[params]`), not `params.splunk.*`. Renders nothing if unset rather than failing the build.
+
 ## [0.11.3] - 2026-05-28
 
 ### Fixed
