@@ -99,7 +99,7 @@
         {{- end }}
       </div>
 
-      <p class="browse__empty" data-browse-empty hidden>{{ i18n "searchEmpty" | default "No matches" }}</p>
+      <p class="browse__empty" data-browse-empty role="status" aria-live="polite" hidden>{{ i18n "searchEmpty" | default "No matches" }}</p>
     </div>
   </div>
 </main>

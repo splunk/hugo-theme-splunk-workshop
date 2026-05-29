@@ -227,18 +227,19 @@ For content the reader **must not skim past** — instructor-only steps, configu
 1. **An inline orange-banded block** that stays in the page for later reference.
 2. **A native `<dialog>` modal** that pops on first page-load and can only be dismissed by clicking the "I understand" button. ESC is blocked; the backdrop swallows clicks. Once acknowledged, the modal stays closed on every subsequent visit.
 
-{{< acknowledge "Only need 1 integration" >}}
-Rather than each attendee setting this up, watch your instructor perform the following steps.
+{{< acknowledge "Example acknowledgement" >}}
+This is an example of an acknowledge block. On a real workshop page, the modal blocks the content until you click **I understand** — so reach for it when a step genuinely must not be skipped.
 
-You will continue performing steps on the next page.
+Click **I understand** to accept and continue reading.
 {{< /acknowledge >}}
 
 ```markdown
-{{</* acknowledge "Only need 1 integration" */>}}
-Rather than each attendee setting this up, watch your instructor perform
-the following steps.
+{{</* acknowledge "Example acknowledgement" */>}}
+This is an example of an acknowledge block. On a real workshop page, the
+modal blocks the content until you click **I understand** — so reach for it
+when a step genuinely must not be skipped.
 
-You will continue performing steps on the next page.
+Click **I understand** to accept and continue reading.
 {{</* /acknowledge */>}}
 ```
 
@@ -349,4 +350,4 @@ A label that tells Splunk how to parse the events in a feed (e.g. `access_combin
 {{</* details summary="What is a sourcetype?" name="qa" */>}}...{{</* /details */>}}
 ```
 
-`expand` is a single collapsible. `details` with the same `name` form a radio group — opening one closes the others.
+`expand` is a single collapsible. `details` with the same `name` form a radio group — opening one closes the others. Pass `open="true"` to either to render it expanded by default.

@@ -26,6 +26,14 @@ e^{i\pi} + 1 = 0
 
 The shortcode wraps your LaTeX in `$$ … $$` (display mode) and flags the page so KaTeX is loaded from CDN in the footer. Pages without a `math` shortcode pay zero cost.
 
+By default the block is centered; pass `align="left"` (or `right`) to change it:
+
+```markdown
+{{</* math align="left" */>}}
+\sum_{i=1}^{n} i = \frac{n(n+1)}{2}
+{{</* /math */>}}
+```
+
 For inline math, use raw `$ … $` (KaTeX's `auto-render` extension picks both up):
 
 ```markdown

@@ -24,10 +24,12 @@ Args:
 
 - `pattern` — glob to filter (default: everything that isn't a markdown page)
 - `title` — section heading (default: "Attachments")
+- `sort` — `asc` (default) or `desc`, by file name
+- `icon` — theme icon shown next to each file (default: `file`)
 
 ### `resources`
 
-Like `attachments`, but lets you pass an explicit Hugo resource type / pattern. Useful when a page has both inline images (referenced from prose) and downloadable resources that you want to list separately.
+Like `attachments`, but lets you pass an explicit Hugo resource type / pattern. Useful when a page has both inline images (referenced from prose) and downloadable resources that you want to list separately. Takes the same `title` / `sort` / `icon` args as `attachments` (heading defaults to "Resources").
 
 ```markdown
 {{</* resources pattern="*.pdf" */>}}
@@ -46,10 +48,13 @@ Renders the immediate children of the current section as a card list. Drop it in
 
 Args:
 
-- `style` — `cards` (default), `list`, or `h2` (rendered as h2 + description for each child)
+- `type` — `cards` (default), `list`, or `h2` / `h3` / `h4` (rendered as a heading + description for each child). `style` is an accepted alias for `type` (Relearn compatibility).
 - `description` — `true` to include each child's `description` front matter (default `true`)
 - `depth` — recurse N levels deep (default `1`)
-- `sort` — `weight` (default), `title`, `date`
+- `sort` — `weight` (default) or `title`
+- `image` — `true` to render each child's featured image (`params.images[0]`) as a banner on card-style listings (default `false`)
+- `showhidden` — `true` to include pages marked `hidden` (default `false`)
+- `notime` — `true` to suppress the time pill on every card in the listing
 
 Pairs nicely with the `weight` front-matter key for explicit ordering.
 
@@ -111,7 +116,9 @@ Inline another file's content as if it were part of the current page. The includ
 {{</* include "shared/prerequisites.md" */>}}
 ```
 
-The path is relative to the project root. Hugo errors if the file is missing.
+The path is relative to the project root (positional, or `file=`). Hugo errors if the file is missing.
+
+Pass `hidefirstheading="true"` (or a second positional `true`) to drop the included file's leading `#` heading — handy when you're embedding a standalone page whose title would otherwise duplicate the host page's heading.
 
 Use cases:
 
@@ -171,7 +178,7 @@ The `{{</* file-tree */>}}` shortcode covered above is the body-mode-only varian
 
 ### `otel-version`
 
-Renders the latest OpenTelemetry Collector version, pulled from a value the site author sets in `[params.splunk]`. Keeps version-pinned text from going stale silently between collector releases — change one param, every workshop page that uses the shortcode updates.
+Renders the latest OpenTelemetry Collector version, pulled from a value the site author sets in `[params]`. Keeps version-pinned text from going stale silently between collector releases — change one param, every workshop page that uses the shortcode updates.
 
 ```markdown
 Install OTel Collector {{</* otel-version */>}}.
@@ -184,7 +191,7 @@ The shortcode reads `Site.Params.stableOtelVersion`. Set it once in `hugo.toml`:
 stableOtelVersion = "0.110.0"
 ```
 
-The legacy snake_case key `stable_otel_version` is still honoured as a fallback for sites that haven't migrated yet, but new sites should use the camelCase form.
+If the param is unset the shortcode renders nothing, so unconfigured sites get an empty string rather than a build error.
 
 ### `linkedin`
 
@@ -228,7 +235,11 @@ The {{</* textcolor color="#FF007F" */>}}magenta{{</* /textcolor */>}} chart sho
 Args:
 
 - `color` — any CSS color (hex, rgb, named)
+- `font` — optional `font-family` (e.g. `serif`, `monospace`)
+- `weight` — optional `font-weight` (e.g. `bold`, `600`)
 - positional 0 — alias of `color`
+
+Each value is validated against a conservative character allow-list before it reaches the inline `style`, so a malformed value falls back to the default rather than injecting arbitrary CSS.
 
 Accepts markdown in the body, so you can combine: `{{</* textcolor "#FF007F" */>}}**critical**{{</* /textcolor */>}}`.
 

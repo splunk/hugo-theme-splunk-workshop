@@ -43,6 +43,8 @@ choco install hugo-extended
 {{</* /tabs */>}}
 ```
 
+Each `tab` takes its label as the positional arg (or `title=` / `name=` / `label=`). Add `icon="<name>"` to render a theme icon before the label.
+
 ### Tabs with `groupid` (synced)
 
 When a workshop has many tab blocks for the same axis (OS, language, environment), pass a shared `groupid` and they'll stay in sync — picking "Linux" once selects it everywhere.
