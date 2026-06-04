@@ -5,6 +5,12 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.11.5] - 2026-05-29
+
+### Fixed
+
+- **Chapter weight number clipped at the top.** `.chapter__weight` (the large gradient number in the chapter-hero corner) uses `line-height: 1` + `font-weight: 800` + `clamp(5rem, 12vw, 9rem)`. At heavy display weights the digit caps extend above the line-box, and `background-clip: text` only paints within the padding box — so the tops of the digits render transparent and look cropped. Added `padding-block: 0.1em` so the gradient covers both ends of the glyph. The 0.11.3 audit had explicitly skipped this rule on the grounds that numbers don't have descenders — true, but they have **ascenders**, which clip the same way at this weight.
+
 ## [0.11.4] - 2026-05-29
 
 ### Security
