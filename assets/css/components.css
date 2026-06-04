@@ -73,23 +73,18 @@ a:focus-visible .link-ext { opacity: 1; transform: translate(2px, -2px); }
   font-size: clamp(5rem, 12vw, 9rem);
   font-weight: 800;
   line-height: 1;
-  letter-spacing: -0.06em;
+  /* `letter-spacing` interacts with `background-clip: text` in Chrome:
+     non-zero tracking shifts the paint area and crops the bottom of the
+     glyph (visible as a flat cut on curve-digits like 5/8/0/6/9). The
+     v0.11.5/0.11.6 padding bumps were chasing the wrong cause; the
+     actual fix is letter-spacing: normal here. Verified A/B with
+     Playwright: removing letter-spacing restores the rounded bottom;
+     padding had no effect. */
+  letter-spacing: normal;
   background: var(--gradient-accent);
   -webkit-background-clip: text;
           background-clip: text;
   -webkit-text-fill-color: transparent;
-  /* Heavy display weight at this font-size with line-height:1 makes the
-     digit caps extend above the line-box AND the rounded bottoms of
-     curves (5, 8, 0, 6, 9) "overshoot" below the baseline by a few
-     percent of em — a deliberate font design choice for optical
-     alignment at heavy weights. background-clip:text only paints within
-     the padding box, so without enough padding both ends of the glyph
-     render transparent and look clipped. 0.1em (initial fix in 0.11.5)
-     wasn't enough at this weight; 0.18em comfortably covers the
-     overshoots in Bricolage Grotesque 800. Same pattern as the
-     gradient-text fix in 0.11.3 — applied vertically here because
-     digits have no descenders per se but DO have curve overshoots. */
-  padding-block: 0.18em;
   /* `--weight-progress` is 1 at rest; weight-bloom animates 0 → 1 so the
      entrance fades + scales without snapping to opacity:1. */
   --weight-progress: 1;
