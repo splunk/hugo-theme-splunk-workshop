@@ -5,6 +5,12 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.11.6] - 2026-05-29
+
+### Fixed
+
+- **Chapter weight number STILL clipped after 0.11.5.** The previous `padding-block: 0.1em` covered the cap heights but didn't cover the **curve overshoots** at the bottom of digits like 5, 8, 0, 6, 9 in Bricolage Grotesque at `font-weight: 800` — these glyphs are designed to extend a few percent below the baseline so they look optically aligned with flat-bottomed digits (1, 2, 7). At this font size the overshoot exceeded 0.1em, so `background-clip: text` still cropped the bottom curves. Bumped to `padding-block: 0.18em`, which covers both the cap overshoots and the curve overshoots without meaningfully shifting the visual position of the (intentionally faded) chapter number.
+
 ## [0.11.5] - 2026-05-29
 
 ### Fixed
