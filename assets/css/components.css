@@ -78,6 +78,13 @@ a:focus-visible .link-ext { opacity: 1; transform: translate(2px, -2px); }
   -webkit-background-clip: text;
           background-clip: text;
   -webkit-text-fill-color: transparent;
+  /* Heavy display weight at this font-size with line-height:1 makes the
+     digit tops extend above the line-box; background-clip:text only
+     paints within the padding box, so without the padding the
+     ascenders render transparent and look clipped. Same fix pattern as
+     the gradient-text descender fix in 0.11.3 — applied vertically here
+     because digits have no descenders but DO have tall caps. */
+  padding-block: 0.1em;
   /* `--weight-progress` is 1 at rest; weight-bloom animates 0 → 1 so the
      entrance fades + scales without snapping to opacity:1. */
   --weight-progress: 1;
