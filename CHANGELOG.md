@@ -5,6 +5,18 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.12.0] - 2026-06-05
+
+### Added
+
+- **`product` front-matter field on workshop / section pages.** Renders a gradient-filled chip at the top-right of the auto-grid card, labelling the product the workshop covers ("ITSI", "Observability Cloud", "Splunk Enterprise"). The point is to **keep the `title` short**: authors often pack the product name into the title ("Alerting and Monitoring with Splunk IT Service Intelligence"), which makes cards unbalanced in a grid. Split it: `title = "Alerting & Monitoring"` + `product = "ITSI"`. Omit `product` and the chip disappears — no layout shift, no empty placeholder.
+
+### Changed
+
+- **Auto-card head row.** `card-from-page.html` now wraps the numbered eyebrow (`card__num`) and the new product chip (`card__product`) in a `card__head` flex row so the title flows full-width below. If only one of the two is present (no index, or no product), the row still renders correctly via `margin-left: auto` on the chip — it always pins right. Cards with neither emit no head row at all.
+- **Card icon hero moved below the head row.** When a section sets `icon = "<lucide-name>"`, the hero icon now renders **between** the head row and the title, not above it. The hero's negative top margin is gone (`margin: 0.25rem 0 0.75rem`) so it sits cleanly under the eyebrow.
+- **Chapter weight number sized down.** `.chapter-hero .chapter__weight` was `clamp(4rem, 9vw, 7rem)` which let two-digit weights ("18", "90") intrude into the chapter title's horizontal space. Now `clamp(2.5rem, 5vw, 4rem)` — clearly a small decorative ghost in the corner, never competing for title room.
+
 ## [0.11.7] - 2026-05-29
 
 ### Fixed

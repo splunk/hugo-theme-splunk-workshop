@@ -51,6 +51,7 @@ layout      = "chapter"                    # pick a page layout
 time        = "20 min"               # shown in workshop-meta + cards
 duration    = "20 min"               # alias of time (legacy)
 difficulty  = "beginner"             # shown in workshop-meta + cards
+product     = "ITSI"                 # gradient-filled chip on the card meta row
 authors     = ["Pieter Hagen",
                "Robert Castley"]     # shown in workshop-meta (plural array, preferred)
 author      = "Pieter Hagen"         # alias of authors[0] (legacy singular)
@@ -102,6 +103,20 @@ Optional explicit override for the page's last-modified date, shown in the small
 ### `difficulty`
 
 Free-form text. Common values: `beginner`, `intermediate`, `advanced`. Renders in workshop meta and cards. Pair with the `difficulty` shortcode if you want a numeric 1–5 dot indicator.
+
+### `product`
+
+Free-form short label for the product the workshop covers — `"ITSI"`, `"Observability Cloud"`, `"Splunk Enterprise"`. Renders as a gradient-filled chip at the start of the card's meta row.
+
+The point is to **keep the `title` short**. Authors often pack the product name into the workshop title (`"Alerting and Monitoring with Splunk IT Service Intelligence"`), which makes cards unbalanced in a grid. Split it:
+
+```toml
+title       = "Alerting & Monitoring"
+product     = "ITSI"
+description = "Combine Splunk Enterprise, AppDynamics, Observability Cloud, and ITSI for end-to-end alerting and service-level monitoring."
+```
+
+The card renders `Alerting & Monitoring` as the hero with `ITSI` as a category chip in the meta row. Omit `product` and the chip disappears — no layout shift, no empty placeholder.
 
 ### `hidden`
 

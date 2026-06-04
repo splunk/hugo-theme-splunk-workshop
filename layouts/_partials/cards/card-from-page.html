@@ -18,10 +18,21 @@
        own visit-tracker), so Hugo doesn't have to guess what counts
        as a "page" — the sidebar is the source of truth. */ -}}
 <a class="card{{ with $page.Params.icon }} card--has-hero{{ end }}" href="{{ $page.RelPermalink }}" data-section-root="{{ $page.RelPermalink }}"{{ if eq $count 0 }} data-section-pages="1"{{ end }}>
+  {{- /* Head row — num + product chip — comes BEFORE the icon hero so
+         the chip sits at the very top-right of the card. `product` is a
+         gradient-filled chip labelling which product the workshop covers;
+         the chip lives here rather than in the meta row so duration +
+         difficulty + pages stay uncrowded at the bottom. */ -}}
+  {{- $product := $page.Params.product -}}
+  {{- if or $hasIndex $product }}
+  <div class="card__head">
+    {{- if $hasIndex }}<span class="card__num">{{ printf "%02d" (add $index 1) }}</span>{{ end }}
+    {{- with $product }}<span class="card__product">{{ . }}</span>{{ end }}
+  </div>
+  {{- end }}
   {{- with $page.Params.icon }}
   <div class="card__hero" aria-hidden="true">{{ partial "cards/card-hero-icon.html" . }}</div>
   {{- end }}
-  {{- if $hasIndex }}<span class="card__num">{{ printf "%02d" (add $index 1) }}</span>{{ end }}
   <h3 class="card__title">{{ $page.LinkTitle }}</h3>
   {{ with $page.Description }}<p class="card__desc">{{ . }}</p>{{ end }}
   <div class="card__meta">

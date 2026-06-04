@@ -4,6 +4,7 @@ linkTitle   = "Getting Started"
 description = "Your first hour with Splunk — install, ingest, search, and visualize."
 duration    = "60 min"
 difficulty  = "beginner"
+product     = "Splunk Enterprise"
 weight      = 1
 layout      = "chapter"
 subtitle    = "Chapter · Foundation"

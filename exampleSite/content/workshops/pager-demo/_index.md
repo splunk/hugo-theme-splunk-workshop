@@ -4,6 +4,7 @@ linkTitle   = "Pager override demo"
 description = "A walkable demo of the `pager` shortcode — override the prev/next destinations on a page-by-page basis."
 duration    = "5 min"
 difficulty  = "reference"
+product     = "Theme demo"
 weight      = 90
 layout      = "chapter"
 subtitle    = "Chapter · Authoring"

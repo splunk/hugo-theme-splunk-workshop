@@ -60,9 +60,13 @@ a:focus-visible .link-ext { opacity: 1; transform: translate(2px, -2px); }
 }
 .chapter-hero .chapter__weight {
   position: absolute;
-  top: -1rem;
+  top: -0.5rem;
   right: 0;
-  font-size: clamp(4rem, 9vw, 7rem);
+  /* Sized as a small decorative ghost in the corner so it never competes
+     with the chapter title for horizontal space. The previous max of
+     7rem allowed two-digit weights ("90", "18") to intrude into the
+     title area on standard viewports. */
+  font-size: clamp(2.5rem, 5vw, 4rem);
   opacity: 0.14;
 }
 .chapter__weight {
@@ -347,13 +351,48 @@ a:focus-visible .link-ext { opacity: 1; transform: translate(2px, -2px); }
 .card__meta-item::before { content: ""; width: 4px; height: 4px; background: var(--color-accent); border-radius: 50%; }
 .card__meta-item:first-child::before { display: none; }
 
+/* Card top row — pairs the numbered eyebrow with the product chip so
+   the title below gets the full card width. Either child can be absent
+   (no `index`, or no `product` front matter); the row collapses
+   accordingly and the partial only emits the wrapper when at least one
+   is present. */
+.card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+.card__head .card__num { margin-bottom: 0; }
+
+/* Product chip — labels which product the workshop covers ("ITSI",
+   "Observability Cloud", …). Gradient fill gives it the visual
+   priority of a category marker; white ink stays AA on the gradient at
+   this size. */
+.card__product {
+  margin-left: auto;  /* always pin right, even when no card__num is present */
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--gradient-accent);
+  padding: 0.3rem 0.6rem 0.25rem;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
 /* Card hero — opt-in Lucide icon at the top of an auto-grid card via
    `icon = "name"` in section front matter. Matches .shortcode-card__hero. */
 .card__hero {
   display: grid;
   place-items: center;
   height: 6.5rem;
-  margin: -1rem 0 0.75rem;
+  /* Sit between the head row (eyebrow + product chip) and the title.
+     No negative top margin — the head row above already establishes
+     the card's top rhythm. */
+  margin: 0.25rem 0 0.75rem;
 }
 .card__hero svg { width: 2.75rem; height: 2.75rem; }
 
