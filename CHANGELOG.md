@@ -5,6 +5,12 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.11.7] - 2026-05-29
+
+### Fixed
+
+- **Chapter weight number bottom-curve crop — actual root cause this time.** v0.11.5 and v0.11.6 added `padding-block` to `.chapter__weight` chasing a misdiagnosed `background-clip: text` painting-area issue. Verified A/B in a real browser with Playwright that padding doesn't move the clip point at all. The actual cause is the inherited `letter-spacing: -0.06em` on this rule: non-zero letter-spacing interacts with `background-clip: text` in Chrome and shifts the paint area, cropping the bottom of curve-digits (5, 8, 0, 6, 9). `letter-spacing: normal` here restores the rounded bottom. Padding-block additions from v0.11.5 / v0.11.6 are dropped — they were solving nothing.
+
 ## [0.11.6] - 2026-05-29
 
 ### Fixed
