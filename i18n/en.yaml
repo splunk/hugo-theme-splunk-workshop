@@ -116,6 +116,14 @@
   translation: "Details"
 - id: presenterNote
   translation: "Presenter Note"
+- id: slidesKicker
+  translation: "Slide deck"          # `{{< slides >}}` preview-card kicker
+- id: slidesOpen
+  translation: "Open presentation"   # `{{< slides >}}` preview-card CTA
+- id: slidesSlide
+  translation: "slide"               # singular suffix on the slide count
+- id: slidesSlides
+  translation: "slides"              # plural suffix on the slide count
 - id: lastModified
   translation: "Last Modified"
 - id: author

@@ -34,6 +34,57 @@ By the end, your dashboard will look something like this:
 
 {{< image src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1600&q=80" alt="Dashboard preview" caption="Sample dashboard — yours will track ingestion rate, top sourcetypes, and event latency." >}}
 
+{{< slides title="The Splunk data pipeline in five slides" >}}
+
+## The pipeline
+
+Splunk takes **raw events**, runs them through a small set of well-named stages, and gives you back a queryable index.
+
+The whole loop:
+
+```text
+forwarder → indexer → search head
+```
+
+---
+
+## Forwarder
+
+A small agent that watches files or sockets and ships events.
+
+- Runs on the host generating the data
+- Tails logs, reads syslog, listens on a TCP port
+- Cheap, stateless, easy to deploy
+
+---
+
+## Indexer
+
+Where events come to rest.
+
+- Parses, timestamps, and stores events
+- Owns the on-disk index
+- Answers searches from the search head
+
+---
+
+## Search head
+
+The query brain.
+
+- Speaks SPL
+- Dispatches sub-searches to indexers
+- Aggregates, ranks, and renders results
+
+---
+
+## What you'll build today
+
+By the end of this workshop, all three stages will be running on **your machine**, ingesting a sample dataset, and answering a search.
+
+Close this deck and read on for the install.
+{{< /slides >}}
+
 ## How this guide works
 
 Every workshop in this series follows the same shape:

@@ -18,6 +18,7 @@ import { initKeyboardNav }  from "./keyboard-nav.js";
 import { initSearch }       from "./search.js";
 import { initLangSwitch }   from "./lang-switch.js";
 import { initBrowse }       from "./browse.js";
+import { initSlides }       from "./slides.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   initThemeToggle();
@@ -39,4 +40,5 @@ document.addEventListener("DOMContentLoaded", () => {
   initSearch();
   initLangSwitch();
   initBrowse();
+  initSlides();
 });

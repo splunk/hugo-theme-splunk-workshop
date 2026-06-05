@@ -13,6 +13,14 @@ function applyMode(on) {
 }
 
 export function initPresenter() {
+  /* Idempotency guard — Hugo's dev-server live reload re-injects the JS
+     bundle on every change, which means initPresenter() can run multiple
+     times in the same page session. Each call would otherwise stack a
+     fresh click handler on the toggle pill: clicks then fire 2× / 4× /…
+     toggling the mode an even number of times → looks "stuck". */
+  if (document.documentElement.dataset.presenterInit === "1") return;
+  document.documentElement.dataset.presenterInit = "1";
+
   // Initial state from URL or localStorage
   const url = new URL(location.href);
   let on = false;

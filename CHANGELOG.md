@@ -5,6 +5,20 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.13.0] - 2026-06-05
+
+### Added
+
+- **`{{< slides >}}` shortcode — inline mid-workshop slide deck.** Author writes markdown inside the shortcode with `---` between slides; on click, the deck mounts in a fullscreen overlay over the workshop. Powered by [reveal.js](https://revealjs.com/) v6.0.1, loaded from jsdelivr on first open (~75KB one-time, with SRI hashes pinned so a CDN compromise can't inject modified code). Pages without `{{< slides >}}` pay nothing — slides.js is bundled but gates on `[data-slides-trigger]` selectors at init. The slide canvas uses the Splunk dark-mode WebP from `static/images/` so decks look on-brand without per-slide background config.
+- **Presenter-mode gate on the deck CTA.** By default the preview card is hidden so attendees don't see the deck on a normal scroll-through. It only appears when presenter mode is on — same `[data-presenter="true"]` toggle the theme already uses for `{{< presenter >}}` notes and the `P P` keyboard shortcut. Override with `.slides-card { display: grid }` in your own CSS if you want decks visible to every reader.
+- **Inter font (with optical-size axis) loaded for slide typography.** Distinct from the workshop site's Splunk Data Sans Pro so slide type reads as its own thing. Loaded from Google Fonts on first deck open, never on pages without slides.
+- **Four new i18n keys** (`slidesKicker`, `slidesOpen`, `slidesSlide`, `slidesSlides`) so consumers can retheme or translate the deck CTA without touching shortcode source.
+
+### Fixed
+
+- **Presenter mode toggle pill could stack click handlers under Hugo dev-server live reload.** Each rebuild re-injected the JS bundle, calling `initPresenter()` a second time, which appended another click listener to the pill — clicks then toggled `data-presenter` an even number of times in a row and the mode appeared stuck. Added an idempotency guard on `document.documentElement.dataset.presenterInit` so subsequent invocations no-op.
+- **Arrow-key conflict between reveal.js and the theme's keyboard-nav** (prev/next workshop page) — both attach to `document` and `stopPropagation` doesn't stop sibling listeners on the same element. Guard added in `keyboard-nav.js` itself: short-circuits when `.slides-overlay.is-open` is present so reveal.js owns nav keys while the deck is up.
+
 ## [0.12.0] - 2026-06-05
 
 ### Added

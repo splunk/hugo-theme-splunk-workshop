@@ -1,0 +1,267 @@
+/* ==========================================================================
+   Slides — `{{< slides >}}` shortcode runtime UI
+   --------------------------------------------------------------------------
+   Two concerns:
+   1. The preview card (.slides-card) that sits inline in the article flow.
+   2. The fullscreen modal (.slides-overlay) that mounts reveal.js on click.
+   ========================================================================== */
+
+/* Presenter-only by default — the deck CTA is a facilitator affordance
+   (display the slides during the workshop), so attendees shouldn't see
+   it in their normal scroll. Same `[data-presenter="true"]` toggle the
+   theme already uses for the `.presenter-only` shortcode and the
+   presenter-row in the keyboard-help dialog. The hidden <template>
+   carrying the deck contents stays in the DOM either way (it's not
+   visible), so toggling presenter mode without a reload reveals the
+   card with no extra work. */
+.slides-card { display: none; }
+[data-presenter="true"] .slides-card { display: grid; }
+
+/* Preview card — a brand-coloured banner inviting the reader into the deck.
+   Lives in normal article flow between prose sections; the goal is "this
+   looks like a CTA, not body text." Gradient ring on the left edge anchors
+   the eye to the play button.
+   `display` is NOT set here — the presenter-mode gate above owns it
+   (none by default, grid when `[data-presenter="true"]`). Setting it
+   here would override the gate via CSS source order and the card would
+   show regardless of mode. */
+.slides-card {
+  grid-template-columns: 1fr auto;
+  gap: 1rem 1.5rem;
+  align-items: center;
+  margin: 2rem 0;
+  padding: 1.25rem 1.4rem 1.25rem 1.5rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 4px solid transparent;
+  border-radius: var(--radius-md);
+  position: relative;
+  isolation: isolate;
+}
+.slides-card::before {
+  /* Gradient stripe on the left edge — uses the brand gradient via a
+     border-image to keep it gradient-coloured without painting a full
+     overlay. Falls back gracefully to solid accent in older browsers. */
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 -1px;
+  width: 4px;
+  background: var(--gradient-accent);
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+.slides-card__body { min-width: 0; }
+.slides-card__kicker {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent-text);
+  margin: 0 0 0.25rem;
+}
+.slides-card__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+  margin: 0;
+  color: var(--color-ink);
+}
+.slides-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem 1.1rem 0.7rem 0.9rem;
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: #fff;
+  background: var(--gradient-accent);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    transform var(--t-fast) var(--ease),
+    box-shadow var(--t-base) var(--ease);
+}
+.slides-card__cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px color-mix(in oklab, var(--color-accent) 35%, transparent);
+}
+.slides-card__cta:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+.slides-card__play { width: 0.85rem; height: 0.85rem; }
+
+@media (max-width: 540px) {
+  .slides-card { grid-template-columns: 1fr; }
+  .slides-card__cta { justify-self: start; }
+}
+
+/* ----------------------------------------------------------------------------
+   Modal overlay — fullscreen container for reveal.js.
+   ---------------------------------------------------------------------------- */
+.slides-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(8, 13, 22, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: none;
+  align-items: stretch;
+  justify-content: stretch;
+}
+.slides-overlay.is-open { display: flex; }
+.slides-overlay__stage {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  /* reveal.js calculates its own internal dimensions from this element;
+     letting it stretch full-screen gives a clean presentation surface. */
+}
+.slides-overlay__reveal { width: 100%; height: 100%; }
+
+/* Branded slide canvas — the Splunk dark-mode WebP from the theme's
+   static/images/, anchored top-right so the gradient bloom sits in the
+   slide's top corner (matches the workshop site's hero background).
+   `background-color` provides the navy fall-back if the image is slow
+   or blocked. Painted on the .reveal element so reveal.js's own
+   `.slides` and `.controls` layers float over it. */
+.reveal.slides-overlay__reveal,
+.slides-overlay__reveal .reveal,
+.slides-overlay .reveal {
+  background-color: #0C1724;
+  background-image: url("/images/background_Splunk-dark-mode3_16x9.webp");
+  background-size: cover;
+  background-position: right top;
+  background-repeat: no-repeat;
+}
+/* Reveal's per-section background paints over the canvas; keep it
+   transparent so the WebP shows on every slide unless a specific
+   `data-background-color` opts out. */
+.reveal .slide-background-content { background: transparent !important; }
+
+/* Reset workshop typography that would otherwise bleed into reveal.js's
+   dark theme. The workshop's global rules (dark ink colour for strong,
+   heading top-borders + gradient marker, code-block chrome around fenced
+   blocks) all assume a light page background — on the deck's dark slide
+   they read as invisible or noisy. Inherit colours from reveal.js's
+   theme and strip the workshop-specific chrome inside the .reveal scope.
+
+   Font: Inter (with the display optical-size axis) is loaded via
+   slides.js when the deck opens. Falls back to the workshop body stack
+   if the CDN load is blocked. */
+.reveal, .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+  /* Inter is loaded as a variable font with the `opsz` (optical-size)
+     axis — `font-optical-sizing: auto` plus an explicit `opsz` setting
+     selects the display cut at heading sizes without needing a separate
+     "Inter Display" family lookup. */
+  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-optical-sizing: auto;
+  font-variation-settings: "opsz" 32;
+}
+.reveal h1, .reveal h2, .reveal h3 {
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+.reveal strong, .reveal b {
+  color: inherit;
+  font-weight: 700;
+}
+.reveal em, .reveal i { color: inherit; }
+.reveal a { color: var(--color-accent); }
+.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+  color: inherit;
+  margin: 0 0 0.5em;
+  padding: 0;
+  border: 0;
+  letter-spacing: -0.02em;
+}
+.reveal h1::before, .reveal h2::before, .reveal h3::before {
+  content: none;  /* strip the typography.css gradient marker on display headings */
+}
+/* Code blocks in slides: reveal.js renders fenced code as plain <pre><code>,
+   but the workshop's render-codeblock hook wraps each fence in
+   `.code-block` chrome (header bar, Copy button, inset gradient
+   highlight, ::before gradient rim, brand-coloured box-shadows). All of
+   that fights reveal.js's dark slide background, so strip it inside the
+   deck and let chroma + the slide background show the code plainly. */
+.reveal .code-block {
+  background: rgba(255, 255, 255, 0.04);  /* faint frosted panel against the dark slide */
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  box-shadow: none;
+  padding: 0.75em 1em;
+  margin: 0.5em auto;
+  max-width: 90%;
+}
+.reveal .code-block::before { content: none; }   /* drop the brand gradient rim */
+.reveal .code-block__header { display: none; }   /* drop the file-name + Copy button bar */
+.reveal .code-block pre,
+.reveal .code-block code,
+.reveal .code-block .chroma {
+  background: transparent;                       /* let the panel show through */
+  color: #f4f1ea;                                /* light ink for dark slide */
+  font-size: 0.55em;
+  line-height: 1.5;
+}
+/* Chroma's own per-token colours stay readable on the dark slide because
+   they were chosen for the dark-mode workshop palette — the workshop
+   site flips chroma to its dark variant via the same token palette
+   reveal.js's dark theme uses. Tokens render as authored. */
+.reveal pre, .reveal code { font-size: 0.55em; }
+
+/* Images in slides — markdown `![alt](src)` works straight through
+   Hugo's image render hook, but the figure wrapper + caption can
+   crowd the slide. Constrain to a sensible portion of the slide
+   viewport and strip the figure chrome inside the deck. */
+.reveal img,
+.reveal figure img {
+  display: block;
+  max-width: 80%;
+  max-height: 60vh;
+  width: auto;
+  height: auto;
+  margin: 0.5em auto;
+  border-radius: 6px;
+  object-fit: contain;
+}
+.reveal figure {
+  margin: 0.5em auto;
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+.reveal figcaption {
+  font-size: 0.45em;
+  opacity: 0.75;
+  text-align: center;
+  margin-top: 0.4em;
+}
+.slides-overlay__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10001;
+  display: grid;
+  place-items: center;
+  width: 2.5rem; height: 2.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background var(--t-fast) var(--ease);
+}
+.slides-overlay__close:hover { background: rgba(0, 0, 0, 0.7); }
+.slides-overlay__close:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+.slides-overlay__close svg { width: 1.1rem; height: 1.1rem; }

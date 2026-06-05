@@ -89,6 +89,10 @@ export function initKeyboardNav() {
 
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     if (isTyping(e.target) || inTabs(e.target)) return;
+    /* While a slide deck is open in the fullscreen overlay, reveal.js owns
+       arrow keys for slide navigation; the workshop prev/next handlers
+       below would otherwise flip the underlying page too. */
+    if (document.querySelector(".slides-overlay.is-open")) return;
 
     // `?` is Shift+/ on most layouts; e.key normalises to "?".
     if (e.key === "?") {

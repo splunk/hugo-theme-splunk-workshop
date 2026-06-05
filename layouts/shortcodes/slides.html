@@ -1,0 +1,82 @@
+{{- /*
+  Slides shortcode — embeds an inline mid-workshop slide deck.
+
+  Author writes markdown inside the shortcode with `---` (a line by
+  itself) between slides. The shortcode splits on those separators,
+  renders each chunk through Hugo's normal markdown (so code blocks,
+  shortcodes, and figures all work), and emits the reveal.js HTML
+  structure as a hidden template. A preview card on the page shows
+  the title + slide count + "Open presentation" button.
+
+  Reveal.js itself is loaded on click — pages with the shortcode pay
+  only ~3KB for the card chrome; the ~75KB reveal.js bundle only
+  fires when a reader actually opens the deck.
+
+  Args:
+    title  — optional heading shown on the preview card (default
+             "Presentation"). Pipes through markdownify so authors can
+             format the kicker.
+    label  — optional CTA text on the button (default "Open presentation").
+
+  Usage (the shortcode-escape sequence isn't reproducible inside a Go
+  template comment because the inner closing `* /` ends THIS comment
+  early; see exampleSite/content/docs/shortcodes/05-heavyweights.md for
+  a rendered example, and the docs for the canonical syntax). Sketch:
+
+    < slides title="Service-level objectives" >
+      ## What is an SLO?
+      A measurable target...
+      ---
+      ## Why bother
+      Three reasons...
+    < /slides >
+*/ -}}
+{{- $title  := .Get "title"  | default "Presentation" -}}
+{{- $label  := .Get "label"  | default (i18n "slidesOpen" | default "Open presentation") -}}
+{{- $inner  := .Inner -}}
+
+{{- /* Split the inner block on `---` sitting on its own line. Authors
+       typically write the separator with blank lines around it (`---`
+       between two slides reads as a thematic break in markdown), so
+       normalise any whitespace + blank lines around the separator down
+       to a single `\n---\n` before splitting. Each chunk renders as one
+       `<section>` for reveal.js via the page's normal markdown pipeline. */ -}}
+{{- $padded     := printf "\n%s\n" $inner -}}
+{{- $normalized := replaceRE `\n\s*---\s*\n` "\n---\n" $padded -}}
+{{- $rawSlides  := split $normalized "\n---\n" -}}
+{{- $slides    := slice -}}
+{{- range $rawSlides -}}
+  {{- $body := trim . "\n\r " -}}
+  {{- if $body -}}
+    {{- $slides = $slides | append (dict "html" ($body | $.Page.RenderString)) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* Stable id derived from the page's relative permalink + the
+       shortcode's ordinal so multiple decks on one page don't collide. */ -}}
+{{- $deckID  := printf "deck-%s" (substr (sha1 (printf "%s-%d" $.Page.RelPermalink (.Ordinal | default 0))) 0 8) -}}
+{{- $count   := len $slides -}}
+
+<aside class="slides-card" data-slides-card>
+  <div class="slides-card__body">
+    <p class="slides-card__kicker">{{ i18n "slidesKicker" | default "Slide deck" }} · {{ $count }} {{ if eq $count 1 }}{{ i18n "slidesSlide" | default "slide" }}{{ else }}{{ i18n "slidesSlides" | default "slides" }}{{ end }}</p>
+    <h3 class="slides-card__title">{{ $title | markdownify }}</h3>
+  </div>
+  <button class="slides-card__cta" type="button" data-slides-trigger data-slides-target="{{ $deckID }}" aria-label="{{ $label }}: {{ $title | plainify }}">
+    <svg class="slides-card__play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 4 20 12 6 20 6 4" fill="currentColor"/></svg>
+    <span>{{ $label }}</span>
+  </button>
+</aside>
+
+{{- /* Hidden template the JS clones into the modal when the button is
+       clicked. Kept out of the article flow so screen readers don't
+       walk the slide bodies as if they were inline prose. */ -}}
+<template id="{{ $deckID }}" data-slides-deck>
+  <div class="reveal slides-overlay__reveal">
+    <div class="slides">
+      {{- range $slides }}
+      <section>{{ .html | safeHTML }}</section>
+      {{- end }}
+    </div>
+  </div>
+</template>

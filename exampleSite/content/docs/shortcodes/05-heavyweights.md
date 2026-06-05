@@ -113,12 +113,98 @@ The theme sets mermaid's `securityLevel: "antiscript"`. This matches relearn's d
 
 Mermaid normally paints its own canvas (white in default theme, dark slate in dark) plus a cream-yellow cluster fill (`#fff5ad`) for subgraphs. The theme overrides all four surface tokens (`background`, `clusterBkg`, `clusterBorder`, `secondaryColor`, `tertiaryColor`) to `transparent` so the diagram sits on the page's own `--color-surface` rather than introducing a fifth surface tint. Node and edge colors stay theme-driven by mermaid's default/dark palette; your `classDef` overrides in author content still win.
 
+## Inline slide decks
+
+`{{</* slides */>}}` embeds a [reveal.js](https://revealjs.com/) slide deck inline in a workshop page. Authors write markdown inside the shortcode with `---` between slides; on click, the deck mounts in a fullscreen overlay over the workshop. Esc closes; arrow keys advance.
+
+````markdown
+{{</* slides title="The Splunk data pipeline" */>}}
+## The pipeline
+
+Splunk takes **raw events**, runs them through a small set of well-named
+stages, and gives you back a queryable index.
+
+```text
+forwarder → indexer → search head
+```
+
+---
+
+## Forwarder
+
+A small agent that watches files or sockets and ships events.
+
+- Runs on the host generating the data
+- Tails logs, reads syslog, listens on a TCP port
+
+---
+
+## What you'll build today
+
+Close this deck and read on for the install.
+{{</* /slides */>}}
+````
+
+### What it renders
+
+A small brand-coloured "Slide deck · N slides" preview card in normal article flow, with an "Open presentation" button. Click → reveal.js loads from CDN (one-time ~75KB) and the deck mounts fullscreen on top of the workshop. The reader scrolls past the card to reach whatever comes next (an exercise, the next chapter, etc.).
+
+### Author conventions
+
+- **Separator.** A horizontal rule (`---`) on its own line splits one slide from the next. The shortcode tolerates blank lines around the separator — both forms work:
+
+  ````markdown
+  ## Slide one
+  Body…
+
+  ---
+
+  ## Slide two
+  ````
+
+- **Markdown inside slides** goes through Hugo's normal markdown pipeline. Code fences with chroma highlighting, images, links, lists, and other shortcodes all work. The theme strips workshop-specific chrome (heading top-borders, code-block file-name bars) inside the slide so the deck reads cleanly on its dark background.
+
+- **Images.** `![alt](path.png)` works straight through — images are auto-sized to fit within 80% width and 60vh height, centred. Hugo's image render hook handles relative paths for page-bundled images.
+
+### Args
+
+| Arg | Default | Purpose |
+| --- | --- | --- |
+| `title` | `"Presentation"` | Heading shown on the preview card. Pipes through `markdownify`. |
+| `label` | i18n `slidesOpen` (default `"Open presentation"`) | CTA label on the button. |
+
+### Presenter-mode gate
+
+By default the preview card is **hidden**, so attendees don't see the deck on their normal scroll-through. It appears only when presenter mode is on — same `[data-presenter="true"]` toggle as the `{{</* presenter */>}}` notes shortcode. Toggle with the floating "Presenter" pill, `?presenter=1` URL param, or `P P` (press P twice). The intent: the facilitator opens the deck during the workshop; readers consuming the workshop async don't get distracted by it.
+
+If you want a deck that every reader can launch (e.g. a recorded workshop), you can override the gate with site CSS:
+
+```css
+/* In your own site's CSS, after the theme bundle */
+.slides-card { display: grid; }
+```
+
+### Reveal.js + CDN + SRI
+
+Reveal.js (v6.0.1) is loaded from jsdelivr with [Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity) hashes pinned in [`assets/js/slides.js`](https://github.com/splunk/hugo-theme-splunk-workshop/blob/main/assets/js/slides.js). The browser refuses to execute the bundle if the CDN ever serves a modified file. Bump `REVEAL_VERSION` in the same file when upgrading and regenerate the hashes:
+
+```bash
+curl -sL https://cdn.jsdelivr.net/npm/reveal.js@<v>/dist/reveal.min.js \
+  | openssl dgst -sha384 -binary | openssl base64 -A
+```
+
+The font (Inter, with the optical-size axis) is loaded from Google Fonts on first open — content there is dynamic, so SRI isn't practical; the blast-radius of a Google Fonts compromise is limited to glyph rendering.
+
+### Why a CDN
+
+Reveal.js is ~75KB minified plus a theme stylesheet — bundling it into every workshop page (including the 99% that have no deck) would inflate the theme's JS bundle for no benefit. CDN delivery on first open keeps the theme bundle small AND caches across workshop sites: a reader who's seen one deck on one Splunk workshop pays nothing on every subsequent deck on every other Splunk workshop.
+
 ## Embedded video
 
-{{< youtube id="dQw4w9WgXcQ" title="An old internet classic" >}}
+{{< youtube id="tBHUyncppng" title="An old internet classic" >}}
 
 ```markdown
-{{</* youtube id="dQw4w9WgXcQ" title="An old internet classic" */>}}
+{{</* youtube id="tBHUyncppng" title="An old internet classic" */>}}
 ```
 
 Uses `youtube-nocookie.com` for GDPR-friendlier embedding. The `title` attribute is required for accessibility.
