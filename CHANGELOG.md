@@ -5,6 +5,13 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.13.2] - 2026-06-05
+
+### Changed
+
+- **Slide content is left-aligned by default.** Reveal.js's stock styles centre every section, which suits a TED-talk deck but is wrong for technical content — workshops are made of bullet lists, code blocks, and paragraph prose, all of which parse faster left-aligned. Override applied as `.slides-overlay .reveal .slides section { text-align: left }`.
+- **`.center` per-slide opt-in** for cover slides, big takeaways, hero quotes — anything that genuinely benefits from centring. Use the reveal.js native class-comment pattern inside the section: `<!-- .slide: class="center" -->`. The theme ships the `.center` rule; the comment syntax is reveal.js's standard mechanism so any other reveal-known class (or your own) works the same way. Documented in `shortcodes/05-heavyweights.md`.
+
 ## [0.13.1] - 2026-06-05
 
 ### Fixed

@@ -134,6 +134,20 @@
    specificity to reveal's would lose by source order. The doubled
    selector bumps specificity to outrank reveal's defaults. */
 
+/* Left-align slide content by default — reveal.js's stock styles
+   center-align every section, which suits a TED-talk deck but is wrong
+   for technical content (bullet lists, code, paragraph prose). The
+   workshop audience parses left-aligned text faster. Authors can opt
+   back to centred on a per-slide basis with the reveal.js class-
+   comment pattern (`<!-- .slide: class="center" -->` inside a section);
+   the `.center` rule below honours that. */
+.slides-overlay .reveal .slides section {
+  text-align: left;
+}
+.slides-overlay .reveal .slides section.center {
+  text-align: center;
+}
+
 /* Branded slide canvas — the Splunk dark-mode WebP from the theme's
    static/images/, anchored top-right so the gradient bloom sits in the
    slide's top corner (matches the workshop site's hero background).

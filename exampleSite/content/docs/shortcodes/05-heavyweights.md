@@ -166,6 +166,24 @@ A small brand-coloured "Slide deck · N slides" preview card in normal article f
 
 - **Images.** `![alt](path.png)` works straight through — images are auto-sized to fit within 80% width and 60vh height, centred. Hugo's image render hook handles relative paths for page-bundled images.
 
+- **Alignment.** Slide content is **left-aligned by default** — better for the bullet-list + code-block + paragraph-prose content workshops are made of. Reveal.js's stock styles centre everything (great for TED talks, wrong for technical decks); the theme overrides that. To centre a specific slide (cover slide, big takeaway, hero quote), use reveal.js's native class-comment pattern *inside* the section:
+
+  ````markdown
+  {{</* slides */>}}
+  ## Default left-aligned slide
+  - Bullet one
+  - Bullet two
+
+  ---
+
+  <!-- .slide: class="center" -->
+  ## Big takeaway
+  Centred for impact.
+  {{</* /slides */>}}
+  ````
+
+  The `<!-- .slide: class="..." -->` syntax is a [reveal.js convention](https://revealjs.com/markdown/#element-attributes) — the comment is parsed off the front of the section and applied as a class on the `<section>` element. The theme ships a `.center` rule; other reveal classes (`has-light-background`, `aligncenter`, etc.) work via the standard reveal.js mechanism. Authors can also define their own per-slide classes and target them in site CSS.
+
 ### Args
 
 | Arg | Default | Purpose |
