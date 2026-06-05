@@ -5,6 +5,13 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.13.1] - 2026-06-05
+
+### Fixed
+
+- **Slide canvas background broken on GitHub Pages (and any subpath deploy).** The slides.css `background-image` used `url("/images/…")` which is domain-rooted — the browser resolved it to `https://splunk.github.io/images/…` instead of `https://splunk.github.io/observability-workshop/images/…`. Changed to `url("../images/…")` so it resolves relative to the bundled CSS file at `<base>/css/bundle.css` and lands at `<base>/images/…` on any deploy.
+- **Inter font (and every other workshop override inside `.reveal`) was being silently overridden by reveal.js.** Reveal.js injects its own stylesheet into `<head>` at runtime on first deck open — AFTER slides.css is already loaded. Rules with equal specificity therefore lost by source order: my `.reveal { font-family: Inter }` was being beaten by reveal's `.reveal { font-family: Source Sans Pro }`. All in-slide rules are now scoped to `.slides-overlay .reveal` (two classes) instead of bare `.reveal` (one class), which outranks reveal's defaults regardless of source order. The bug also affected the typography reset (strong/em color, code-block chrome, image sizing) — those override too now.
+
 ## [0.13.0] - 2026-06-05
 
 ### Added

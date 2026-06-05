@@ -127,73 +127,84 @@
 }
 .slides-overlay__reveal { width: 100%; height: 100%; }
 
+/* All rules in this section scope to `.slides-overlay .reveal` (two
+   classes) rather than bare `.reveal` (one class). Reveal.js's own
+   stylesheet is INJECTED INTO `<head>` AT RUNTIME on first deck open,
+   AFTER our slides.css is already loaded — so rules with equal
+   specificity to reveal's would lose by source order. The doubled
+   selector bumps specificity to outrank reveal's defaults. */
+
 /* Branded slide canvas — the Splunk dark-mode WebP from the theme's
    static/images/, anchored top-right so the gradient bloom sits in the
    slide's top corner (matches the workshop site's hero background).
-   `background-color` provides the navy fall-back if the image is slow
-   or blocked. Painted on the .reveal element so reveal.js's own
-   `.slides` and `.controls` layers float over it. */
-.reveal.slides-overlay__reveal,
-.slides-overlay__reveal .reveal,
+   The image path is relative to the bundled CSS file (`<base>/css/`),
+   so `../images/…` resolves to `<base>/images/…` on any project-page
+   deploy (GitHub Pages subpath, etc.). A domain-rooted `/images/…`
+   would break on those. background-color provides the navy fall-back
+   while the WebP loads. */
 .slides-overlay .reveal {
   background-color: #0C1724;
-  background-image: url("/images/background_Splunk-dark-mode3_16x9.webp");
+  background-image: url("../images/background_Splunk-dark-mode3_16x9.webp");
   background-size: cover;
   background-position: right top;
   background-repeat: no-repeat;
 }
-/* Reveal's per-section background paints over the canvas; keep it
-   transparent so the WebP shows on every slide unless a specific
-   `data-background-color` opts out. */
-.reveal .slide-background-content { background: transparent !important; }
+.slides-overlay .reveal .slide-background-content {
+  background: transparent !important;
+}
 
-/* Reset workshop typography that would otherwise bleed into reveal.js's
-   dark theme. The workshop's global rules (dark ink colour for strong,
-   heading top-borders + gradient marker, code-block chrome around fenced
-   blocks) all assume a light page background — on the deck's dark slide
-   they read as invisible or noisy. Inherit colours from reveal.js's
-   theme and strip the workshop-specific chrome inside the .reveal scope.
-
-   Font: Inter (with the display optical-size axis) is loaded via
+/* Font: Inter (with the display optical-size axis) is loaded via
    slides.js when the deck opens. Falls back to the workshop body stack
    if the CDN load is blocked. */
-.reveal, .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
-  /* Inter is loaded as a variable font with the `opsz` (optical-size)
-     axis — `font-optical-sizing: auto` plus an explicit `opsz` setting
-     selects the display cut at heading sizes without needing a separate
-     "Inter Display" family lookup. */
+.slides-overlay .reveal,
+.slides-overlay .reveal h1,
+.slides-overlay .reveal h2,
+.slides-overlay .reveal h3,
+.slides-overlay .reveal h4,
+.slides-overlay .reveal h5,
+.slides-overlay .reveal h6 {
   font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   font-optical-sizing: auto;
   font-variation-settings: "opsz" 32;
 }
-.reveal h1, .reveal h2, .reveal h3 {
+.slides-overlay .reveal h1,
+.slides-overlay .reveal h2,
+.slides-overlay .reveal h3 {
   font-weight: 800;
   letter-spacing: -0.025em;
 }
-.reveal strong, .reveal b {
+.slides-overlay .reveal strong,
+.slides-overlay .reveal b {
   color: inherit;
   font-weight: 700;
 }
-.reveal em, .reveal i { color: inherit; }
-.reveal a { color: var(--color-accent); }
-.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+.slides-overlay .reveal em,
+.slides-overlay .reveal i { color: inherit; }
+.slides-overlay .reveal a { color: var(--color-accent); }
+.slides-overlay .reveal h1,
+.slides-overlay .reveal h2,
+.slides-overlay .reveal h3,
+.slides-overlay .reveal h4,
+.slides-overlay .reveal h5,
+.slides-overlay .reveal h6 {
   color: inherit;
   margin: 0 0 0.5em;
   padding: 0;
   border: 0;
   letter-spacing: -0.02em;
 }
-.reveal h1::before, .reveal h2::before, .reveal h3::before {
+.slides-overlay .reveal h1::before,
+.slides-overlay .reveal h2::before,
+.slides-overlay .reveal h3::before {
   content: none;  /* strip the typography.css gradient marker on display headings */
 }
-/* Code blocks in slides: reveal.js renders fenced code as plain <pre><code>,
-   but the workshop's render-codeblock hook wraps each fence in
-   `.code-block` chrome (header bar, Copy button, inset gradient
-   highlight, ::before gradient rim, brand-coloured box-shadows). All of
-   that fights reveal.js's dark slide background, so strip it inside the
-   deck and let chroma + the slide background show the code plainly. */
-.reveal .code-block {
-  background: rgba(255, 255, 255, 0.04);  /* faint frosted panel against the dark slide */
+
+/* Code blocks: strip the workshop's `.code-block` chrome (header bar,
+   Copy button, inset gradient highlight, ::before gradient rim,
+   brand-coloured box-shadows) and let a faint frosted panel + chroma
+   tokens carry the rendering. */
+.slides-overlay .reveal .code-block {
+  background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   box-shadow: none;
@@ -201,28 +212,23 @@
   margin: 0.5em auto;
   max-width: 90%;
 }
-.reveal .code-block::before { content: none; }   /* drop the brand gradient rim */
-.reveal .code-block__header { display: none; }   /* drop the file-name + Copy button bar */
-.reveal .code-block pre,
-.reveal .code-block code,
-.reveal .code-block .chroma {
-  background: transparent;                       /* let the panel show through */
-  color: #f4f1ea;                                /* light ink for dark slide */
+.slides-overlay .reveal .code-block::before { content: none; }
+.slides-overlay .reveal .code-block__header { display: none; }
+.slides-overlay .reveal .code-block pre,
+.slides-overlay .reveal .code-block code,
+.slides-overlay .reveal .code-block .chroma {
+  background: transparent;
+  color: #f4f1ea;
   font-size: 0.55em;
   line-height: 1.5;
 }
-/* Chroma's own per-token colours stay readable on the dark slide because
-   they were chosen for the dark-mode workshop palette — the workshop
-   site flips chroma to its dark variant via the same token palette
-   reveal.js's dark theme uses. Tokens render as authored. */
-.reveal pre, .reveal code { font-size: 0.55em; }
+.slides-overlay .reveal pre,
+.slides-overlay .reveal code { font-size: 0.55em; }
 
-/* Images in slides — markdown `![alt](src)` works straight through
-   Hugo's image render hook, but the figure wrapper + caption can
-   crowd the slide. Constrain to a sensible portion of the slide
-   viewport and strip the figure chrome inside the deck. */
-.reveal img,
-.reveal figure img {
+/* Images: markdown `![alt](src)` works straight through Hugo's image
+   render hook; constrain to a sensible portion of the slide viewport. */
+.slides-overlay .reveal img,
+.slides-overlay .reveal figure img {
   display: block;
   max-width: 80%;
   max-height: 60vh;
@@ -232,13 +238,13 @@
   border-radius: 6px;
   object-fit: contain;
 }
-.reveal figure {
+.slides-overlay .reveal figure {
   margin: 0.5em auto;
   background: transparent;
   border: 0;
   padding: 0;
 }
-.reveal figcaption {
+.slides-overlay .reveal figcaption {
   font-size: 0.45em;
   opacity: 0.75;
   text-align: center;
