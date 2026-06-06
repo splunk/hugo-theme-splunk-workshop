@@ -5,6 +5,16 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.13.4] - 2026-06-05
+
+### Changed
+
+- **Inline code chips now carry brand identity on the type, not the surface.** Background unified with fenced code blocks (`--code-bg`, the same surface used by `.code-block`); chip text uses `--color-accent-text` — the theme's body-text accent token (dark magenta `#BD0D5F` on white in light mode, light pink `#FF7DBA` on navy in dark mode). Both token values are pre-tuned for WCAG body-text contrast (~5.4:1 light, ~8:1 dark). Two earlier-flagged problems addressed in one move:
+  - **Two-tone code surfaces** (chip on `--color-surface-alt` vs blocks on `--code-bg`) read as visual noise per the frontend-design review. They now share the surface; the chip is distinguished by the brand glyph colour + border + tight padding.
+  - **Dark-mode chips were nearly invisible** (previously `--color-surface` on `--color-paper-dark` = only 4–11 unit per-channel delta). Pink text on the unified surface gives the chip definitive identity without needing a tinted background.
+- **Removed the `[data-theme="dark"]` chip override** — `--code-bg` and `--color-accent-text` both flip per theme automatically, so a single rule serves both modes.
+- **Chip border bumped to `--color-border-strong`** for definition at the small chip size.
+
 ## [0.13.3] - 2026-06-05
 
 ### Fixed

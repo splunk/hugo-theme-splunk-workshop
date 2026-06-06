@@ -115,15 +115,20 @@ small { font-size: var(--fs-sm); }
      too tight against the chip's solid fill). 0.15em reads as deliberate
      space without feeling like a real word gap. */
   margin: 0 0.15em;
-  background: var(--color-surface-alt);
-  color: var(--color-ink);
+  /* Brand identity carried by the type, not the surface. Background is
+     unified with fenced code blocks (`--code-bg`); text uses the
+     accent-text token that flips per mode and is engineered for body-
+     text contrast (~5.4:1 dark-magenta on white, ~8:1 light-pink on
+     navy — both pass WCAG AA on its own scale). Distinct from links by
+     the chip's mono font + border + padding. Modern dev-doc convention
+     (GitHub / Linear / Stripe all use brand colour on inline code at
+     least in dark mode); applying it in both keeps the chip identity
+     consistent across modes and means no `[data-theme="dark"]` override. */
+  background: var(--code-bg);
+  color: var(--color-accent-text);
   border-radius: 4px;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-strong);
   font-feature-settings: "calt" 0;
-}
-[data-theme="dark"] :not(pre):not(.terminal__body) > code {
-  color: var(--color-ink);
-  background: var(--color-surface);
 }
 /* Terminal's <code> wrapper must inherit cleanly */
 .terminal__body > code {
