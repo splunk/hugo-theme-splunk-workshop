@@ -5,6 +5,12 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.13.3] - 2026-06-05
+
+### Fixed
+
+- **Inline code chip butted up against neighbouring words.** Rules in typography.css had `padding: 0.15em 0.4em` but no margin, so the chip's filled background started right where the inter-word space ended — reading "into `gateway-metrics.out`." the gap from the "o" in "into" to the chip's left edge was just the natural space character, which is visually tight against the chip's solid fill. Added `margin: 0 0.15em` so there's a deliberate ~0.15em buffer on each side without feeling like a real word gap.
+
 ## [0.13.2] - 2026-06-05
 
 ### Changed

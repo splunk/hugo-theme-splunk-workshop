@@ -110,6 +110,11 @@ small { font-size: var(--fs-sm); }
   font-family: var(--font-mono);
   font-size: 0.875em;
   padding: 0.15em 0.4em;
+  /* Small horizontal margin so the chip's background edge doesn't butt
+     up against the adjacent word (just the inter-word space character is
+     too tight against the chip's solid fill). 0.15em reads as deliberate
+     space without feeling like a real word gap. */
+  margin: 0 0.15em;
   background: var(--color-surface-alt);
   color: var(--color-ink);
   border-radius: 4px;
