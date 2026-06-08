@@ -11,9 +11,14 @@
 {{- $content := .Inner | .Page.RenderString -}}
 
 {{- if and .Parent (eq .Parent.Name "tabs") -}}
-  {{- /* Nested inside tabs — push into parent's bucket */ -}}
-  {{- $key := printf "_tabs_%d" .Parent.Ordinal -}}
-  {{- $entry := dict "label" $label "icon" $icon "content" $content -}}
+  {{- /* Nested inside tabs — push into parent's bucket. Key on the parent
+         tabs shortcode's .Position so the bucket is unique per tabs
+         instance even when the parent tabs is re-rendered inside another
+         percent shortcode's .Inner (see tabs.html for the same fix). */ -}}
+  {{- $posKey := printf "%v" .Parent.Position -}}
+  {{- $idSlug := replaceRE "[^a-zA-Z0-9]" "-" $posKey -}}
+  {{- $key    := printf "_tabs_%s" $idSlug -}}
+  {{- $entry  := dict "label" $label "icon" $icon "content" $content -}}
   {{- .Page.Store.Add $key (slice $entry) -}}
 {{- else -}}
 {{- /* Standalone — render as a labeled single-pane block. Flat output so

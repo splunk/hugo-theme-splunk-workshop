@@ -11,8 +11,19 @@
   shortcode re-runs the inner through the markdown parser; any 4+-space
   indentation in the emitted HTML would then be treated as a code block.
 */ -}}
-{{- $key     := printf "_tabs_%d" .Ordinal -}}
-{{- $tid     := printf "tabs-%d" .Ordinal -}}
+{{- /* Key on .Position rather than .Ordinal: when a {{% tabs %}} is nested
+       inside another percent shortcode (e.g. {{% exercise %}}), the parent
+       re-renders its .Inner through .Page.RenderString and the inner
+       shortcodes get a fresh .Ordinal counter from that sub-scope.
+       Two physically-separate tabs blocks can then share an ordinal
+       and collide in .Page.Store, producing a single tab bar that
+       carries both blocks' children. .Position is file:line:col and
+       uniquely identifies a shortcode instance regardless of where
+       it sits in the parse tree. */ -}}
+{{- $posKey  := printf "%v" .Position -}}
+{{- $idSlug  := replaceRE "[^a-zA-Z0-9]" "-" $posKey -}}
+{{- $key     := printf "_tabs_%s" $idSlug -}}
+{{- $tid     := printf "tabs-%s" $idSlug -}}
 {{- $groupid := .Get "groupid" | default (.Get "groupId") -}}
 {{- $style   := .Get "style" -}}
 {{- /* Force inner so children push */ -}}
