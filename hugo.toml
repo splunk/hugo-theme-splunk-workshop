@@ -9,27 +9,27 @@ enableGitInfo = true
 # ---------------------------------------------------------------------------
 # Multilingual (opt-in)
 # ---------------------------------------------------------------------------
-# Uncomment the block below to author in two or more languages. Once you do,
-# the language switcher in the site header auto-renders, your content moves
-# into per-language directories (content/en/, content/ja/, …), and URLs gain
-# the /<lang>/ prefix.
+# Uncomment the block below in your site config to author in two or more
+# languages. Once you do, the language switcher in the site header
+# auto-renders, your content moves into per-language directories
+# (content/en/, content/ja/, …), and URLs gain the /<lang>/ prefix.
 #
 # See: exampleSite/content/docs/advanced/07-multilingual.md for the full
 # walkthrough — directory layout, per-language i18n strings, hreflang, etc.
 #
-defaultContentLanguageInSubdir = true
-[languages]
-  [languages.en]
-    label      = "English"
-    locale     = "en"
-    weight     = 1
-    contentDir = "content/en"
-  [languages.ja]
-    label          = "日本語"
-    locale         = "ja"
-    weight         = 2
-    hasCJKLanguage = true
-    contentDir     = "content/ja"
+# defaultContentLanguageInSubdir = true
+# [languages]
+#   [languages.en]
+#     label      = "English"
+#     locale     = "en"
+#     weight     = 1
+#     contentDir = "content/en"
+#   [languages.ja]
+#     label          = "日本語"
+#     locale         = "ja"
+#     weight         = 2
+#     hasCJKLanguage = true
+#     contentDir     = "content/ja"
 
 # Markup configuration — Goldmark with attributes & raw HTML enabled for rich content
 [markup]

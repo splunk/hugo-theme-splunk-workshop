@@ -5,8 +5,11 @@
 {{- $title   := .Get "title"   -}}
 {{- $align   := .Get "align"   | default "" -}}
 {{- $url := $src -}}
-{{- $isExternal := or (hasPrefix $src "http") (hasPrefix $src "//") (hasPrefix $src "/") (hasPrefix $src "data:") -}}
-{{- if not $isExternal -}}
+{{- $hasScheme := gt (len (findRE `^[A-Za-z][A-Za-z0-9+.-]*:` $src)) 0 -}}
+{{- $isAbsoluteURI := or $hasScheme (hasPrefix $src "//") -}}
+{{- if hasPrefix $src "/" -}}
+  {{- $url = partial "site-href.html" $src -}}
+{{- else if not $isAbsoluteURI -}}
   {{- with .Page.Resources.GetMatch $src -}}
     {{- $url = .RelPermalink -}}
   {{- else -}}

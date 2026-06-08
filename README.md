@@ -79,6 +79,11 @@ hugo new --kind workshop content/workshops/my-workshop/01-intro.md
 hugo server         # http://localhost:1313 — serves YOUR content/
 ```
 
+By default, the theme is single-language and reads content from `content/`.
+If you opt into multilingual mode, move authored content under language
+directories such as `content/en/` and `content/ja/`; see the multilingual docs
+for the full config.
+
 **Install as a dependency** — recommended for production sites you want to keep upgrade-able. See the [Install docs](https://splunk.github.io/hugo-theme-splunk-workshop/docs/getting-started/01-install/) for the three install methods (Hugo Module, submodule, direct download).
 
 ## Documentation

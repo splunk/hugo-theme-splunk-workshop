@@ -8,6 +8,8 @@
 {{- $hide := eq (.Get "hidefirstheading" | default (.Get 1) | default "false") "true" -}}
 {{- with $.Page.GetPage $file -}}
   {{- $html := .RenderShortcodes -}}
+  {{- if .Store.Get "_needs_katex" }}{{- $.Page.Store.Set "_needs_katex" true -}}{{- end -}}
+  {{- if .Store.Get "_needs_mermaid" }}{{- $.Page.Store.Set "_needs_mermaid" true -}}{{- end -}}
   {{- $rendered := $html | $.Page.RenderString -}}
   {{- if $hide -}}
     {{- /* Split at the first </h1> and discard everything up to and including

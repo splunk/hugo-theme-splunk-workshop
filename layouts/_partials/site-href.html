@@ -6,8 +6,9 @@
   https://owner.github.io/repo/). This helper strips the leading slash before
   piping through relLangURL so internal paths get the path prefix AND the
   current language prefix on multilingual sites with
-  `defaultContentLanguageInSubdir = true`. External (http*) and anchor (#)
-  hrefs pass through unchanged.
+  `defaultContentLanguageInSubdir = true`. Absolute/protocol-relative URIs
+  (https:, mailto:, tel:, //cdn.example.com/...) and anchor (#) hrefs pass
+  through unchanged.
 
   relLangURL degrades to relURL on single-language sites, so this is safe
   regardless of whether multilingual mode is configured.
@@ -17,7 +18,8 @@
 {{- $raw := . -}}
 {{- $out := $raw -}}
 {{- if $raw -}}
-  {{- if not (or (hasPrefix $raw "http") (hasPrefix $raw "#")) -}}
+  {{- $hasScheme := gt (len (findRE `^[A-Za-z][A-Za-z0-9+.-]*:` $raw)) 0 -}}
+  {{- if not (or $hasScheme (hasPrefix $raw "//") (hasPrefix $raw "#")) -}}
     {{- $out = (strings.TrimPrefix "/" $raw) | relLangURL -}}
   {{- end -}}
 {{- end -}}

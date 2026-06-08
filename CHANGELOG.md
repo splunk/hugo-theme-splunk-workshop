@@ -5,6 +5,19 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.13.5] - 2026-06-05
+
+### Fixed
+
+- **`site-href.html` now recognises any RFC 3986 URI scheme**, not just `http`. Previously a `mailto:`, `tel:`, `ftp:`, `data:`, etc. href was passed through `relLangURL` as if it were an internal path — mangling it. The scheme check is now `findRE '^[A-Za-z][A-Za-z0-9+.-]*:'` plus an explicit `//` (protocol-relative) check.
+- **`{{< image >}}` / `{{< figure >}}` / the markdown image render hook** route `/`-prefixed image refs through `site-href.html` so the baseURL path prefix is added on GitHub Pages project-page deploys (and any other subpath host). Previously a `src="/foo.png"` produced a domain-rooted href that 404'd on subpath sites.
+- **`{{< include >}}` bubbles `_needs_katex` and `_needs_mermaid` flags** from the included page's `Page.Store` up to the host page's store. Without this, a workshop that pulls in a shared snippet via `include` and the snippet uses the `{{< mermaid >}}` shortcode would not load mermaid.js on the host page — diagrams rendered as plain text.
+
+### Changed
+
+- **Theme's root `hugo.toml` defaults to single-language** (multilingual block now commented out). Consuming sites that opt into multilingual mode uncomment the block in their own config. This matches the typical author flow and avoids confusing newcomers who don't need `/en/` URL prefixes.
+- **README** clarifies that the theme reads from `content/` by default and only requires `content/<lang>/` directories when multilingual mode is opted in.
+
 ## [0.13.4] - 2026-06-05
 
 ### Changed
