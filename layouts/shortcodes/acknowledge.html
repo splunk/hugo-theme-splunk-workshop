@@ -35,7 +35,7 @@
     <span class="ack__bar-icon" aria-hidden="true">{{ $iconHTML }}</span>
     <span class="ack__bar-label">{{ i18n "acknowledge" | default "Acknowledge" }}</span>
     <span class="ack__bar-divider" aria-hidden="true">·</span>
-    <span class="ack__bar-title">{{ $title }}</span>
+    <span class="ack__bar-title">{{ $title | markdownify }}</span>
   </header>
   <div class="ack__panel">
     <div class="ack__body">{{ $body | safeHTML }}</div>
@@ -45,7 +45,7 @@
 <dialog class="ack-modal" data-ack-modal-for="{{ $ackId }}" aria-labelledby="{{ $titleId }}">
   <div class="ack-modal__inner">
     <span class="ack-modal__icon" aria-hidden="true">{{ $iconHTML }}</span>
-    <p class="ack-modal__title" id="{{ $titleId }}">{{ $title }}</p>
+    <p class="ack-modal__title" id="{{ $titleId }}">{{ $title | markdownify }}</p>
     <div class="ack-modal__body">{{ $body | safeHTML }}</div>
     <button class="ack-modal__ack" type="button">{{ $btnLabel }}</button>
   </div>

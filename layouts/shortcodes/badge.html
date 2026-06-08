@@ -38,6 +38,6 @@
 {{- end -}}
 <span class="{{ $cls }}"{{ with $inline }} style="{{ . | safeCSS }}"{{ end }}>
   {{- with $icon }}<span class="badge__icon">{{ partial "icon-svg.html" . }}</span>{{ end -}}
-  {{- with $title }}<span class="badge__title">{{ . }}</span>{{ end -}}
+  {{- with $title }}<span class="badge__title">{{ . | markdownify }}</span>{{ end -}}
   {{ $text | safeHTML -}}
 </span>

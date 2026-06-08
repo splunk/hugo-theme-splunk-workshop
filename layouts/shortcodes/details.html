@@ -5,7 +5,7 @@
 {{- $open    := eq (.Get "open" | default "") "true" -}}
 {{- $name    := .Get "name" -}}
 <details class="solution expand"{{ if $open }} open{{ end }}{{ with $name }} name="{{ . }}"{{ end }}>
-  <summary class="solution__summary">{{ $summary }}</summary>
+  <summary class="solution__summary">{{ $summary | markdownify }}</summary>
   <div class="solution__body">
     {{ .Inner | .Page.RenderString }}
   </div>

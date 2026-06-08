@@ -5,6 +5,12 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.13.6] - 2026-06-08
+
+### Fixed
+
+- **Shortcode `title=` args now honour inline markdown** on `expand`, `details`, `badge`, `exercise`, `acknowledge`, and `presenter`. Previously a value like `title="**Ninja:** Observing the collector internals"` rendered with literal `**` asterisks in the visible heading instead of bold text. Each shortcode now pipes its `title` (or `summary`) value through `markdownify` at the point of visible output, matching the same fix applied to the `step` shortcode in v0.11.4. `aria-label` and `<dialog aria-labelledby>` reference points are left as plain text where they're attributes (markdown HTML in attribute strings doesn't help assistive tech and would render as literal angle brackets).
+
 ## [0.13.5] - 2026-06-05
 
 ### Fixed

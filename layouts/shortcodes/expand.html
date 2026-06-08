@@ -7,7 +7,7 @@
 {{- $title := .Get "title" | default (.Get 0) | default (i18n "expand") -}}
 {{- $open  := or (eq (.Get "open" | default "") "true") (eq (.Get 1 | default "") "true") -}}
 <details class="solution expand"{{ if $open }} open{{ end }}>
-  <summary class="solution__summary">{{ $title }}</summary>
+  <summary class="solution__summary">{{ $title | markdownify }}</summary>
   <div class="solution__body">
     {{ .Inner | .Page.RenderString }}
   </div>

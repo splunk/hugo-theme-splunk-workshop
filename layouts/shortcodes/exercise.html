@@ -19,7 +19,7 @@
 <span class="exercise__bar-icon" aria-hidden="true">{{ partial "icon-svg.html" "target" }}</span>
 <span class="exercise__bar-label">{{ i18n "exercise" }}</span>
 <span class="exercise__bar-divider" aria-hidden="true">·</span>
-<span class="exercise__bar-title">{{ $title }}</span>
+<span class="exercise__bar-title">{{ $title | markdownify }}</span>
 </header>
 <div class="exercise__panel">
 <div class="exercise__body">
