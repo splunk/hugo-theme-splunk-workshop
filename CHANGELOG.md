@@ -5,6 +5,16 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.13.8] - 2026-06-08
+
+### Fixed
+
+- **Nested `tabs` blocks could merge their panes.** When two separate `{{< tabs >}}` blocks live inside `step`, `exercise`, or `notice` shortcodes (whose `.Inner` re-renders via `.Page.RenderString`), the inner `.Position` collapses to zero and `.Ordinal` resets per sub-scope. Both `{{< tabs >}}` then computed the same bucket key in `.Page.Store` and their child `{{% tab %}}` pushes accumulated into one bucket, producing a tab bar with all panes from both blocks. The fix adds an explicit `id=` (or `key=`) arg to `tabs`; `tab` reads it from `.Parent.Get "id"`. When omitted, the existing automatic keying (`.Position` + `.Ordinal`) is still tried — so pages without the nesting hazard need no changes. Documented in `shortcodes/02-structure.md` + `03-layout.md`. v0.13.7 was an earlier incomplete attempt at this fix.
+
+### Added
+
+- **`objectives` and `prerequisites` shortcodes now accept a `title=` arg** (and first positional). Pipes through `markdownify` so authors can format the heading (`title="**Goals** for today"`). Defaults remain "What you'll learn" and "Before you start" via the new `objectivesTitle` and `prerequisitesTitle` i18n keys.
+
 ## [0.13.6] - 2026-06-08
 
 ### Fixed

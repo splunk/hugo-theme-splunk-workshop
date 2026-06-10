@@ -104,6 +104,10 @@
   translation: "Question"
 - id: exerciseDefault
   translation: "Try it"
+- id: objectivesTitle
+  translation: "What you'll learn"      # default `{{< objectives >}}` heading
+- id: prerequisitesTitle
+  translation: "Before you start"       # default `{{< prerequisites >}}` heading
 - id: acknowledge
   translation: "Acknowledge"           # label in the acknowledge bar header
 - id: acknowledgeDefault

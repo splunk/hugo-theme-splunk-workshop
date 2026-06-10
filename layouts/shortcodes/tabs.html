@@ -11,22 +11,24 @@
   shortcode re-runs the inner through the markdown parser; any 4+-space
   indentation in the emitted HTML would then be treated as a code block.
 */ -}}
-{{- /* Key on .Position rather than .Ordinal: when a {{% tabs %}} is nested
-       inside another percent shortcode (e.g. {{% exercise %}}), the parent
-       re-renders its .Inner through .Page.RenderString and the inner
-       shortcodes get a fresh .Ordinal counter from that sub-scope.
-       Two physically-separate tabs blocks can then share an ordinal
-       and collide in .Page.Store, producing a single tab bar that
-       carries both blocks' children. .Position is file:line:col and
-       uniquely identifies a shortcode instance regardless of where
-       it sits in the parse tree. */ -}}
-{{- $posKey  := printf "%v" .Position -}}
-{{- $idSlug  := replaceRE "[^a-zA-Z0-9]" "-" $posKey -}}
-{{- $key     := printf "_tabs_%s" $idSlug -}}
-{{- $tid     := printf "tabs-%s" $idSlug -}}
+{{- /* Prefer an explicit id when authors need a stable key. Otherwise fall
+       back to the rendered shortcode position, which is the existing theme
+       behaviour for pages that don't need a custom bucket key. */ -}}
+{{- $explicit := .Get "id" | default (.Get "key") -}}
+{{- $seed := "" -}}
+{{- if $explicit -}}
+  {{- $seed = printf "%v" $explicit -}}
+{{- else -}}
+  {{- $scope := printf "%v" .Position -}}
+  {{- $ordinal := .Ordinal | default 0 -}}
+  {{- $seed = printf "%s-%v" $scope $ordinal -}}
+{{- end -}}
+{{- $slug := replaceRE "[^a-zA-Z0-9]" "-" $seed -}}
+{{- $key    := printf "_tabs_%s" $slug -}}
+{{- $tid    := printf "tabs-%s" $slug -}}
 {{- $groupid := .Get "groupid" | default (.Get "groupId") -}}
 {{- $style   := .Get "style" -}}
-{{- /* Force inner so children push */ -}}
+{{- /* Force inner so children push into the current tab bucket. */ -}}
 {{- $_ := .Inner -}}
 {{- $tabs := .Page.Store.Get $key | default slice -}}
 <div class="tabs{{ with $style }} tabs--{{ . }}{{ end }}" data-tabs{{ with $groupid }} data-tabs-group="{{ . }}"{{ end }}>

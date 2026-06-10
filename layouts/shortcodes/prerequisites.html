@@ -4,11 +4,16 @@
   - Familiarity with the command line
   - Splunk Enterprise 9.0+ installed
   {{< /prerequisites >}}
+
+  Optional `title` arg (or first positional) overrides the default
+  label and pipes through markdownify so authors can format it
+  (`title="**Bring** these to the workshop"`).
 */ -}}
+{{- $title := .Get "title" | default (.Get 0) | default (i18n "prerequisitesTitle" | default "Before you start") -}}
 <aside class="list-block list-block--prerequisites">
   <p class="list-block__label">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-    Before you start
+    {{ $title | markdownify }}
   </p>
   {{ .Inner | .Page.RenderString }}
 </aside>

@@ -45,6 +45,26 @@ choco install hugo-extended
 
 Each `tab` takes its label as the positional arg (or `title=` / `name=` / `label=`). Add `icon="<name>"` to render a theme icon before the label.
 
+When a page has more than one `tabs` block inside nested shortcodes such as `step`, `exercise`, or `notice`, give each `tabs` block a unique `id`. Hugo can collapse shortcode position data during nested re-renders; the explicit `id` keeps each tab set in its own bucket so panes from separate steps do not merge:
+
+```markdown
+{{</* step "Run the app" */>}}
+{{</* tabs id="run-app" */>}}
+{{%/* tab title="Command" */%}} ... {{%/* /tab */%}}
+{{%/* tab title="Output" */%}} ... {{%/* /tab */%}}
+{{</* /tabs */>}}
+{{</* /step */>}}
+
+{{</* step "Send a request" */>}}
+{{</* tabs id="send-request" */>}}
+{{%/* tab title="Command" */%}} ... {{%/* /tab */%}}
+{{%/* tab title="Output" */%}} ... {{%/* /tab */%}}
+{{</* /tabs */>}}
+{{</* /step */>}}
+```
+
+Use `id` for rendering identity only. Use `groupid` when you want matching tab labels to stay selected together across multiple tab sets.
+
 ### Tabs with `groupid` (synced)
 
 When a workshop has many tab blocks for the same axis (OS, language, environment), pass a shared `groupid` and they'll stay in sync — picking "Linux" once selects it everywhere.

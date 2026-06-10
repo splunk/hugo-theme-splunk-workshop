@@ -139,12 +139,12 @@ Run `./restart.sh` and watch the logs. You should see `Extension started · file
 
 ### 4. Tabbed exercise variants
 
-When the same task has different paths (macOS vs Linux, Python vs Go, kubectl vs helm), wrap a `tabs` block inside `exercise`:
+When the same task has different paths (macOS vs Linux, Python vs Go, kubectl vs helm), wrap a `tabs` block inside `exercise`. If an exercise contains more than one `tabs` block, give each one a unique `id` so their panes do not merge during Hugo's nested shortcode rendering:
 
 {{< exercise "Install the collector" >}}
 Pick your platform and run the install command:
 
-{{< tabs groupid="install-platform" >}}
+{{< tabs id="install-collector-platform" groupid="install-platform" >}}
 {{< tab "macOS" >}}
 
 ```bash
@@ -169,7 +169,7 @@ choco install otel-collector
 {{< /tabs >}}
 
 {{< notice tip >}}
-The `groupid` on `tabs` keeps the reader's platform choice synced across every exercise that uses the same id — they pick once, and every later exercise opens the same tab.
+The `id` identifies this rendered tab set. The `groupid` syncs the reader's platform choice across every exercise that uses the same group — they pick once, and every later exercise opens the same tab.
 {{< /notice >}}
 {{< /exercise >}}
 

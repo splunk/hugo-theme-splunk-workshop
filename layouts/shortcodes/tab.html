@@ -11,13 +11,20 @@
 {{- $content := .Inner | .Page.RenderString -}}
 
 {{- if and .Parent (eq .Parent.Name "tabs") -}}
-  {{- /* Nested inside tabs — push into parent's bucket. Key on the parent
-         tabs shortcode's .Position so the bucket is unique per tabs
-         instance even when the parent tabs is re-rendered inside another
-         percent shortcode's .Inner (see tabs.html for the same fix). */ -}}
-  {{- $posKey := printf "%v" .Parent.Position -}}
-  {{- $idSlug := replaceRE "[^a-zA-Z0-9]" "-" $posKey -}}
-  {{- $key    := printf "_tabs_%s" $idSlug -}}
+  {{- /* Nested inside tabs — append to the bucket for the matching tab set.
+         Use an explicit id when present. Otherwise fall back to the current
+         rendered position plus the parent tabs ordinal, which matches the
+         existing automatic keying used by older pages. */ -}}
+  {{- $explicit := .Parent.Get "id" | default (.Parent.Get "key") -}}
+  {{- $seed := "" -}}
+  {{- if $explicit -}}
+    {{- $seed = printf "%v" $explicit -}}
+  {{- else -}}
+    {{- $scope := printf "%v" .Parent.Position -}}
+    {{- $ordinal := .Parent.Ordinal | default 0 -}}
+    {{- $seed = printf "%s-%v" $scope $ordinal -}}
+  {{- end -}}
+  {{- $key := printf "_tabs_%s" (replaceRE "[^a-zA-Z0-9]" "-" $seed) -}}
   {{- $entry  := dict "label" $label "icon" $icon "content" $content -}}
   {{- .Page.Store.Add $key (slice $entry) -}}
 {{- else -}}

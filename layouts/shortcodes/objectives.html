@@ -6,11 +6,16 @@
     - Run your first search
     - Save it as a report
     {{< /objectives >}}
+
+  Optional `title` arg (or first positional) overrides the default
+  label and pipes through markdownify so authors can format it
+  (`title="**Goals** for today"`).
 */ -}}
+{{- $title := .Get "title" | default (.Get 0) | default (i18n "objectivesTitle" | default "What you'll learn") -}}
 <aside class="list-block list-block--objectives">
   <p class="list-block__label">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-    What you'll learn
+    {{ $title | markdownify }}
   </p>
   {{ .Inner | .Page.RenderString }}
 </aside>
