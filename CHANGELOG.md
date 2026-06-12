@@ -5,6 +5,23 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.13.9] - 2026-06-08
+
+### Security
+
+- **CSS-color allow-list factored into a shared partial.** New `layouts/_partials/css-color.html` validates a user-supplied colour against a regex allow-list (hex, named colours, `rgb()` / `hsl()` / `var()` / `color-mix()` syntax) before it's interpolated into an inline `style` attribute. Applied to every shortcode that takes a `color=` arg and emits it inline:
+  - `button.html` (filled-style chip)
+  - `card.html` (`--card-accent` CSS variable)
+  - `icon.html` (inline glyph color)
+  - `linkedin.html` (replaces the local copy of the same regex)
+  - `webex-msg.html` (avatar tint)
+  
+  Same defence as `textcolor.html` / `badge.html`. On failure each shortcode falls back to a sensible per-context default (`currentColor`, accent, etc.) so a malformed value degrades safely instead of rendering attacker-controlled CSS declarations.
+
+### Fixed
+
+- **`solution` shortcode label now honours inline markdown.** Same fix as the other title-arg shortcodes in v0.13.6 — pipes the label through `markdownify` so an author can write `label="**Solution** with bold"` and have it render as expected.
+
 ## [0.13.8] - 2026-06-08
 
 ### Fixed

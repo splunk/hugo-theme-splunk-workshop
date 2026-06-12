@@ -1,6 +1,6 @@
 {{- $label := .Get "label" | default (.Get 0) | default (i18n "solution") -}}
 <details class="solution">
-  <summary class="solution__summary">{{ $label }}</summary>
+  <summary class="solution__summary">{{ $label | markdownify }}</summary>
   <div class="solution__body">
     {{ .Inner | .Page.RenderString }}
   </div>
