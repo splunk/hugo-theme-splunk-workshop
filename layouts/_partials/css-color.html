@@ -1,0 +1,22 @@
+{{- /*
+  Validate a user-provided CSS color-like value before it is interpolated into
+  an inline style. `safeCSS` marks a value trusted; it does not validate that
+  the value is only a single CSS value.
+
+  Allows common workshop theme values:
+    #fff, #ffffff, red, rgb(...), hsl(...), var(--token), color-mix(...)
+
+  Rejects characters used to escape into extra declarations or markup,
+  including semicolons, colons, braces, backslashes, angle brackets, and quotes.
+*/ -}}
+{{- $value := index . "value" | default "" -}}
+{{- $fallback := "currentColor" -}}
+{{- if isset . "fallback" -}}{{- $fallback = index . "fallback" -}}{{- end -}}
+{{- $value = string $value -}}
+{{- $fallback = string $fallback -}}
+{{- $allow := `^[a-zA-Z0-9#.,()% /_-]+$` -}}
+{{- if and $value (findRE $allow $value) -}}
+  {{- $value -}}
+{{- else -}}
+  {{- $fallback -}}
+{{- end -}}

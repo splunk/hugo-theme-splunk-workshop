@@ -33,9 +33,9 @@ hugo new --kind lesson content/workshops/getting-started/02-concept.md
 
 Explain the concept the lesson teaches. Keep prose tight — workshop readers skim. Reach for shortcodes where they help:
 
-- `{{</* tip */>}}` for shortcuts and pro moves
-- `{{</* note */>}}` for caveats that aren't blocking
-- `{{</* warning */>}}` for things that will break a beginner
+- `{{</* notice tip */>}}` for shortcuts and pro moves
+- `{{</* notice note */>}}` for caveats that aren't blocking
+- `{{</* notice warning */>}}` for things that will break a beginner
 
 A real lesson would have 2–4 short paragraphs here, ideally one diagram or `mermaid` chart.
 

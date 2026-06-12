@@ -76,6 +76,10 @@
     {{- $color = $style -}}
   {{- end -}}
 {{- end -}}
+{{- if $color -}}
+  {{- $fallback := cond (eq $styleKey "transparent") "var(--color-accent-text)" "var(--color-accent)" -}}
+  {{- $color = partial "css-color.html" (dict "value" $color "fallback" $fallback) -}}
+{{- end -}}
 {{- /* Add the filled modifier whenever we end up with a colour and we're
        not in the outline or text-only variant. */ -}}
 {{- if and $color (ne $styleKey "secondary") (ne $styleKey "transparent") -}}

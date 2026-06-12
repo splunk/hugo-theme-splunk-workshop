@@ -20,6 +20,7 @@
 {{- $name    := .Get "name"  | default (cond $me "You" "") -}}
 {{- $time    := .Get "time"  | default "" -}}
 {{- $color   := .Get "color" | default "#1d8b54" -}}
+{{- $color   = partial "css-color.html" (dict "value" $color "fallback" "#1d8b54") -}}
 {{- $content := .Inner | .Page.RenderString -}}
 {{- if and .Parent (eq .Parent.Name "webex") -}}
   {{- $key := printf "_webex_%d" .Parent.Ordinal -}}

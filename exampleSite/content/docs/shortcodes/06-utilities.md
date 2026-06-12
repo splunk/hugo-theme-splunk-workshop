@@ -22,35 +22,36 @@ Place a page bundle at `content/workshops/intro/index.md` and drop `lab-data.csv
 
 Args:
 
-- `pattern` — glob to filter (default: everything that isn't a markdown page)
+- `pattern` — regular expression matched against the resource name (default: every non-image page resource)
 - `title` — section heading (default: "Attachments")
 - `sort` — `asc` (default) or `desc`, by file name
 - `icon` — theme icon shown next to each file (default: `file`)
 
 ### `resources`
 
-Like `attachments`, but lets you pass an explicit Hugo resource type / pattern. Useful when a page has both inline images (referenced from prose) and downloadable resources that you want to list separately. Takes the same `title` / `sort` / `icon` args as `attachments` (heading defaults to "Resources").
+Like `attachments`, but with a more generic heading. Useful when a page has downloadable resources that you want to list separately from the prose. It uses the same page-resource listing logic and takes the same `pattern` / `title` / `sort` / `icon` args as `attachments` (heading defaults to "Resources").
 
 ```markdown
-{{</* resources pattern="*.pdf" */>}}
-{{</* resources pattern="*.zip" title="Starter projects" */>}}
+{{</* resources pattern=".*\\.pdf$" */>}}
+{{</* resources pattern=".*\\.zip$" title="Starter projects" */>}}
 ```
 
 ## Page-tree helpers
 
 ### `children`
 
-Renders the immediate children of the current section as a card list. Drop it in a chapter `_index.md` and Hugo fills in the rest:
+Renders the immediate children of the current section. Drop it in a chapter `_index.md` and Hugo fills in the rest:
 
 ```markdown
 {{</* children */>}}
+{{</* children type="card" */>}}
 ```
 
 Args:
 
-- `type` — `cards` (default), `list`, or `h2` / `h3` / `h4` (rendered as a heading + description for each child). `style` is an accepted alias for `type` (Relearn compatibility).
+- `type` — `list` (default), `card`, or `h2` / `h3` / `h4` (rendered as a heading + description for each child). `style` is an accepted alias for `type` (Relearn compatibility).
 - `description` — `true` to include each child's `description` front matter (default `true`)
-- `depth` — recurse N levels deep (default `1`)
+- `depth` — accepted for Relearn compatibility; the current renderer lists the immediate child pages/sections only
 - `sort` — `weight` (default) or `title`
 - `image` — `true` to render each child's featured image (`params.images[0]`) as a banner on card-style listings (default `false`)
 - `showhidden` — `true` to include pages marked `hidden` (default `false`)
@@ -113,10 +114,10 @@ For a "two-way branch" page, render two `card` shortcodes inline (one per path) 
 Inline another file's content as if it were part of the current page. The included file is rendered through Hugo's markdown pipeline, so shortcodes work in the included file too.
 
 ```markdown
-{{</* include "shared/prerequisites.md" */>}}
+{{</* include "shared/prerequisites" */>}}
 ```
 
-The path is relative to the project root (positional, or `file=`). Hugo errors if the file is missing.
+The path is a Hugo page reference under `content/` (positional, or `file=`), not an arbitrary filesystem include. Hugo errors if the page can't be resolved.
 
 Pass `hidefirstheading="true"` (or a second positional `true`) to drop the included file's leading `#` heading — handy when you're embedding a standalone page whose title would otherwise duplicate the host page's heading.
 
@@ -146,7 +147,7 @@ The current version is **{{</* siteparam name="productVersion" */>}}**.
 Args:
 
 - `name` (positional) — the param to read
-- `default` — fallback if the param is unset
+Unset params render as an empty string.
 
 ### `tree`
 
@@ -178,7 +179,7 @@ The `{{</* file-tree */>}}` shortcode covered above is the body-mode-only varian
 
 ### `otel-version`
 
-Renders the latest OpenTelemetry Collector version, pulled from a value the site author sets in `[params]`. Keeps version-pinned text from going stale silently between collector releases — change one param, every workshop page that uses the shortcode updates.
+Renders the OpenTelemetry Collector version configured by the site author in `[params]`. It centralizes version-pinned text — change one param, every workshop page that uses the shortcode updates.
 
 ```markdown
 Install OTel Collector {{</* otel-version */>}}.
@@ -237,11 +238,9 @@ Args:
 - `color` — any CSS color (hex, rgb, named)
 - `font` — optional `font-family` (e.g. `serif`, `monospace`)
 - `weight` — optional `font-weight` (e.g. `bold`, `600`)
-- positional 0 — alias of `color`
-
 Each value is validated against a conservative character allow-list before it reaches the inline `style`, so a malformed value falls back to the default rather than injecting arbitrary CSS.
 
-Accepts markdown in the body, so you can combine: `{{</* textcolor "#FF007F" */>}}**critical**{{</* /textcolor */>}}`.
+The body is treated as inline HTML/text rather than markdown. Use normal markdown emphasis outside the shortcode, or keep the shortcode body to plain inline text.
 
 ## Typography
 

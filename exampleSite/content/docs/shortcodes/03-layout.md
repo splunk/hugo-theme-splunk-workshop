@@ -158,7 +158,7 @@ Paste output from the `tree` command directly. Lines containing `/` are highligh
 {{</* image src="dashboard.png" alt="Dashboard" caption="Click any image to zoom." */>}}
 ```
 
-`image` resolves the `src` against the page's resources first, then falls back to a relative URL. Add `align="left"` / `"right"` for floated variants (prose wraps around, capped at 40% width; unfloats on screens narrower than 720px), `align="center"` to centre an image narrower than the content column, or `align="bleed"` to extend the figure past the prose margins for a full-bleed screenshot.
+`image` resolves the `src` against the page's resources first, then falls back to a relative URL. Add `align="left"` / `"right"` for floated variants (prose wraps around, capped at 40% width; unfloats on screens narrower than 720px), `align="center"` to center an image narrower than the content column, or `align="bleed"` to let the figure use the full content width.
 
 Pass `width=` (e.g. `width="320px"`, `width="50%"`) to clamp the whole figure, or `height=` to clamp just the image vertically. Either dimension accepts any CSS length (`px`, `rem`, `%`, `vh`, …); with only one set, the browser preserves the image's intrinsic aspect ratio. Setting both pins the image inside a fixed box without distortion.
 
@@ -239,7 +239,7 @@ All three modifiers compose:
 
 | Param | Default | Notes |
 | --- | --- | --- |
-| (inner content) | — | The visible label. Markdown allowed (e.g. `` `code` ``, **bold**, links). |
+| (inner content) | — | The visible label. Keep it short and plain; the body is not rendered through the markdown pipeline. |
 | `color` | — | Either a preset name (`accent`, `info`, `success`, `warn`, `danger`, `primary`, `secondary`) or any CSS color value. |
 | `style` | — | Alias of `color` (relearn-compatibility). |
 | `title` | — | Optional label rendered to the left of the content, separated by a hairline. |
@@ -257,7 +257,7 @@ All three modifiers compose:
 
 ### What badges aren't
 
-- **Not a callout.** If you need a paragraph of "be careful" guidance, use `tip` / `warning` / `notice`.
+- **Not a callout.** If you need a paragraph of "be careful" guidance, use `notice` with a semantic style such as `tip`, `warning`, or `danger`.
 - **Not a button.** Badges aren't interactive. Use `button` if it's clickable.
 - **Not for long text.** Keep them under 4 words. Long text in a badge defeats the visual hierarchy.
 
@@ -386,16 +386,16 @@ Common Font Awesome aliases are accepted too: `fas-check`, `fa-circle-info`, `ex
 
 ### Adding your own icons
 
-To register a new icon, edit [`layouts/_partials/icon-svg.html`](https://github.com/splunk/hugo-theme-splunk-workshop/blob/main/layouts/_partials/icon-svg.html) (override it in your own site to keep your changes outside the theme). Drop a new entry into the `$icons` dict — paste the SVG path data only, without the `<svg>` wrapper:
+To register a new icon, add an entry to `data/icons.toml` under `[icons]` (override that data file in your own site to keep your changes outside the theme). Paste the SVG inner markup only, without the `<svg>` wrapper:
 
-```go-html-template
-"my-icon" `<path d="M3 12h18M12 3l9 9-9 9" stroke-linecap="round"/>`
+```toml
+my-icon = '<path d="M3 12h18M12 3l9 9-9 9" stroke-linecap="round"/>'
 ```
 
 The wrapper auto-applies `viewBox="0 0 24 24"`, `stroke="currentColor"`, and 2px stroke. So your SVG path data should be designed for a 24×24 grid with no inline color.
 
 {{< notice tip "Source for new icons" >}}
-[Lucide](https://lucide.dev/) and [Phosphor](https://phosphoricons.com/) both ship 24×24 SVGs with consistent stroke widths that drop straight in. Copy the path data, paste into the dict, restart `hugo server`.
+[Lucide](https://lucide.dev/) and [Phosphor](https://phosphoricons.com/) both ship 24×24 SVGs with consistent stroke widths that drop straight in. Copy the inner SVG markup, paste it into `data/icons.toml`, restart `hugo server`.
 {{< /notice >}}
 
 ## Cards
@@ -661,7 +661,7 @@ Five-dot meter + labelled difficulty band. Takes either a positional integer or 
 {{</* difficulty level=4 */>}}
 ```
 
-Out-of-range values cap to 1 or 5; missing values default to 1 (Beginner). The dot meter is `aria-label`-described for screen readers.
+Out-of-range values clamp to 1 or 5; missing values default to 1 (Beginner). The dot meter is `aria-label`-described for screen readers.
 
 ### When to reach for indicators vs front matter
 

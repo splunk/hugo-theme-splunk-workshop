@@ -6,4 +6,5 @@
 */ -}}
 {{- $name  := .Get "icon" | default (.Get 0) | default "info" -}}
 {{- $color := .Get "color" -}}
+{{- if $color }}{{- $color = partial "css-color.html" (dict "value" $color "fallback" "currentColor") -}}{{- end -}}
 <span class="inline-icon"{{ with $color }} style="color: {{ . | safeCSS }}"{{ end }}>{{ partial "icon-svg.html" $name }}</span>

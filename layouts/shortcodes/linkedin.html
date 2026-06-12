@@ -21,9 +21,7 @@
 {{- $url    := .Get "certUrl"        | default site.Params.linkedinCertUrl  | default "" -}}
 {{- $text   := .Get "text"           | default "LinkedIn" -}}
 {{- $color  := .Get "color"          | default "#ffffff" -}}
-{{- /* safeCSS doesn't validate values; allow-list to prevent CSS injection
-       via `color="red;background:url(...)"`. See textcolor.html. */ -}}
-{{- if not (findRE `^[a-zA-Z0-9#.,()% /_-]+$` $color) -}}{{- $color = "#ffffff" -}}{{- end -}}
+{{- $color = partial "css-color.html" (dict "value" $color "fallback" "#ffffff") -}}
 {{- $year   := now.Format "2006" -}}
 {{- $month  := time.Now.Month | int -}}
 {{- $href := printf "https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=%s&organizationId=%s&issueYear=%s&issueMonth=%d%s" ($name | urlquery) $org $year $month (cond (ne $url "") (printf "&certUrl=%s" ($url | urlquery)) "") -}}

@@ -27,6 +27,7 @@
 {{- $image     := .Get "image" -}}
 {{- $heroIcon  := .Get "hero-icon" -}}
 {{- $color     := .Get "color" -}}
+{{- if $color }}{{- $color = partial "css-color.html" (dict "value" $color "fallback" "var(--color-accent)") -}}{{- end -}}
 {{- $showTime  := eq (lower (.Get "show-time"  | default "" | string)) "true" -}}
 {{- $showPages := eq (lower (.Get "show-pages" | default "" | string)) "true" -}}
 {{- $content   := .Inner | .Page.RenderString -}}
