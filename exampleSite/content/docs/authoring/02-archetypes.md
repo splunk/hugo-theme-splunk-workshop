@@ -136,9 +136,9 @@ One-sentence summary of what this lesson covers and why the reader should care.
 Explain the concept the lesson teaches. Keep prose tight — workshop readers
 skim. Reach for shortcodes where they help:
 
-- `{{</* tip */>}}` for shortcuts and pro moves
-- `{{</* note */>}}` for caveats that aren't blocking
-- `{{</* warning */>}}` for things that will break a beginner
+- `{{</* notice tip */>}}` for shortcuts and pro moves
+- `{{</* notice note */>}}` for caveats that aren't blocking
+- `{{</* notice warning */>}}` for things that will break a beginner
 
 ## Walkthrough
 

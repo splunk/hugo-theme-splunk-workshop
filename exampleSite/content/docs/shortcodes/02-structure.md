@@ -29,7 +29,7 @@ Steps are the backbone of any procedure...
 {{</* /step */>}}
 ```
 
-The third positional arg is an optional time hint that renders next to the step title. Omit it for steps that aren't time-bounded.
+The positional args are `title`, `n` (the step number), and `time` (an optional duration hint that renders next to the title). Omit `n` to let Hugo auto-increment; the examples above pass `"1"` / `"2"` explicitly only to make the rendered numbering deterministic on this reference page. The named forms `n=`, `time=`, and `title=` work too.
 
 The title accepts inline markdown — `**bold**`, `*emphasis*`, `` `code` ``, and links — so you can format file names or commands directly in the title:
 

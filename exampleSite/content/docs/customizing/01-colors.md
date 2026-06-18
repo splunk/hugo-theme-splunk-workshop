@@ -53,12 +53,12 @@ To rebrand to a single accent (no gradient), set both `colorAccent` and `colorAc
 | Token | Default | Used for |
 | --- | --- | --- |
 | `colorInk` | `#0C1724` | Body text |
-| `colorInkMuted` | `#585B61` | Muted text, captions (AA-safe; the theme's bare default is `#4B4D52` but the demo overrides to `#585B61` for ~4.6:1 on white — recommended) |
+| `colorInkMuted` | `#585B61` | Muted text, captions (AA-safe; bumped from the bare `#4B4D52` to hit ~4.6:1 on white) |
 | `colorPaper` | `#FFFFFF` | Page background |
-| `colorSurface` | `#F7F6F3` | Callout fills, card surfaces |
-| `colorSurfaceAlt` | `#EFEDE7` | Inline code chip background |
-| `colorBorder` | `#E5E2DA` | Hairlines |
-| `colorBorderStrong` | `#D6D2C8` | Strong borders, code-block borders |
+| `colorSurface` | `#F4F6FA` | Callout fills, card surfaces (cool gray to harmonize with the dark-mode navy palette) |
+| `colorSurfaceAlt` | `#E9EDF2` | Inline code chip background |
+| `colorBorder` | `#E1E5EC` | Hairlines |
+| `colorBorderStrong` | `#C7CDD8` | Strong borders, code-block borders |
 
 ## Dark mode tokens
 

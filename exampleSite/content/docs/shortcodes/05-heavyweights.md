@@ -225,7 +225,7 @@ Reveal.js is ~75KB minified plus a theme stylesheet — bundling it into every w
 {{</* youtube id="tBHUyncppng" title="An old internet classic" */>}}
 ```
 
-Uses `youtube-nocookie.com` for GDPR-friendlier embedding. The `title` attribute is required for accessibility.
+Uses `youtube-nocookie.com` for GDPR-friendlier embedding. The `title` attribute is strongly recommended for accessibility — omit it and the iframe falls back to a generic `"YouTube video"` label, which screen readers will announce verbatim.
 
 For other video providers (Vimeo, Wistia, etc.), the theme doesn't ship a shortcode — drop the embed iframe directly into your markdown and Hugo's Goldmark with `unsafe = true` will render it.
 

@@ -10,7 +10,7 @@ The theme ships a fully self-contained client-side search — no Algolia, no ext
 
 ## How it works
 
-When Hugo builds your site, it emits a `/index.json` file containing every regular page's title, description, section, URL, tags, and a 600-character summary of the body. The JavaScript modal fetches this file once on first open, scores entries against the user's query with a small substring + word-prefix matcher, and renders the top 12 results.
+When Hugo builds your site, it emits a `/index.json` file containing every regular page's title, description, section, URL, tags, and a 4000-character plain-text summary of the body. The JavaScript modal fetches this file once on first open, scores entries against the user's query with a small substring + word-prefix matcher, and renders the top 12 results.
 
 ```text
 Build time:
@@ -64,7 +64,7 @@ The index template `layouts/_default/index.json` includes every page where `Para
   "section": "Getting Started",
   "url": "/workshops/getting-started/03-first-search/",
   "tags": ["spl", "search"],
-  "summary": "First 600 chars of the rendered plain-text body..."
+  "summary": "First 4000 chars of the rendered plain-text body..."
 }
 ```
 

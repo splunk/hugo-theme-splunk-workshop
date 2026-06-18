@@ -37,8 +37,11 @@ make serve
 That target expands to:
 
 ```bash
-hugo server --source exampleSite --themesDir ../.. --port 1313 --disableFastRender
+hugo server --source exampleSite --themesDir ../.. --port 1313 \
+  --bind 0.0.0.0 --baseURL http://$(LAN_IP) --disableFastRender
 ```
+
+`LAN_IP` is auto-detected from your active interface so the server is reachable from a phone on the same network (handy for mobile testing). Override with `LAN_IP=192.168.x.y make serve` if the wrong interface is picked, or drop the `--bind` / `--baseURL` flags entirely if you only need localhost.
 
 Open <http://localhost:1313>. Edit any file under `exampleSite/content/` or `assets/css/` and the page reloads on save.
 

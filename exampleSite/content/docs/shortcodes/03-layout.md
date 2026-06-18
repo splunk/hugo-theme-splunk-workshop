@@ -164,13 +164,13 @@ Pass `width=` (e.g. `width="320px"`, `width="50%"`) to clamp the whole figure, o
 
 ### `figure` alias
 
-Hugo's built-in shortcode name is `figure`, and content from other Hugo themes often uses it. This theme aliases `figure` to the same renderer as `image` so migrated content works without rewrites:
+Hugo's built-in shortcode name is `figure`, and content from other Hugo themes often uses it. The theme ships a `figure` shim that maps Hugo's standard figure args onto the same `<figure>` markup `image` produces, so migrated content renders without rewrites:
 
 ```markdown
-{{</* figure src="dashboard.png" alt="Dashboard" caption="Same render as `image`." */>}}
+{{</* figure src="dashboard.png" alt="Dashboard" title="Fig 1" caption="A short note." */>}}
 ```
 
-Prefer `image` for new content (it's the documented name); `figure` is the compatibility surface.
+`figure` accepts `src`, `alt`, `caption`, `title` (rendered as a bold lead-in to the caption), and `align`. `width=` and `height=` are **`image`-only** — content that needs explicit sizing should use `image` instead. Prefer `image` for new content; `figure` is the compatibility surface for relearn / stock-Hugo migrations.
 
 ## Badges
 

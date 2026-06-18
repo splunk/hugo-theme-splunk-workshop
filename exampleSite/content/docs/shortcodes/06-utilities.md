@@ -32,8 +32,8 @@ Args:
 Like `attachments`, but with a more generic heading. Useful when a page has downloadable resources that you want to list separately from the prose. It uses the same page-resource listing logic and takes the same `pattern` / `title` / `sort` / `icon` args as `attachments` (heading defaults to "Resources").
 
 ```markdown
-{{</* resources pattern=".*\\.pdf$" */>}}
-{{</* resources pattern=".*\\.zip$" title="Starter projects" */>}}
+{{</* resources pattern=".*\.pdf$" */>}}
+{{</* resources pattern=".*\.zip$" title="Starter projects" */>}}
 ```
 
 ## Page-tree helpers

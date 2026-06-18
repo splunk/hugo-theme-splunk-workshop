@@ -47,7 +47,7 @@ Wrapped in a zoomable `<figure>` with an optional caption (the markdown image's 
 
 ### Headings
 
-H2–H4 get hover-revealed anchor links so readers can deep-link to a specific section. The anchor icon fades in at 0.6 opacity on heading hover, brightens on its own hover, and copies the section URL to the clipboard on click.
+H2–H4 get hover-revealed anchor links so readers can deep-link to a specific section. The anchor (`#`) fades in at 0.6 opacity on heading hover, brightens on its own hover or keyboard focus, and on click updates the page URL to that section — copy it from the address bar to share. The h1 is reserved for the page title set by the layout, so authors don't normally produce one in body markdown.
 
 ### External links
 
