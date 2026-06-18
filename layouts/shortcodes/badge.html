@@ -24,15 +24,8 @@
     {{- if eq $alias "secondary" }}{{ $alias = "" }}{{ end -}}
     {{- if $alias }}{{ $cls = printf "badge badge--%s" $alias }}{{ end -}}
   {{- else -}}
-    {{- /* Custom colour: allow-list the value before interpolating it into a
-           multi-property inline style. `safeCSS` marks the string trusted but
-           does NOT validate it, so an unguarded value like
-           `red;background:url(...)` would inject extra declarations. Same
-           defence as `textcolor.html` — restrict to a conservative char-set
-           (hex, names, rgb/hsl/var/calc) and reject `;` `:` `{` `}` quotes.
-           A failing value falls back to currentColor so the badge degrades
-           safely rather than rendering attacker-controlled CSS. */ -}}
-    {{- if not (findRE `^[a-zA-Z0-9#.,()% /_-]+$` $color) }}{{ $color = "currentColor" }}{{ end -}}
+    {{- /* Validate before interpolating into a multi-property inline style. */ -}}
+    {{- $color = partial "css-color.html" (dict "value" $color "fallback" "currentColor") -}}
     {{- $inline = printf "color:%s;border-color:color-mix(in oklab, %s 40%%, transparent);background:color-mix(in oklab, %s 10%%, transparent)" $color $color $color -}}
   {{- end -}}
 {{- end -}}

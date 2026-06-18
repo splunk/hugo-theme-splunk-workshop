@@ -87,7 +87,7 @@
        linked section has been dwelled-on. Total page count is read
        from localStorage (written by the sidebar's visit-tracker), so
        Hugo doesn't have to guess what the sidebar counts as a page. */ -}}
-{{- $trackAttrs := "" -}}
+{{- $trackAttrs := safeHTMLAttr "" -}}
 {{- if $tp -}}
   {{- $trackAttrs = printf ` data-section-root=%q` $tp.RelPermalink -}}
   {{- /* Leaf section (_index.md only, no children) — emit the

@@ -20,6 +20,7 @@
 {{- $date        := .Get "date"          | default "Today" -}}
 {{- $seenby      := .Get "seenby" -}}
 {{- $seenbyColor := .Get "seenby-color"  | default "#1d8b54" -}}
+{{- $seenbyColor = partial "css-color.html" (dict "value" $seenbyColor "fallback" "#1d8b54") -}}
 {{- /* Force inner so children push into the message bucket. */ -}}
 {{- $_ := .Inner -}}
 {{- $msgs := .Page.Store.Get $key | default slice -}}

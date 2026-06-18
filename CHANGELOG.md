@@ -5,6 +5,27 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.13.10] - 2026-06-18
+
+### Security
+
+- **CSS-color allow-list extended to the remaining inline-`style=` surfaces.** v0.13.9 introduced `layouts/_partials/css-color.html` and migrated five shortcodes onto it. This release finishes the sweep:
+  - `badge.html` (custom-hex / `color=`)
+  - `textcolor.html` (`color=`)
+  - `webex.html` (`seenby-color=`, falls back to Webex green `#1d8b54`)
+  - `_partials/callout-render.html` (the per-callout `color=` style on the wrapper)
+
+  Each callsite now routes its user-supplied colour through the shared partial and falls back to a per-context default (`currentColor`, accent, etc.) when validation fails, so a malformed value degrades safely instead of rendering attacker-controlled CSS declarations. Comment blocks reduced to one-liners — the rationale lives in the partial.
+
+### Fixed
+
+- **`difficulty` shortcode clamps to 1–5.** Out-of-range positional / `level=` values previously rendered a meter with the wrong dot count (or none) and produced misleading `aria-label="Difficulty 0 of 5"` strings. Values now clamp into `[1, 5]` before render, so both the visual meter and the screen-reader label stay consistent with the documented range. Already covered by the wording in `shortcodes/06-utilities.md`.
+- **`card.html` `$trackAttrs` typed as `safeHTMLAttr`.** Initialising the variable to a bare empty string broke Hugo's `with` chain when the variable was reused as an attribute fragment in subsequent branches — initialising via `safeHTMLAttr ""` keeps the type consistent across branches.
+
+### Docs
+
+- **Reference docs re-audited against current shortcode behaviour.** Eight discrepancies fixed across `shortcodes/02-structure.md`, `shortcodes/03-layout.md`, `shortcodes/05-heavyweights.md`, `authoring/02-archetypes.md`, `authoring/04-markdown.md`, `customizing/01-colors.md`, `getting-started/00-run-locally.md`, `advanced/03-search.md`, and `advanced/04-i18n.md`. Highlights: corrected i18n key names (`presenterNote`, dropped non-existent `allWorkshops`), fixed search-summary char count (4000, not 600), corrected light-mode colour-token defaults to match the bundled `hugo.toml`, removed a false clipboard-copy claim on heading anchors, clarified `figure` is a Hugo-compat shim rather than a true alias of `image`, and spelled out `step`'s positional args.
+
 ## [0.13.9] - 2026-06-08
 
 ### Security

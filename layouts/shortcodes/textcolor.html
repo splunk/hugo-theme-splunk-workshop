@@ -5,21 +5,14 @@
     textcolor color="green" weight="bold" font="serif"
 
   Allow-list inputs to prevent CSS property-escape attacks via arbitrary
-  `style=` injection. `safeCSS` doesn't validate values — it only escapes
-  against Hugo's HTML escaper. A caller passing
-    color="red; background: url(javascript:alert(1))"
-  would otherwise inject a separate `background` property. Restrict each
-  param to a conservative char-set that covers all reasonable CSS values
-  (hex, names, rgb/hsl/var/calc) and reject anything containing `;`, `:`,
-  `{`, `}`, `\`, `<`, `>`, or quotes. Values failing validation fall back
-  to the safe defaults so the shortcode degrades silently rather than
-  rendering an attacker-controlled style.
+  `style=` injection. `safeCSS` doesn't validate values — it only marks
+  them trusted for Hugo's HTML escaper.
 */ -}}
 {{- $color  := .Get "color"  | default "currentColor" -}}
 {{- $font   := .Get "font"   | default "inherit" -}}
 {{- $weight := .Get "weight" | default "normal" -}}
 {{- $allow  := `^[a-zA-Z0-9#.,()% /_-]+$` -}}
-{{- if not (findRE $allow $color)  }}{{- $color  = "currentColor" -}}{{- end -}}
+{{- $color = partial "css-color.html" (dict "value" $color "fallback" "currentColor") -}}
 {{- if not (findRE $allow $font)   }}{{- $font   = "inherit"      -}}{{- end -}}
 {{- if not (findRE $allow $weight) }}{{- $weight = "normal"       -}}{{- end -}}
 <span style="color: {{ $color | safeCSS }}; font-family: {{ $font | safeCSS }}; font-weight: {{ $weight | safeCSS }}">{{ .Inner | safeHTML }}</span>

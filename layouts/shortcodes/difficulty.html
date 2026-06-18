@@ -4,6 +4,7 @@
 */ -}}
 {{- $level := .Get "level" | default (.Get 0) | default "1" -}}
 {{- $n := int $level -}}
+{{- if lt $n 1 -}}{{- $n = 1 -}}{{- else if gt $n 5 -}}{{- $n = 5 -}}{{- end -}}
 <span class="indicator">
   <span class="difficulty__dots" aria-label="Difficulty {{ $n }} of 5">
     {{ range seq 1 5 }}
