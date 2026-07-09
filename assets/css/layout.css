@@ -110,6 +110,31 @@
   background: var(--gradient-accent);
 }
 
+/* Browse menu entry is a destination pill (not a utility icon button). */
+.nav__link--browse {
+  display: inline-flex;
+  align-items: center;
+  height: 2.25rem;
+  padding: 0 0.95rem;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 999px;
+  color: var(--color-ink);
+  font-weight: 600;
+  line-height: 1;
+}
+.nav__link--browse:hover {
+  color: var(--color-accent-text);
+  border-color: var(--color-accent);
+}
+.nav__link--browse.is-active::after {
+  content: none;
+}
+.nav__link--browse.is-active {
+  color: var(--color-accent-text);
+  border-color: var(--color-accent);
+  background: color-mix(in oklab, var(--color-accent) 8%, transparent);
+}
+
 /* ---- Language switcher ---- */
 .lang-switch {
   position: relative;

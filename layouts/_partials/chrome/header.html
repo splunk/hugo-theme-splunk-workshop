@@ -17,6 +17,15 @@
 
     <nav class="nav" aria-label="Primary">
       {{- range site.Menus.main }}
+        {{- $classes := slice "nav__link" -}}
+        {{- if $.IsMenuCurrent "main" . -}}
+          {{- $classes = $classes | append "is-active" -}}
+        {{- end -}}
+        {{- with .Page -}}
+          {{- if eq .Layout "browse" -}}
+            {{- $classes = $classes | append "nav__link--browse" -}}
+          {{- end -}}
+        {{- end -}}
         {{- /* Page-backed menu entries (added via `[menu.main]` in a page's
                front matter) report .URL as the page's RelPermalink, which
                is already an absolute path INCLUDING baseURL prefix and
@@ -24,7 +33,7 @@
                relLangURL it a second time and produce a doubled URL
                (`/repo/en/repo/en/foo/`). Use .Page.RelPermalink directly
                in that case and only run site-href on URL-only entries. */ -}}
-        <a class="nav__link {{ if $.IsMenuCurrent "main" . }}is-active{{ end }}" href="{{ with .Page }}{{ .RelPermalink }}{{ else }}{{ partial "site-href.html" .URL }}{{ end }}">{{ .Name }}</a>
+        <a class="{{ delimit $classes " " }}" href="{{ with .Page }}{{ .RelPermalink }}{{ else }}{{ partial "site-href.html" .URL }}{{ end }}">{{ .Name }}</a>
       {{- end }}
       <button class="site-search-trigger" type="button" data-search-trigger aria-label="{{ i18n "searchTrigger" }}" aria-haspopup="dialog">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
