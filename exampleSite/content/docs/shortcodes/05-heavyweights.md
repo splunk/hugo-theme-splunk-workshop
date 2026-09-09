@@ -231,7 +231,7 @@ For other video providers (Vimeo, Wistia, etc.), the theme doesn't ship a shortc
 
 ## Presenter notes
 
-A `presenter` block is hidden by default and revealed when the user enters presenter mode. A floating "Presenter" pill appears in the bottom-right of any page that has presenter notes; clicking it (or pressing `P` twice in quick succession, or appending `?presenter=1` to the URL) toggles the mode.
+A `presenter` block is hidden by default and revealed when the user enters presenter mode. Presenter controls are URL-gated: the floating "Presenter" pill appears only after the browser has visited a URL with `?presenter=1` at least once. After that unlock, clicking the pill (or pressing `P` twice) toggles the mode.
 
 {{< presenter >}}
 This block only appears when the floating "Presenter" pill is toggled on. Use it for delivery cues — timing notes, "kick off the demo container in the background", "remind people about the lunch break".
@@ -249,7 +249,7 @@ Allow 10 minutes for attendees to finish this section.
 {{</* /presenter */>}}
 ```
 
-The state persists in `localStorage`, so once you toggle presenter mode it stays on as you navigate between pages — useful for live workshops where you want notes available throughout.
+Unlock state and mode both persist in `localStorage`, so once unlocked the presenter controls remain available in that browser profile as you navigate between pages.
 
 {{< notice tip "Don't put answers in presenter notes" >}}
 The markup is in the page source. Attendees who view-source can see them. Use presenter notes for delivery cues and timing only — not for hidden answers to exercises.

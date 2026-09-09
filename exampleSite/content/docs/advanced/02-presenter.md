@@ -22,15 +22,15 @@ Allow 10 minutes for attendees to finish this section.
 {{</* /presenter */>}}
 ```
 
-By default the block is hidden. When the page loads, JavaScript checks if any `presenter` blocks exist; if so, it injects a floating "Presenter" pill in the bottom-right.
+By default the block is hidden **and presenter controls are locked**. A floating "Presenter" pill appears only after the browser has visited a URL with `?presenter=1` at least once.
 
 ## Three ways to toggle
 
-1. **Click the pill** — the floating "Presenter" button in the bottom-right of any page that has presenter notes
-2. **Press `P` twice** in quick succession — same effect, no mouse needed during a live demo
-3. **Append `?presenter=1`** to the URL — useful if you want a bookmarkable presenter view
+1. **Append `?presenter=1`** to the URL once — unlocks presenter controls in this browser and turns presenter mode on
+2. **Click the pill** — after unlock, use the floating "Presenter" button in the bottom-right on pages with presenter notes
+3. **Press `P` twice** in quick succession — after unlock, same effect with no mouse
 
-The state persists in `localStorage`, so once toggled it stays on as you navigate. The setting is per-browser, not per-page.
+The unlock and mode state persist in `localStorage`, so once unlocked you keep presenter controls as you navigate and revisit pages in that browser profile.
 
 ## Live example
 
