@@ -13,9 +13,10 @@
   slot. When `hero-icon` is set, the inline `icon` is suppressed —
   one identity signal per card.
 
-  `show-time` / `show-pages` (booleans) opt into a meta row pulled
-  from the linked Hugo page (reading time, child-page count). Both
-  no-op for external `href` values where the target can't be resolved.
+  `show-time` / `show-pages` (booleans, default false) opt into a meta
+  row pulled from the linked Hugo page (reading time, child-page count).
+  Omit either flag or set it to false to suppress that value. Both no-op
+  for external `href` values where the target can't be resolved.
 
   Legacy alias (deprecated, accepted for relearn compatibility):
     `url` — use `href` instead.

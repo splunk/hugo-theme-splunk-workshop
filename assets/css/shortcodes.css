@@ -1358,7 +1358,8 @@ pre.file-tree .file-tree__dir-line {
 .shortcode-card {
   --card-accent: var(--color-accent);
   position: relative;
-  display: block;
+  display: flex;
+  flex-direction: column;
   padding: 1.4rem 1.5rem;
   margin: 1.5rem 0;
   background: var(--color-surface);
@@ -1425,6 +1426,7 @@ a.shortcode-card:hover .shortcode-card__title { color: var(--color-accent-text);
   color: var(--card-accent);
 }
 .shortcode-card__icon svg { width: 100%; height: 100%; }
+.shortcode-card__body { flex-grow: 1; }
 .shortcode-card__body p:first-child { margin-top: 0; }
 .shortcode-card__body p:last-child { margin-bottom: 0; }
 .shortcode-card__image {
@@ -1480,15 +1482,10 @@ a.shortcode-card:hover .shortcode-card__title { color: var(--color-accent-text);
 }
 .shortcode-card__meta-item:first-child::before { display: none; }
 
-/* Cards rendered by {{< children type="card" >}} — flex-column layout so
-   every card in a row has its meta pinned to the bottom (`margin-top: auto`)
-   regardless of body length. */
-.shortcode-card--children {
-  display: flex;
-  flex-direction: column;
-}
+/* Cards rendered by {{< children type="card" >}} use smaller body text and
+   retain an explicit gap above the footer. All shortcode cards use the shared
+   flex-column layout above, keeping their meta rows aligned at the bottom. */
 .shortcode-card--children .shortcode-card__body {
-  flex-grow: 1;
   color: var(--color-ink-muted);
   font-size: var(--fs-sm);
   line-height: 1.55;

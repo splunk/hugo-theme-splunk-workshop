@@ -505,7 +505,7 @@ Sections without an `icon` key render the existing text-only card layout — no 
 
 ### Opt-in meta row — `show-time` / `show-pages`
 
-Manual `{{</* card */>}}`s render title + body by default. Pass either flag to add a hairline-separated meta row pulled from the linked Hugo page (same mono-uppercase + magenta-bullet styling as the auto-grid cards):
+Manual `{{</* card */>}}`s render title + body by default. Both flags default to `false`. Pass either flag as `true` to add a hairline-separated meta row pulled from the linked Hugo page (same mono-uppercase + magenta-bullet styling as the auto-grid cards):
 
 ```markdown
 {{</* card title="Scenarios" href="/scenarios/" hero-icon="rocket" show-time=true show-pages=true */>}}
@@ -518,7 +518,15 @@ Guided workshops...
 | `show-time=true` | `time` / `duration` front matter, falling back to Hugo's auto-estimated `ReadingTime`. |
 | `show-pages=true` | Child-page count via the `workshop/children-count` partial. Hidden if ≤1. |
 
-Both flags **no-op silently on external `href`** values where the target isn't a Hugo page. Safe to leave on for any card.
+To show the duration without the page count, omit `show-pages` (preferred) or set it explicitly to `false`:
+
+```markdown
+{{</* card title="Scenarios" href="/scenarios/" show-time=true */>}}
+Guided workshops...
+{{</* /card */>}}
+```
+
+Both flags **no-op silently on external `href`** values where the target isn't a Hugo page. The meta row is pinned to the bottom of cards in the same grid so their footers remain aligned when titles and descriptions have different lengths.
 
 ### Categorized card grids
 
