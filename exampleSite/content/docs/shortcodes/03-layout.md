@@ -372,14 +372,15 @@ Note that the `icon` shortcode takes either a single positional arg (`{{</* icon
 
 The bundled set covers the cases you'll most often hit in workshop content:
 
-- **Status:** `check`, `x`, `info`, `warning`, `alert`, `tip`, `note`, `lightbulb`
+- **Status:** `check`, `close`, `info`, `warning`, `alert`, `tip`, `note`, `lightbulb`
 - **Action:** `download`, `upload`, `external`, `link`, `play`, `edit`, `trash`, `copy`, `search`
-- **Navigation:** `home`, `menu`, `chevron-left`, `chevron-right`, `chevron-up`, `chevron-down`, `arrow-left`, `arrow-right`, `plus`, `minus`
-- **Content:** `book`, `code`, `terminal`, `file`, `folder`
-- **People:** `user`, `users`
+- **Navigation:** `home`, `menu`, `compass`, `route`, `chevron-left`, `chevron-right`, `chevron-up`, `chevron-down`, `arrow-left`, `arrow-right`, `plus`, `minus`
+- **Content:** `book`, `book-text`, `library`, `code`, `terminal`, `file`, `folder`
+- **People:** `user`, `users`, `hard-hat`
 - **Time:** `clock`, `calendar`
-- **Settings:** `settings`, `shield`
-- **Other:** `star`, `heart`, `rocket`
+- **Configuration:** `settings`
+- **Observability:** `layers`, `waypoints`, `server`, `gauge`, `cpu`, `workflow`, `monitor-smartphone`
+- **Other:** `star`, `heart`, `rocket`, `sparkles`, `shield`, `target`
 - **Brands:** `github`, `twitter` (alias `x`), `linkedin`, `youtube`, `mastodon`, `bluesky`, `rss`
 
 Common Font Awesome aliases are accepted too: `fas-check`, `fa-circle-info`, `external-link`, etc.
