@@ -1,14 +1,15 @@
 {{- $p := site.Params -}}
-{{- /* Always-dark footer (regardless of theme) — a consistent grounding
-       zone at the bottom of every page. */ -}}
+{{- /* Brand row follows the page theme and reuses the hero bloom
+       asset. The legal row stays navy so the copyright strip has no
+       wash behind it. */ -}}
 <footer class="site-footer">
-  {{ if $p.showLightTrails }}<div class="light-trails light-trails--footer" aria-hidden="true"></div>{{ end }}
   <div class="site-footer__meta">
+    {{ if $p.showLightTrails }}<div class="light-trails light-trails--footer" aria-hidden="true"></div>{{ end }}
     <div class="site-footer__brand">
       <a href="{{ partial "site-href.html" "/" }}" class="brand brand--block brand--footer">
         {{- if $p.logoLight -}}
-          {{- $logo := $p.logoDark | default $p.logoLight -}}
-          <img class="brand__logo" src="{{ $logo | relURL }}" alt="{{ site.Title | markdownify | plainify }}">
+          <img class="brand__logo brand__logo--light" src="{{ $p.logoLight | relURL }}" alt="{{ site.Title | markdownify | plainify }}">
+          {{ with $p.logoDark }}<img class="brand__logo brand__logo--dark" src="{{ . | relURL }}" alt="{{ site.Title | markdownify | plainify }}">{{ end }}
         {{- else -}}
           <span class="brand__mark">{{ $p.brandName | default "splunk>" }}</span>
         {{- end -}}

@@ -42,9 +42,7 @@
   display: flex;
   align-items: center;
   padding: 0 var(--gutter);
-  background: color-mix(in oklab, var(--color-paper) 85%, transparent);
-  backdrop-filter: saturate(180%) blur(12px);
-  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  background: var(--color-paper);
   border-bottom: 1px solid var(--color-border);
   z-index: var(--z-header);
 }
@@ -266,7 +264,7 @@
   top: var(--header-h);
   left: 0; right: 0;
   height: 2px;
-  background: transparent;
+  background: var(--color-paper);
   z-index: var(--z-meta-bar);
 }
 .progress__bar {
@@ -534,15 +532,19 @@
 }
 
 /* ---- Footer ----
-   Two-tier dark footer. Always uses the brand-dark surface regardless of the
-   active theme — gives every page a consistent grounding zone, like
-   Material for MkDocs. */
+   Two-tier close. The brand row follows the page theme and reuses the
+   hero bloom asset (same WebP, quieter). The legal row stays navy so
+   the copyright strip has no wash behind it. */
 .site-footer {
   margin-top: 6rem;
-  background: var(--color-surface-dark);
-  color: var(--color-ink-dark);
+  background: var(--color-paper);
+  color: var(--color-ink);
   position: relative;
   overflow: hidden;
+}
+[data-theme="dark"] .site-footer {
+  background: var(--color-paper-dark);
+  color: var(--color-ink-dark);
 }
 
 /* Tier 1 — meta: brand block + social icons */
@@ -556,30 +558,37 @@
   justify-content: space-between;
   padding: 2.75rem var(--gutter) 1.75rem;
   max-width: 100%;
+  overflow: hidden;
 }
 .site-footer__brand {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   max-width: 38rem;
 }
-.site-footer__brand .brand { color: var(--color-ink-dark); gap: 0.6rem; }
-.site-footer__brand .brand__mark { color: var(--color-ink-dark); }
+.site-footer__brand .brand { color: var(--color-ink); gap: 0.6rem; }
+.site-footer__brand .brand__mark { color: var(--color-ink); }
 .site-footer__brand .brand__tag {
-  color: var(--color-ink-muted-dark);
-  border-left-color: rgba(244, 241, 234, 0.15);
+  color: var(--color-ink-muted);
+  border-left-color: color-mix(in oklab, var(--color-ink-muted) 35%, transparent);
 }
 .site-footer__brand .brand__logo { height: var(--logo-h, 28px); width: auto; }
 .site-footer__desc {
+  position: relative;
+  z-index: 1;
   margin: 0;
-  color: var(--color-ink-muted-dark);
-  max-width: 36ch;
+  color: var(--color-ink-muted);
   font-size: var(--fs-sm);
   line-height: 1.55;
+  white-space: nowrap;
 }
 
 /* Social icon row */
 .site-footer__social {
+  position: relative;
+  z-index: 1;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -596,17 +605,21 @@
   width: 2.25rem;
   height: 2.25rem;
   border-radius: 999px;
-  color: var(--color-ink-muted-dark);
+  color: var(--color-ink-muted);
   transition: color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
 }
 .site-footer__social a:hover {
+  color: var(--color-ink);
+  background: color-mix(in oklab, var(--color-ink) 6%, transparent);
+  transform: translateY(-1px);
+}
+[data-theme="dark"] .site-footer__social a:hover {
   color: #FFFFFF;
   background: rgba(255, 255, 255, 0.06);
-  transform: translateY(-1px);
 }
 .site-footer__social svg { width: 1.05rem; height: 1.05rem; }
 
-/* Tier 2 — legal: copyright + attribution. Slightly darker than tier 1. */
+/* Tier 2 — legal: always navy, no bloom. */
 .site-footer__legal {
   position: relative;
   z-index: 1;
@@ -644,6 +657,7 @@
 @media (max-width: 720px) {
   .site-footer__meta { flex-direction: column; align-items: flex-start; }
   .site-footer__legal { flex-direction: column; align-items: flex-start; }
+  .site-footer__desc { white-space: normal; }
 }
 
 /* ---- Page-level prev/next ---- */
@@ -721,9 +735,8 @@
 .pager__hint kbd { font-size: 0.95em; }
 
 /* ---- Light Trails — Splunk brand gradient bloom ---- */
-/* The hero bloom uses the official brand asset PNGs (configurable via
-   `heroBackgroundLight` / `heroBackgroundDark` params). The footer uses a
-   subtle CSS radial fallback. */
+/* Hero and footer share the official brand assets
+   (`heroBackgroundLight` / `heroBackgroundDark`). */
 
 .light-trails {
   position: absolute;
@@ -750,18 +763,21 @@
   background-color: transparent;
 }
 
-/* Footer bloom — CSS radial gradient anchored off the left edge so the
-   bloom's natural fade-out happens beyond the footer, not inside it.
-   Avoids the visible curve a contained bloom image would create where the
-   bright magenta transitions to dark. */
+/* Footer bloom — same WebP as the hero, quieter: cover window, left
+   fade, reduced opacity. Lives inside `.site-footer__meta` so the navy
+   legal row never sees it. */
 .light-trails--footer {
   inset: 0;
-  background:
-    radial-gradient(ellipse 80% 140% at -10% 50%,
-      color-mix(in oklab, var(--color-accent)   78%, transparent) 0%,
-      color-mix(in oklab, var(--color-accent-2) 50%, transparent) 35%,
-      transparent 70%);
-  opacity: 0.85;
+  background-image: var(--hero-bg-light);
+  background-repeat: no-repeat;
+  background-position: right 42%;
+  background-size: cover;
+  opacity: 0.42;
+  -webkit-mask-image: linear-gradient(90deg, transparent 8%, black 72%);
+  mask-image: linear-gradient(90deg, transparent 8%, black 72%);
+}
+[data-theme="dark"] .light-trails--footer {
+  background-image: var(--hero-bg-dark);
 }
 
 /* ---- Mobile nav toggle ---- */

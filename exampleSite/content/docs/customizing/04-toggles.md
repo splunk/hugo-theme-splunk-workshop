@@ -45,7 +45,7 @@ The gradient bar at the top of the page that fills as you scroll. Useful on long
 
 ### `showLightTrails`
 
-The decorative gradient blobs in the top-right of the hero and bottom-left of the footer. Pure decoration — set to `false` for a flatter, less editorial look.
+The decorative bloom in the top-right of the hero and the matching, quieter bloom in the footer brand row. Both use `heroBackgroundLight` / `heroBackgroundDark`. Set to `false` for a flatter, less editorial look. The copyright strip stays navy either way.
 
 ### `contentMaxWidth`
 
