@@ -474,7 +474,7 @@ Explicit `image=` always wins over the auto-pull. Path is piped through `relURL`
 
 ### Hero icons — featured visual via Lucide
 
-When you don't want a raster image but still want a visual anchor at the top of a card, pass `hero-icon="<lucide-name>"`. The icon renders large in a full-bleed Orange 50 → Amber header band, stroked in white (cream in dark mode):
+When you don't want a raster image but still want a visual anchor at the top of a card, pass `hero-icon="<lucide-name>"`. The icon renders large in a full-bleed Magenta 50 → Orange 50 header band — the same brand trail as the page hero — stroked in white (cream in dark mode):
 
 {{< cards >}}
 {{< card title="Resources" href="/docs/" hero-icon="book-text" >}}

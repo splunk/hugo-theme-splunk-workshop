@@ -1448,20 +1448,20 @@ a.shortcode-card:hover .shortcode-card__title { color: var(--color-accent-text);
 }
 
 /* Hero icon — `hero-icon=` on {{< card >}}, or a child's `icon`
-   front-matter key on {{< children type="card" >}}. Gradient header
-   band: full-bleed Orange 50 → Amber wash with a light stroke icon.
-   1px inset keeps the card hover ring visible. Auto-grid `.card__hero`
-   is unchanged — it still uses the pink→orange glyph on paper. */
+   front-matter key on {{< children type="card" >}}. Light-mode band
+   continues the page hero: saturated Magenta 50 → Orange 50, the same
+   brand trail as `--gradient-accent`. Orange→Amber alone fights the
+   magenta bloom; paper-tinting washes the trail out. 1px inset keeps
+   the card hover ring visible. Auto-grid `.card__hero` is unchanged. */
 .shortcode-card__hero {
   display: grid;
   place-items: center;
   height: 10rem;
   margin: calc(-1.4rem + 1px) calc(-1.5rem + 1px) 1.1rem;
-  background: linear-gradient(120deg,
-    color-mix(in srgb, var(--color-accent) 32%, var(--color-accent-2)) 0%,
-    var(--color-accent-2) 42%,
-    var(--color-accent-3) 78%,
-    color-mix(in srgb, var(--color-accent-3) 70%, white) 100%);
+  background: linear-gradient(118deg,
+    var(--color-accent) 0%,
+    color-mix(in srgb, var(--color-accent) 45%, var(--color-accent-2)) 52%,
+    var(--color-accent-2) 100%);
   overflow: hidden;
 }
 .shortcode-card__hero svg {
@@ -1471,7 +1471,7 @@ a.shortcode-card:hover .shortcode-card__title { color: var(--color-accent-text);
 .shortcode-card__hero svg,
 .shortcode-card__hero svg * {
   /* Overrides the partial's brand-gradient stroke so the glyph reads
-     as a light mark on the orange band. */
+     as a light mark on the magenta–orange band. */
   stroke: #fff;
 }
 [data-theme="dark"] .shortcode-card__hero {
