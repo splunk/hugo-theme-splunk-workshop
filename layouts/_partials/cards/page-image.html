@@ -1,0 +1,34 @@
+{{- /*
+  Resolve a page's featured-image URL from `images[0]` front matter.
+
+  Lookup order:
+    1. Page-bundle resource at the raw path
+    2. Page-bundle resource at images/<basename>
+    3. Page-bundle resource at the basename
+    4. Path-join URL relative to the page permalink (legacy / relearn
+       content that stores the file next to the page rather than as a
+       named resource)
+
+  Returns "" when the page has no `images` key. Callers decide whether
+  to render an image slot; this partial never falls back to an icon.
+*/ -}}
+{{- $imgURL := "" -}}
+{{- with .Params.images -}}
+  {{- $raw  := index . 0 -}}
+  {{- $base := path.Base $raw -}}
+  {{- with $.Resources.GetMatch $raw -}}
+    {{- $imgURL = .RelPermalink -}}
+  {{- else -}}
+    {{- with $.Resources.GetMatch (printf "images/%s" $base) -}}
+      {{- $imgURL = .RelPermalink -}}
+    {{- else -}}
+      {{- with $.Resources.GetMatch $base -}}
+        {{- $imgURL = .RelPermalink -}}
+      {{- else -}}
+        {{- $clean := strings.TrimPrefix "./" $raw -}}
+        {{- $imgURL = path.Join $.RelPermalink $clean -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $imgURL -}}

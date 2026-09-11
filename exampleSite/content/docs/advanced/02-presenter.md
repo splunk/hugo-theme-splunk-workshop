@@ -35,7 +35,7 @@ The unlock and mode state persist in `localStorage`, so once unlocked you keep p
 ## Live example
 
 {{< presenter title="Live demo" >}}
-This is what a presenter note looks like when the mode is on. Toggle it via the pill in the bottom-right or press `P` twice. The block has a dashed border, an amber accent, and a hatched background so you can't miss it during a talk.
+This is what a presenter note looks like when the mode is on. Toggle it via the pill in the bottom-right or press `P` twice. The block uses a quiet surface and a magenta left rail so it stays readable in light and dark mode.
 {{< /presenter >}}
 
 If presenter mode is off, you should see no block above this paragraph. If presenter mode is on, you should see a styled note.

@@ -53,7 +53,7 @@ Args:
 - `description` — `true` to include each child's `description` front matter (default `true`)
 - `depth` — accepted for Relearn compatibility; the current renderer lists the immediate child pages/sections only
 - `sort` — `weight` (default) or `title`
-- `image` — `true` to render each child's featured image (`params.images[0]`) as a banner on card-style listings (default `false`)
+- `image` — `true` to render each child's featured image (`images[0]`) as a banner on card-style listings (default `false`). Image wins over the child's `icon` hero; without an image the `icon` front-matter key still renders as a hero icon. Markup matches `{{</* card */>}}`.
 - `showhidden` — `true` to include pages marked `hidden` (default `false`)
 - `notime` — `true` to suppress the time pill on every card in the listing
 

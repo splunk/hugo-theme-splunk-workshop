@@ -401,6 +401,14 @@ The wrapper auto-applies `viewBox="0 0 24 24"`, `stroke="currentColor"`, and 2px
 
 ## Cards
 
+`{{</* card */>}}` and `{{</* children type="card" */>}}` share one renderer (`layouts/_partials/cards/shortcode-card.html`), so title size, body copy, image/hero slot, meta row, hover ring, and completion tick match regardless of how the card was authored.
+
+**Image vs icon precedence** (same for both call paths):
+
+1. A raster image, if present and enabled, occupies the featured slot.
+2. Otherwise a hero icon occupies that slot (`hero-icon=` on a manual card, or the child's `icon` front-matter key on a `children` listing).
+3. A small inline `icon=` next to the title is suppressed whenever a hero icon is shown — one identity signal per card.
+
 A grid of cards via the `cards` container:
 
 {{< cards >}}
@@ -462,11 +470,11 @@ No `image=` arg needed on the card itself. The auto-resolution does a 3-step loo
 
 Explicit `image=` always wins over the auto-pull. Path is piped through `relURL` so baseURL subpaths (GitHub Pages) work.
 
-**3. Featured image via `children type="card" image="true"`.** Auto-discovered for **every** card in a `children` listing, same `images` front-matter contract. The auto-discovery semantics are identical; the difference is `children` lists every visible sub-page automatically, while hand-written `cards` + `card` blocks let you curate which pages appear and in what order.
+**3. Featured image via `children type="card" image="true"`.** Auto-discovered for **every** card in a `children` listing, same `images` front-matter contract and the same `.shortcode-card__image` slot as a manual card. The difference is `children` lists every visible sub-page automatically, while hand-written `cards` + `card` blocks let you curate which pages appear and in what order. A child without an image still renders a hero icon when its `icon` front-matter key is set.
 
 ### Hero icons — featured visual via Lucide
 
-When you don't want a raster image but still want a visual anchor at the top of a card, pass `hero-icon="<lucide-name>"`. The icon renders large in the card's featured-image slot, stroked with the brand pink→orange gradient:
+When you don't want a raster image but still want a visual anchor at the top of a card, pass `hero-icon="<lucide-name>"`. The icon renders large in a full-bleed Orange 50 → Amber header band, stroked in white (cream in dark mode):
 
 {{< cards >}}
 {{< card title="Resources" href="/docs/" hero-icon="book-text" >}}
@@ -486,13 +494,29 @@ Reference docs, community links, deeper reading.
 {{</* /card */>}}
 ```
 
-The gradient is locked to the theme's `--color-accent` → `--color-accent-2` variables, so sites that rebrand those tokens in `hugo.toml` automatically get their own gradient — no fork needed.
+The band uses `--color-accent` / `--color-accent-2` / `--color-accent-3`, so sites that rebrand those tokens in `hugo.toml` get their own wash — no fork needed.
 
 **Precedence:** if both `image=` and `hero-icon=` are set on the same card, `image=` wins (the explicit raster beats the derived visual).
 
 **Inline icon suppression:** the `icon=` arg renders a small glyph next to the title. When `hero-icon=` is also set, the inline `icon=` is **automatically suppressed** — one identity signal per card. Use `hero-icon=` OR `icon=`, not both; the hero is the right call for landing-card visuals.
 
-**Auto-grid equivalent.** The auto card-grid (sections with `home_sections` or `subsections = true`) reads the same Lucide name from each child page's `icon` front-matter key and renders the same hero treatment without any per-card markup:
+**`children type="card"` equivalent.** A `children` listing reads the same Lucide name from each child page's `icon` front-matter key and renders the same hero treatment — no `hero-icon=` arg needed:
+
+```markdown
+{{</* children type="card" */>}}
+```
+
+```toml
+# content/resources/_index.md
++++
+title = "Resources"
+icon  = "book-text"
++++
+```
+
+That listing and a hand-written `{{</* card title="Resources" href="/resources/" hero-icon="book-text" */>}}` produce the same chrome, type scale, and featured-icon slot. Add `image="true"` on the listing (or `image=` / auto-pull on the manual card) and both switch to the raster banner instead.
+
+**Auto-grid equivalent.** The auto card-grid (sections with `home_sections` or `subsections = true`) also reads `icon` from front matter, using the larger `.card` listing chrome rather than the in-content shortcode card:
 
 ```toml
 # content/resources/_index.md

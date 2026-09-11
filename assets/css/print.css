@@ -104,6 +104,12 @@
     color: #000 !important;
   }
 
+  /* Card hero gradient band — flatten so print doesn't dump orange ink. */
+  .shortcode-card__hero {
+    background: #f4f4f4 !important;
+  }
+  .shortcode-card__hero svg { stroke: #000 !important; }
+
   /* Anchors — show URL after links so the print page is useful offline */
   a[href]::after {
     content: " (" attr(href) ")";

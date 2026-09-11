@@ -1259,36 +1259,42 @@ pre.file-tree .file-tree__dir-line {
 [data-presenter="true"] .presenter-only {
   display: block;
   position: relative;
+  isolation: isolate;
   margin: 1.5rem 0;
-  padding: 1.1rem 1.4rem 1.1rem 1.4rem;
-  background: repeating-linear-gradient(
-    -45deg,
-    color-mix(in oklab, var(--color-accent-3) 10%, transparent),
-    color-mix(in oklab, var(--color-accent-3) 10%, transparent) 10px,
-    transparent 10px,
-    transparent 20px
-  ),
-  color-mix(in oklab, var(--color-accent-3) 7%, var(--color-paper));
-  border: 1px dashed color-mix(in oklab, var(--color-accent-3) 50%, transparent);
+  padding: 1.1rem 1.4rem 1.1rem 1.55rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   color: var(--color-ink);
+  overflow: hidden;
+}
+[data-presenter="true"] .presenter-only::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: var(--color-accent);
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
 }
 .presenter-only__label {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.55rem;
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.9rem;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: #b75c10;
-  margin-bottom: 0.5rem;
+  letter-spacing: 0.12em;
+  color: var(--color-accent-text);
+  margin-bottom: 0.55rem;
 }
-.presenter-only__label svg { width: 0.95rem; height: 0.95rem; }
-[data-theme="dark"] [data-presenter="true"] .presenter-only__label { color: var(--color-accent-3); }
+.presenter-only__label svg { width: 1.25rem; height: 1.25rem; }
 .presenter-only__body > :first-child { margin-top: 0; }
 .presenter-only__body > :last-child  { margin-bottom: 0; }
+/* Site-wide `strong { color: var(--color-ink) }` can fight this box
+   if tokens lag; inherit so bold matches the note body in both modes. */
+.presenter-only__body strong,
+.presenter-only__body b { color: inherit; }
 
 /* Floating toggle pill (rendered in footer when a page has presenter notes) */
 .presenter-toggle {
@@ -1438,29 +1444,57 @@ a.shortcode-card:hover .shortcode-card__title { color: var(--color-accent-text);
   height: auto;
   display: block;
   padding: 5px;
-  border-radius: var(--radius-lg); }
+  border-radius: var(--radius-lg);
+}
 
-/* Hero icon — opt-in via `hero-icon=` on the {{< card >}} shortcode.
-   No background tint, no border divider — the gradient icon floats
-   in the card's own surface so it pops against neutral whitespace
-   and the card reads as one continuous surface (not header-then-body). */
+/* Hero icon — `hero-icon=` on {{< card >}}, or a child's `icon`
+   front-matter key on {{< children type="card" >}}. Gradient header
+   band: full-bleed Orange 50 → Amber wash with a light stroke icon.
+   1px inset keeps the card hover ring visible. Auto-grid `.card__hero`
+   is unchanged — it still uses the pink→orange glyph on paper. */
 .shortcode-card__hero {
   display: grid;
   place-items: center;
-  height: 8rem;
-  margin: -1.4rem -1.5rem 0.5rem;
+  height: 10rem;
+  margin: calc(-1.4rem + 1px) calc(-1.5rem + 1px) 1.1rem;
+  background: linear-gradient(120deg,
+    color-mix(in srgb, var(--color-accent) 32%, var(--color-accent-2)) 0%,
+    var(--color-accent-2) 42%,
+    var(--color-accent-3) 78%,
+    color-mix(in srgb, var(--color-accent-3) 70%, white) 100%);
+  overflow: hidden;
 }
-.shortcode-card__hero svg { width: 6.5rem; height: 6.5rem; }
+.shortcode-card__hero svg {
+  width: 5.5rem;
+  height: 5.5rem;
+}
+.shortcode-card__hero svg,
+.shortcode-card__hero svg * {
+  /* Overrides the partial's brand-gradient stroke so the glyph reads
+     as a light mark on the orange band. */
+  stroke: #fff;
+}
+[data-theme="dark"] .shortcode-card__hero {
+  background: linear-gradient(120deg,
+    color-mix(in srgb, var(--color-accent) 28%, var(--color-accent-2)) 0%,
+    var(--color-accent-2) 48%,
+    var(--color-accent-3) 100%);
+}
+[data-theme="dark"] .shortcode-card__hero svg,
+[data-theme="dark"] .shortcode-card__hero svg * {
+  stroke: var(--color-ink-dark);
+}
 
-/* Meta row — used by both the {{< card >}} shortcode (opt-in via
-   show-time= / show-pages=, emits <span class="shortcode-card__meta-item">)
-   and {{< children type="card" >}} (emits bare <span>). Same visual:
-   hairline top border, mono uppercase, magenta-bullet separators. */
+/* Meta row — shared by {{< card >}} (opt-in via show-time= / show-pages=)
+   and {{< children type="card" >}} (time + difficulty + page count by
+   default). Hairline top border, mono uppercase, magenta-bullet separators.
+   `margin-top: auto` pins the footer to the bottom of mixed-height cards
+   in a grid. */
 .shortcode-card__meta {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
-  margin-top: 1rem;
+  margin-top: auto;
   padding-top: 0.85rem;
   border-top: 1px solid var(--color-border);
   font-family: var(--font-mono);
@@ -1470,10 +1504,8 @@ a.shortcode-card:hover .shortcode-card__title { color: var(--color-accent-text);
   letter-spacing: 0.1em;
 }
 .shortcode-card__meta:empty { display: none; }
-.shortcode-card__meta-item,
-.shortcode-card__meta > span { display: inline-flex; align-items: center; gap: 0.3rem; }
-.shortcode-card__meta-item::before,
-.shortcode-card__meta > span + span::before {
+.shortcode-card__meta-item { display: inline-flex; align-items: center; gap: 0.3rem; }
+.shortcode-card__meta-item::before {
   content: "";
   width: 4px;
   height: 4px;
@@ -1481,46 +1513,6 @@ a.shortcode-card:hover .shortcode-card__title { color: var(--color-accent-text);
   border-radius: 50%;
 }
 .shortcode-card__meta-item:first-child::before { display: none; }
-
-/* Cards rendered by {{< children type="card" >}} use smaller body text and
-   retain an explicit gap above the footer. All shortcode cards use the shared
-   flex-column layout above, keeping their meta rows aligned at the bottom. */
-.shortcode-card--children .shortcode-card__body {
-  color: var(--color-ink-muted);
-  font-size: var(--fs-sm);
-  line-height: 1.55;
-  margin-bottom: 1rem;
-}
-.shortcode-card--children .shortcode-card__meta { margin-top: auto; }
-
-/* Featured image at the top of a children-card (image="true" arg). Bleeds
-   to the inner card edges and follows the card's rounded top corners.
-   `cover` so banner-style featured images fill the slot edge-to-edge
-   instead of being letterboxed against a surface background. */
-.shortcode-card__media {
-  margin: -1.4rem -1.5rem 1rem;
-  overflow: hidden;
-  aspect-ratio: 16 / 9;
-  /*background: var(--color-surface-alt);*/
-  /* Match the card's outer border-radius so the image fills the rounded
-     top corners. Card uses --radius-lg with a 1px border; - 1px keeps the
-     inner edge flush. */
-  border-top-left-radius: calc(var(--radius-lg) - 1px);
-  border-top-right-radius: calc(var(--radius-lg) - 1px);
-}
-.shortcode-card__media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  padding: 5px;
-  border-radius: var(--radius-lg);
-}
-/* On narrow viewports, flatten the banner so it doesn't dominate compressed
-   cards. 21:9 leaves room for the title + meta without scrolling. */
-@media (max-width: 720px) {
-  .shortcode-card__media { aspect-ratio: 21 / 9; }
-}
 
 /* Attachments / resources list */
 .attachments {
