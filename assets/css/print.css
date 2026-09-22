@@ -97,8 +97,7 @@
   /* Force pink/orange/amber accent to a print-safe gray for backgrounds —
      keeps the gradient text readable when ink is forced to black */
   .gradient-text,
-  .hero__title em,
-  .chapter__weight {
+  .hero__title em {
     background: none !important;
     -webkit-text-fill-color: #000 !important;
     color: #000 !important;

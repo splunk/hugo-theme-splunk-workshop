@@ -436,6 +436,22 @@ Rebrand colors, fonts, and logo.
 
 A standalone `card` outside a `cards` container renders as a single full-width content card.
 
+### Open in a new tab
+
+Default is the same tab. Three ways to change that, most specific wins:
+
+1. **Site-wide** — `cardsNewTab = true` in `[params]`. Every card link (`{{</* card */>}}`, `{{</* children type="card" */>}}`, auto-grid) gets `target="_blank" rel="noopener"`.
+2. **One grid** — `{{</* cards target="_blank" */>}}` … `{{</* /cards */>}}` (or `new-tab="true"`). Same args work on `{{</* children type="card" target="_blank" */>}}`.
+3. **One card** — `{{</* card … target="_blank" */>}}`. Use `target="_self"` to keep a card in the current tab when a parent grid or the site param is on.
+
+```markdown
+{{</* cards target="_blank" */>}}
+{{</* card title="Beat social media to the issue" href="/splunk4rookies/o11y-rookies-26/modules/5-dem/" show-time="true" */>}}
+Combine Real User Monitoring and Synthetics to identify and prevent poor customer experiences.
+{{</* /card */>}}
+{{</* /cards */>}}
+```
+
 ### Card images
 
 Three ways to attach a banner image to a card, in order of preference:

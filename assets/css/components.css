@@ -24,22 +24,8 @@ a:focus-visible .link-ext { opacity: 1; transform: translate(2px, -2px); }
   to   { opacity: 1; transform: none; }
 }
 
-/* @property lets the chapter-weight bloom interpolate via a number so
-   the end-state opacity stays at the declared clamp. Browsers without
-   @property support skip the bloom — element renders at clamp opacity. */
-@property --weight-progress {
-  syntax: '<number>';
-  inherits: false;
-  initial-value: 1;
-}
-@keyframes weight-bloom {
-  from { --weight-progress: 0; transform: scale(0.94); }
-  to   { --weight-progress: 1; transform: none; }
-}
-
 /* ---- Chapter hero ---- */
 .hero--chapter .hero__inner { max-width: none; }
-.chapter { position: relative; }
 /* In-column chapter hero (sits inside the content column, not full-bleed). */
 .chapter-hero {
   position: relative;
@@ -58,49 +44,7 @@ a:focus-visible .link-ext { opacity: 1; transform: translate(2px, -2px); }
   margin-bottom: 0.4rem;
   animation: reveal-up 580ms var(--ease) 80ms both;
 }
-.chapter-hero .chapter__weight {
-  position: absolute;
-  top: -0.5rem;
-  right: 0;
-  /* Sized as a small decorative ghost in the corner so it never competes
-     with the chapter title for horizontal space. The previous max of
-     7rem allowed two-digit weights ("90", "18") to intrude into the
-     title area on standard viewports. */
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  opacity: 0.14;
-}
-.chapter__weight {
-  position: absolute;
-  top: -1rem;
-  right: 0;
-  font-family: var(--font-display);
-  font-size: clamp(5rem, 12vw, 9rem);
-  font-weight: 800;
-  line-height: 1;
-  /* `letter-spacing` interacts with `background-clip: text` in Chrome:
-     non-zero tracking shifts the paint area and crops the bottom of the
-     glyph (visible as a flat cut on curve-digits like 5/8/0/6/9). The
-     v0.11.5/0.11.6 padding bumps were chasing the wrong cause; the
-     actual fix is letter-spacing: normal here. Verified A/B with
-     Playwright: removing letter-spacing restores the rounded bottom;
-     padding had no effect. */
-  letter-spacing: normal;
-  background: var(--gradient-accent);
-  -webkit-background-clip: text;
-          background-clip: text;
-  -webkit-text-fill-color: transparent;
-  /* `--weight-progress` is 1 at rest; weight-bloom animates 0 → 1 so the
-     entrance fades + scales without snapping to opacity:1. */
-  --weight-progress: 1;
-  opacity: calc(clamp(0.12, 0.06 + 0.6vw, 0.18) * var(--weight-progress));
-  animation: weight-bloom 700ms var(--ease) both;
-  pointer-events: none;
-  user-select: none;
-  z-index: 0;
-}
 .chapter__title {
-  position: relative;
-  z-index: 1;
   font-size: var(--fs-4xl);
   font-weight: 700;
   letter-spacing: -0.03em;
@@ -110,9 +54,6 @@ a:focus-visible .link-ext { opacity: 1; transform: translate(2px, -2px); }
 }
 .chapter-hero .hero__lead {
   animation: reveal-up 640ms var(--ease) 280ms both;
-}
-@media (max-width: 720px) {
-  .chapter__weight { top: -2rem; }
 }
 
 /* ---- Eyebrow alignment helpers ---- */

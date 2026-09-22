@@ -5,7 +5,7 @@ weight      = 40
 +++
 
 {{< lead >}}
-Six boolean params and one width param control the major layout decisions. Flip them in `hugo.toml` to suppress chrome you don't need.
+Seven boolean params and one width param control the major layout decisions. Flip them in `hugo.toml` to suppress chrome you don't need.
 {{< /lead >}}
 
 ## All toggles
@@ -18,6 +18,7 @@ Six boolean params and one width param control the major layout decisions. Flip 
   showToc         = true       # right-rail "On this page"
   showProgress    = true       # gradient reading-progress bar
   showLightTrails = true       # decorative gradient streaks in hero/footer
+  cardsNewTab     = false      # true → every card link opens in a new tab
   contentMaxWidth = "720px"    # prose column width on workshop pages
 ```
 
@@ -46,6 +47,10 @@ The gradient bar at the top of the page that fills as you scroll. Useful on long
 ### `showLightTrails`
 
 The decorative bloom in the top-right of the hero and the matching, quieter bloom in the footer brand row. Both use `heroBackgroundLight` / `heroBackgroundDark`. Set to `false` for a flatter, less editorial look. The copyright strip stays navy either way.
+
+### `cardsNewTab`
+
+Defaults to `false`. Set to `true` when card links should leave the current page in place — typical for a hub that jumps into other modules. Applies to `{{</* card */>}}`, `{{</* children type="card" */>}}`, and the auto card-grid. A single grid or card can still override with `target="_blank"` / `target="_self"`.
 
 ### `contentMaxWidth`
 

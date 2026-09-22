@@ -10,7 +10,7 @@ Every color the theme uses is a CSS custom property fed by a Hugo param. Overrid
 
 ## The signature gradient
 
-The theme's defining motif is the official Splunk brand gradient — **Magenta 50 → Orange 50** with stops at 10% / 90%. It appears on the hero `<em>`, step circles, the chapter weight number, the progress bar, the pager hover, and a dozen other places.
+The theme's defining motif is the official Splunk brand gradient — **Magenta 50 → Orange 50** with stops at 10% / 90%. It appears on the hero `<em>`, step circles, the progress bar, the pager hover, and a dozen other places.
 
 ```toml
 [params]
@@ -31,7 +31,7 @@ Magenta 50 (`#FF007F`) is the brand colour but only hits ~3.6:1 on white — fin
 
 | Use | Token |
 | --- | --- |
-| Hero gradient, step circles, chapter weight number, progress bar | `--color-accent` |
+| Hero gradient, step circles, progress bar | `--color-accent` |
 | Icons, decorative borders, focus rings, shadows | `--color-accent` |
 | Inline link text, active sidebar/TOC entry, inline-code colour | `--color-accent-text` |
 | Body badges (`accent` variant) | `--color-accent-text` |

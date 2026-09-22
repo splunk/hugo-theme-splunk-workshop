@@ -15,7 +15,7 @@ Hugo's `layout` front-matter key picks one of three layouts:
 | Layout | Opt-in | Renders | Use for |
 | --- | --- | --- | --- |
 | **`hero`** | `layout = "hero"` (auto for the site/language home) | Centered hero (breadcrumb-or-eyebrow + H1 + lead + CTAs) → body + auto card-grid. No sidebar, no TOC. | Landing pages: home, category hubs. |
-| **`chapter`** | `layout = "chapter"` | Gradient weight-number hero → workshop-meta → body OR auto card-grid of sub-sections. Sidebar + TOC. | Chapter intros inside a workshop. |
+| **`chapter`** | `layout = "chapter"` | Title hero → workshop-meta → body OR auto card-grid of sub-sections. Sidebar + TOC. | Chapter intros inside a workshop. |
 | default | no `layout` key | Breadcrumb → section eyebrow → H1 → lead → workshop-meta → body. Sidebar + TOC. | Workshop content pages and section landings. |
 
 Hero is automatic only for the language home; every other landing (category hubs etc.) needs explicit `layout = "hero"`. The earlier depth-1 auto-detect was removed in v0.9 — see [`hub` (deprecated)](#hub-deprecated) for migration.

@@ -40,7 +40,7 @@ Most relearn front-matter keys are honored as-is. Differences:
 | `weight` | `weight` | Same — controls ordering everywhere |
 | `description` | `description` | Same — renders as lead paragraph + meta description |
 | `hidden` | `hidden` | Same — excludes from sidebar, search, pager, children listings |
-| `chapter` | use `layout = "chapter"` | Triggers the gradient weight-number hero |
+| `chapter` | use `layout = "chapter"` | Triggers the chapter title hero |
 | `head` | (not supported) | Override `layouts/_partials/chrome/head.html` in your own site instead |
 | `menuPre` / `menuPost` | (not supported) | Customise the sidebar via your own `layouts/_partials/nav/sidebar.html` |
 | `disableToc` | `show_toc = false` (theme param) or `nopager = true` (page-level pager only) | TOC is a theme-wide param; pager can be suppressed per page |
@@ -49,7 +49,7 @@ For full front-matter coverage on this theme see [Authoring › Front matter](..
 
 ## What changes visually
 
-- **The hero**. Relearn's chapter pages have a numbered banner. This theme uses a similar gradient weight-number hero, but the gradient and typography are different. Set `colorAccent`, `colorAccent2`, `fontDisplay`, and `fontBody` in your `hugo.toml` to rebrand.
+- **The hero**. Relearn's chapter pages have a numbered banner. This theme's chapter layout is a title, optional subtitle, and lead — no corner number. Set `colorAccent`, `colorAccent2`, `fontDisplay`, and `fontBody` in your `hugo.toml` to rebrand.
 - **Sidebar**. Relearn has nested expandable groups. This theme has a flat scoped sidebar that shows the current chapter's pages — chapter switching is the responsibility of the breadcrumb / parent listing. If you depend on the nested-tree UX, override `layouts/_partials/nav/sidebar.html` in your own site.
 - **Print stylesheet**. Both themes ship one. This theme's is in `assets/css/print.css`.
 - **Edit-on-GitHub link**. Set `params.editURL` in your `hugo.toml` and pages get a "Edit this page on GitHub" link in the footer.

@@ -6,7 +6,7 @@
     positional 0  = title
     positional 1  = href
     named:          title, href, icon, image, hero-icon, color,
-                    show-time, show-pages
+                    show-time, show-pages, target, new-tab
 
   `icon` is the small inline glyph next to the title; `hero-icon`
   renders a large Lucide icon on the gradient header band. When
@@ -20,6 +20,10 @@
 
   Markup is emitted by `cards/shortcode-card.html` — the same partial
   `{{< children type="card" >}}` uses.
+
+  `target="_blank"` / `new-tab="true"` opens this card in a new tab.
+  Unset, the wrapping {{< cards >}} target is used, then
+  site.Params.cardsNewTab. `target="_self"` opts a card out.
 
   Legacy alias (deprecated, accepted for relearn compatibility):
     `url` — use `href` instead.
@@ -67,6 +71,15 @@
 {{- $trackRoot := "" -}}
 {{- with $tp }}{{ $trackRoot = .RelPermalink }}{{ end -}}
 
+{{- $parentTarget := "" -}}
+{{- with .Parent -}}
+  {{- $parentTarget = .Get "target" | default (.Get "new-tab") -}}
+{{- end -}}
+{{- $newTab := partial "cards/new-tab.html" (dict
+  "explicit" (.Get "target" | default (.Get "new-tab"))
+  "parent"   $parentTarget
+) -}}
+
 {{- /* Flag the page so layouts (notably index.html) suppress their
        auto-card-grid when the body has already authored its own. */ -}}
 {{- .Page.Store.Set "_has_cards" true -}}
@@ -82,4 +95,5 @@
   "meta"       $meta
   "trackRoot"  $trackRoot
   "trackLeaf"  (and (ne $trackRoot "") (eq $count 0))
+  "newTab"     $newTab
 ) -}}

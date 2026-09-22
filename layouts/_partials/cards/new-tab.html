@@ -1,0 +1,26 @@
+{{- /*
+  Returns true when a card link should open in a new tab.
+
+  Cascade (first set wins):
+    1. explicit — `target` / `new-tab` on this card
+    2. parent   — same args on the wrapping {{< cards >}} or {{< children >}}
+    3. site.Params.cardsNewTab
+
+  Open:  true | "true" | "_blank"
+  Same tab (opts out of a parent/site default): false | "false" | "_self"
+*/ -}}
+{{- $explicit := trim (.explicit | default "" | string) " " -}}
+{{- $parent   := trim (.parent   | default "" | string) " " -}}
+{{- $raw := $explicit -}}
+{{- if eq $raw "" }}{{ $raw = $parent }}{{ end -}}
+{{- $key := lower $raw -}}
+{{- $out := false -}}
+{{- if or (eq $key "_blank") (eq $key "true") -}}
+  {{- $out = true -}}
+{{- else if or (eq $key "_self") (eq $key "false") -}}
+  {{- $out = false -}}
+{{- else -}}
+  {{- $site := site.Params.cardsNewTab | default false -}}
+  {{- $out = or (eq $site true) (eq (lower (printf "%v" $site)) "true") -}}
+{{- end -}}
+{{- return $out -}}

@@ -12,6 +12,7 @@
                    the `icon` front-matter key renders as a hero icon.
     showhidden   - "true" to include hidden pages (default false)
     sort         - weight | title  (default weight)
+    target       - "_blank" to open every card in a new tab (alias: new-tab)
 
   Card markup is emitted by `cards/shortcode-card.html` — the same partial
   `{{< card >}}` uses — so both paths share typography, media, and meta.
@@ -32,6 +33,9 @@
        a duration estimate adds noise. Other meta items (difficulty, page
        count) keep rendering. */ -}}
 {{- $notime := eq (.Get "notime" | default "false") "true" -}}
+{{- $newTab := partial "cards/new-tab.html" (dict
+  "explicit" (.Get "target" | default (.Get "new-tab"))
+) -}}
 
 {{- $start := .Page -}}
 {{- if $page -}}
@@ -74,6 +78,7 @@
   "meta"      $meta
   "trackRoot" $child.RelPermalink
   "trackLeaf" (eq $childCount 0)
+  "newTab"    $newTab
 ) -}}
 {{- end -}}
 </div>

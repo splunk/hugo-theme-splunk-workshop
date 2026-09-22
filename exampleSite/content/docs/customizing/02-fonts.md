@@ -20,7 +20,7 @@ The theme defaults to **Inter** (Google Fonts) for display and body, paired with
 
 | Slot | Used for |
 | --- | --- |
-| `fontDisplay` | Headings, hero title, chapter weight number, callout titles, brand wordmark |
+| `fontDisplay` | Headings, hero title, callout titles, brand wordmark |
 | `fontBody` | Prose, lead paragraphs, sidebar, TOC, navigation |
 | `fontMono` | Code blocks, inline code, file chips, terminal, kbd, eyebrows, file-tree, badges |
 

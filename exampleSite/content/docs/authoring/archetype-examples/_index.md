@@ -7,7 +7,7 @@ subtitle    = "Authoring · Reference"
 tagline     = "Templates → pages"
 +++
 
-The five pages below are each generated from one of the theme's archetypes. The section index page you're reading right now uses `chapter` — the same archetype you'd run `hugo new --kind chapter content/foo/_index.md` to create — which is what gives this page its gradient weight number in the corner and the eyebrow subtitle above the title.
+The five pages below are each generated from one of the theme's archetypes. The section index page you're reading right now uses `chapter` — the same archetype you'd run `hugo new --kind chapter content/foo/_index.md` to create — which is what gives this page its eyebrow subtitle above the title.
 
 Click into any of the four child pages to see the other archetypes rendered as real, navigable pages:
 

@@ -7,10 +7,16 @@
       {{< card title="Bar" href="/bar" icon="book" >}}   ... {{< /card >}}
     {{< /cards >}}
 
+    {{< cards target="_blank" >}} … {{< /cards >}}
+
+  `target="_blank"` (or `new-tab="true"`) opens every nested card in a
+  new tab. Nested `card` `target=` / `new-tab=` wins per card.
+  Site-wide default: params.cardsNewTab.
+
   Implementation: wraps `.Inner` in a flex/grid container. Each child
   `card` shortcode emits its own `<a class="shortcode-card">` HTML; this
-  shortcode just provides the layout box. No Store state, no per-card
-  bookkeeping — Hugo's normal shortcode evaluator handles every step.
+  shortcode just provides the layout box. Nested cards read `.Parent`
+  for the grid-level target.
 */ -}}
 {{- /* Flag the page so layouts (notably index.html) suppress their
        auto-card-grid when the body has already authored cards. */ -}}

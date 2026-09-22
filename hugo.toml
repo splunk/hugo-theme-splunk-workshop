@@ -129,6 +129,7 @@ enableGitInfo = true
   showProgress    = true
   showLightTrails = true
   contentMaxWidth = "720px"
+  cardsNewTab     = false    # true → every card link opens in a new tab
 
   # ---- Repo / edit-on-github --------------------------------------------
   editURL = ""
