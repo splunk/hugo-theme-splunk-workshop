@@ -5,6 +5,94 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.13.21] - 2026-09-22
+
+### Removed
+
+- **Chapter corner weight number.** `layout = "chapter"` no longer paints Hugo's `weight` as a large decorative numeral in the top-right. The field read it as a chapter index. `weight` still controls sidebar, listing, and pager order.
+
+### Added
+
+- **Card links can open in a new tab.** Default stays the same tab.
+  - Site-wide: `cardsNewTab = true` in `[params]`
+  - One grid: `{{< cards target="_blank" >}}` or `{{< children type="card" target="_blank" >}}` (`new-tab="true"` is an alias)
+  - One card: `target="_blank"`. `target="_self"` opts out of a parent or site default.
+  - Applies to shortcode cards, `children type="card"`, and the auto card-grid. New-tab links get `rel="noopener"`.
+
+### Docs
+
+- Chapter layout copy no longer refers to a weight-number hero (`01-front-matter`, archetype examples, colors, fonts, from-relearn).
+- New-tab cascade documented in `shortcodes/03-layout.md` and `customizing/04-toggles.md`.
+
+## [0.13.20] - 2026-09-11
+
+### Changed
+
+- **Footer brand row reuses the hero WebP** (quieter cover + left fade) and follows the page theme. The copyright strip stays solid navy.
+- **Header and reading-progress track are opaque paper**, so scrolling body copy no longer shows through the frosted header or the 2px progress track.
+- **Footer tagline stays on one line** on desktop.
+
+## [0.13.19] - 2026-09-11
+
+### Fixed
+
+- **Auto-grid listing cards match shortcode card type scale** — padding, title, and body size now share the same rhythm as `{{< card >}}`.
+- **Card hero bands are Magenta 50 → Orange 50** so they continue the page-hero bloom in light mode instead of a paper-tinted blush.
+
+## [0.13.18] - 2026-09-11
+
+### Changed
+
+- **`{{< card >}}` and `{{< children type="card" >}}` share one renderer** (`layouts/_partials/cards/shortcode-card.html`). Title size, body, image/hero slot, meta row, hover ring, and completion tick match on both paths.
+- **Image vs icon precedence is unified:** raster image wins; otherwise a hero icon (`hero-icon=` or the child's `icon` front matter); an inline title `icon=` is suppressed whenever a hero is shown.
+- **Hero icons sit on a full-bleed orange–amber band.** Presenter notes use a magenta rail that stays readable in both modes.
+
+## [0.13.17] - 2026-09-10
+
+### Added
+
+- **`sparkles` and `monitor-smartphone` icons** in `data/icons.toml`.
+
+### Docs
+
+- Card-layout docs: expanded icon groupings and explicit `show-time` / `show-pages` defaults.
+
+## [0.13.16] - 2026-09-10
+
+### Fixed
+
+- **Shortcode card meta footers align in mixed-height grids.** Cards use a shared column flex layout so the meta row stays at the bottom regardless of body length.
+
+## [0.13.15] - 2026-09-09
+
+### Changed
+
+- **Presenter controls are URL-gated.** The floating Presenter pill appears only after the browser has visited a URL with `?presenter=1` at least once. After that unlock, the pill and `P` `P` toggle persist in `localStorage` for that browser. A one-off `?presenter=1` no longer silently enables presenter mode site-wide.
+
+## [0.13.14] - 2026-09-01
+
+### Added
+
+- **`{{< latest-otel-version >}}` and `{{< legacy-otel-version >}}`** shortcodes so workshop content can reference each OTel version stream explicitly (`params.latestOtelVersion` / `params.legacyOtelVersion`).
+
+## [0.13.13] - 2026-07-10
+
+### Fixed
+
+- **Alias interstitial card is wider** so long URLs and copy scan without wrapping too aggressively.
+
+## [0.13.12] - 2026-07-10
+
+### Added
+
+- **Manual alias interstitial.** Hugo's alias template is overridden with a bookmark-update page and a manual continue action. Light/dark styling follows the saved theme mode and system preference.
+
+## [0.13.11] - 2026-07-09
+
+### Changed
+
+- **Browse nav entry is a destination pill**, visually distinct from the header's utility icon buttons.
+
 ## [0.13.10] - 2026-06-18
 
 ### Security
@@ -52,6 +140,12 @@ versions follow [Semantic Versioning](https://semver.org/).
 ### Added
 
 - **`objectives` and `prerequisites` shortcodes now accept a `title=` arg** (and first positional). Pipes through `markdownify` so authors can format the heading (`title="**Goals** for today"`). Defaults remain "What you'll learn" and "Before you start" via the new `objectivesTitle` and `prerequisitesTitle` i18n keys.
+
+## [0.13.7] - 2026-06-08
+
+### Fixed
+
+- **Nested `tabs` blocks keyed on `.Position`** so two `{{< tabs >}}` inside a percent-form parent (`exercise`, `notice`, …) no longer share a `.Page.Store` bucket and merge their panes. Incomplete: `.Position` still collapsed to zero after `.Page.RenderString` in some nests — finished in v0.13.8 with an explicit `id=` / `key=` arg.
 
 ## [0.13.6] - 2026-06-08
 
