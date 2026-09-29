@@ -52,7 +52,7 @@ time        = "20 min"               # shown in workshop-meta + cards
 duration    = "20 min"               # alias of time (legacy)
 difficulty  = "beginner"             # shown in workshop-meta + cards
 product     = "ITSI"                 # gradient-filled chip on the card meta row
-badge       = "New"                  # diagonal corner sash on cards; omit to hide
+badge       = "New"                  # New | Updated | Beta | Deprecated; omit to hide
 authors     = ["Pieter Hagen",
                "Robert Castley"]     # shown in workshop-meta (plural array, preferred)
 author      = "Pieter Hagen"         # alias of authors[0] (legacy singular)
@@ -121,7 +121,14 @@ The card renders `Alerting & Monitoring` as the hero with `ITSI` as a category c
 
 ### `badge`
 
-Free-form text painted as a diagonal sash in the card's top-right corner. Typical values: `"New"`, `"Updated"`, `"Beta"`. The theme uppercases it. Omit the key and the corner stays empty — the sash stays until you delete the text.
+One of four words, painted as a diagonal sash in the card's top-right corner. The theme uppercases it and ignores anything else. Omit the key and the corner stays empty — the sash stays until you delete the text.
+
+| Value | Sash |
+| --- | --- |
+| `"New"` | Magenta. White on a hero band, where magenta would disappear. |
+| `"Updated"` | Ink. Cream in dark mode, so it still reads on a dark card. |
+| `"Beta"` | Info blue. |
+| `"Deprecated"` | Warn orange. |
 
 The same key drives every card that represents the page:
 

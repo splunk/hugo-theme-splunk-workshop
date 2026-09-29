@@ -5,6 +5,16 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.13.23] - 2026-09-29
+
+### Changed
+
+- **Corner sash is four labels, each a fixed color.** `badge` accepts `New` (magenta; white on a hero band), `Updated` (ink; cream in dark mode), `Beta` (info blue), and `Deprecated` (warn orange), in any case. Any other value is ignored. This replaces the free-text magenta sash from 0.13.22.
+
+### Docs
+
+- Layout, front matter, and `children` docs list the four labels and show a live example of each color, including a `New` sash on a hero band and an ignored value.
+
 ## [0.13.22] - 2026-09-29
 
 ### Added

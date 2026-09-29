@@ -370,11 +370,10 @@ a:focus-visible .link-ext { opacity: 1; transform: translate(2px, -2px); }
 .card__check          { bottom: 1.4rem;  right: 1.5rem; }
 .shortcode-card__check { bottom: 1.4rem; right: 1.5rem;  }
 
-/* Corner sash — author label ("New", "Updated", …). Anchored on the
-   top-right diagonal so longer words stay centred on the corner and
-   overflow:hidden on the card clips the ends. Magenta, matching the
-   brand accent. A hero band is the same magenta→orange, so that card
-   flips the sash to white with ink text. Completion tick stays
+/* Corner sash. Four labels only, each a fixed color. Anchored on the
+   top-right diagonal so the word stays centred and overflow:hidden
+   clips the ends. New is magenta, which disappears on a hero band,
+   so that one sash turns white there. Completion tick stays
    bottom-right. */
 .card-ribbon {
   position: absolute;
@@ -383,7 +382,6 @@ a:focus-visible .link-ext { opacity: 1; transform: translate(2px, -2px); }
   z-index: 2;
   transform: translate(50%, -50%) rotate(45deg);
   padding: 0.28rem 2.6rem;
-  background: var(--color-accent);
   color: #fff;
   font-family: var(--font-mono);
   font-size: 0.62rem;
@@ -394,8 +392,21 @@ a:focus-visible .link-ext { opacity: 1; transform: translate(2px, -2px); }
   white-space: nowrap;
   pointer-events: none;
 }
-.card:has(.card__hero) .card-ribbon,
-.shortcode-card:has(.shortcode-card__hero) .card-ribbon {
+.card-ribbon--new        { background: var(--color-accent); }
+.card-ribbon--updated    { background: #0C1724; }
+.card-ribbon--beta       { background: #1d5d99; }
+.card-ribbon--deprecated {
+  background: #b75c10;
+  font-size: 0.56rem;
+  letter-spacing: 0.04em;
+}
+/* Ink on a dark card disappears, so Updated flips to cream. */
+[data-theme="dark"] .card-ribbon--updated {
+  background: #F4F1EA;
+  color: #0C1724;
+}
+.card:has(.card__hero) .card-ribbon--new,
+.shortcode-card:has(.shortcode-card__hero) .card-ribbon--new {
   background: #fff;
   color: #0C1724;
 }

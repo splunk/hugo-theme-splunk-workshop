@@ -1,9 +1,17 @@
 {{- /*
-  Diagonal corner sash. Pass the label string. Empty, "true", and
-  "false" render nothing — the label is author text ("New", "Updated"),
-  not a boolean, and it stays until that text is removed.
+  Diagonal corner sash. Only these labels render, matched
+  case-insensitively. Anything else — including empty, "true",
+  and "false" — renders nothing. The label stays until removed.
+
+    new         magenta (white on a hero band)
+    updated     ink
+    beta        info blue
+    deprecated  warn orange
 */ -}}
-{{- $text := trim (printf "%v" (. | default "")) " " -}}
-{{- if and $text (ne $text "true") (ne $text "false") (ne $text "<nil>") -}}
-<span class="card-ribbon">{{ $text }}</span>
+{{- $text := trim (printf "%v" (. | default "")) " " | lower -}}
+{{- if $text -}}
+{{- $kind := index (dict "new" "new" "updated" "updated" "beta" "beta" "deprecated" "deprecated") $text -}}
+{{- with $kind -}}
+<span class="card-ribbon card-ribbon--{{ . }}">{{ . }}</span>
+{{- end -}}
 {{- end -}}

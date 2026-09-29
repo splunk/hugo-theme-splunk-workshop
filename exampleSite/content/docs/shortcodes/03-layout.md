@@ -454,41 +454,50 @@ Combine Real User Monitoring and Synthetics to identify and prevent poor custome
 
 ### Corner sash
 
-A diagonal label in the top-right corner. The text is whatever you write — `New`, `Updated`, `Beta` — and it stays until you delete it. Cards without a label are unchanged. The completion tick stays in the opposite corner.
+A diagonal label in the top-right corner. Four values only, in any case. Anything else is ignored and the corner stays empty. The label stays until you delete it. The completion tick stays in the opposite corner.
+
+| `badge` | Sash |
+| --- | --- |
+| `New` | Magenta. White on a hero band, where magenta would disappear. |
+| `Updated` | Ink. Cream in dark mode. |
+| `Beta` | Info blue. |
+| `Deprecated` | Warn orange. |
 
 This is not the inline `{{</* badge */>}}` shortcode. That one is a chip in prose. The corner sash is only for cards.
 
-**Hand-written card.** `badge=` on that card. Only the cards you mark get a sash:
+**Hand-written card.** `badge=` on that card:
 
 {{< cards >}}
 {{< card title="Beat social media to the issue" href="/docs/shortcodes/03-layout/" badge="New" >}}
-Combine Real User Monitoring and Synthetics to catch a poor experience early.
+Magenta. The loudest mark — this module was not in the last run.
 {{< /card >}}
-{{< card title="Digital Experience Analytics" href="/docs/shortcodes/" >}}
-No sash on this card. Omit `badge` and the corner stays empty.
+{{< card title="Digital Experience Analytics" href="/docs/shortcodes/" badge="Updated" >}}
+Ink. The steps changed and are worth doing again.
 {{< /card >}}
-{{< card title="Session replay" href="/docs/" hero-icon="monitor-smartphone" badge="Updated" >}}
-On a hero band the sash turns white, so it still reads on the magenta–orange gradient.
+{{< card title="Session replay" href="/docs/" badge="Beta" >}}
+Info blue. The lab may still change.
+{{< /card >}}
+{{< card title="Browser tests" href="/docs/shortcodes/" badge="Deprecated" >}}
+Warn orange. Still linked, but replaced by a newer module.
+{{< /card >}}
+{{< card title="On a hero band" href="/docs/" hero-icon="monitor-smartphone" badge="New" >}}
+New turns white here. Updated, Beta, and Deprecated keep their colors.
+{{< /card >}}
+{{< card title="Unmarked" href="/docs/shortcodes/03-layout/" badge="Preview" >}}
+`Preview` is not a sash label, so this corner stays empty.
 {{< /card >}}
 {{< /cards >}}
 
 ```markdown
-{{</* cards */>}}
 {{</* card title="Beat social media to the issue" href="/splunk4rookies/o11y-rookies-26/modules/5-dem/" badge="New" */>}}
-Combine Real User Monitoring and Synthetics to identify and prevent poor customer experiences.
-{{</* /card */>}}
-{{</* card title="Digital Experience Analytics" href="/splunk4rookies/o11y-rookies-26/modules/9-dxa/" */>}}
-Explore adoption, frustration, funnels, and user segments.
-{{</* /card */>}}
-{{</* card title="Session replay" href="/rum/" hero-icon="monitor-smartphone" badge="Updated" */>}}
-Watch the journey that led to the checkout drop.
-{{</* /card */>}}
-{{</* /cards */>}}
+{{</* card title="Digital Experience Analytics" href="/splunk4rookies/o11y-rookies-26/modules/9-dxa/" badge="Updated" */>}}
+{{</* card title="Session replay" href="/rum/" badge="Beta" */>}}
+{{</* card title="Browser tests" href="/synthetics/" badge="Deprecated" */>}}
 ```
 
 An explicit `badge=` wins. If you omit it, the card uses the linked page's `badge` front matter when that page has one.
 
-**`children` and the auto card-grid.** There is no shortcode arg — the listing does not know which child is new. Set `badge` on the child page. Both `{{</* children type="card" */>}}` and the auto card-grid read it.
+**`children` and the auto card-grid.** There is no shortcode arg. Set `badge` on the child page. Both `{{</* children type="card" */>}}` and the auto card-grid read it.
 
 ```toml
 +++
@@ -497,7 +506,7 @@ badge = "New"
 +++
 ```
 
-Remove the key when the label should go away. Keep the word short. The card clips the ends of the sash, so a long phrase runs off the corner.
+Remove the key when the label should go away.
 
 ### Card images
 

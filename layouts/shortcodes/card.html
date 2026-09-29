@@ -21,7 +21,8 @@
   Markup is emitted by `cards/shortcode-card.html` — the same partial
   `{{< children type="card" >}}` uses.
 
-  `badge` paints a diagonal corner sash. An explicit value wins;
+  `badge` paints a diagonal corner sash. Only New, Updated, Beta,
+  and Deprecated render (any case). An explicit value wins;
   otherwise the linked page's `badge` front matter is used.
 
   `target="_blank"` / `new-tab="true"` opens this card in a new tab.
