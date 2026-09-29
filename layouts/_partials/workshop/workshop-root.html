@@ -5,8 +5,7 @@
   every ancestor is a hero (or the page itself is one), returns false
   and the caller renders the hero layout.
 
-  Hero detection: `layout = "hero"` (canonical) OR `hub = true` (legacy,
-  deprecated; removal in v0.10.0).
+  Hero detection: `layout = "hero"`.
 */ -}}
 {{- $page := . -}}
 {{- $root := false -}}
@@ -27,13 +26,7 @@
     {{- if not $found -}}
       {{- $cand := index $candidates (sub $n .) -}}
       {{- if and (not $cand.IsHome) (not (in $langHomes $cand.RelPermalink)) -}}
-        {{- $isHeroExplicit := eq $cand.Layout "hero" -}}
-        {{- $isHubLegacy    := eq ($cand.Params.hub | default false) true -}}
-        {{- $isHero         := or $isHeroExplicit $isHubLegacy -}}
-
-        {{- if $isHubLegacy -}}
-          {{- warnidf (printf "workshop-root-hub-deprecated-%s" $cand.RelPermalink) "workshop-root: section %q uses deprecated `hub: true` — replace with `layout = \"hero\"`. Removal in v0.10.0." $cand.RelPermalink -}}
-        {{- end -}}
+        {{- $isHero := eq $cand.Layout "hero" -}}
 
         {{- /* Trap: hero section also has direct .md page children. Those
                pages render at their URLs but become invisible in workshop

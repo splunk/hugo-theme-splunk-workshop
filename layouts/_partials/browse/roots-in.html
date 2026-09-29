@@ -2,8 +2,8 @@
   Collect workshop-root sections within a given section, at any depth.
   A "workshop root" is the topmost NON-hero section in a branch — the unit
   that opens a sidebar + pager scope (same definition as
-  workshop/workshop-root.html). Hero sections (`layout = "hero"` or legacy
-  `hub = true`) are category hubs: we descend through them and keep
+  workshop/workshop-root.html). Hero sections (`layout = "hero"`) are
+  category hubs: we descend through them and keep
   looking; the first non-hero section IS a workshop and we stop (we do
   NOT list its inner pages — that's the workshop's content).
 
@@ -19,7 +19,7 @@
   {{- /* `layout: browse` is the See-all page itself — never list it as a
          workshop. `hidden: true` opts pages out site-wide. */ -}}
   {{- if and (ne (.Params.hidden | default false) true) (ne .Layout "browse") -}}
-    {{- $isHero := or (eq .Layout "hero") (eq (.Params.hub | default false) true) -}}
+    {{- $isHero := eq .Layout "hero" -}}
     {{- if $isHero -}}
       {{- range (partial "browse/roots-in.html" .) -}}{{- $out = $out | append . -}}{{- end -}}
     {{- else -}}

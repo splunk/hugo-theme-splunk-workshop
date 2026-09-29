@@ -458,10 +458,10 @@ A diagonal label in the top-right corner. Four values only, in any case. Anythin
 
 | `badge` | Sash |
 | --- | --- |
-| `New` | Magenta. White on a hero band, where magenta would disappear. |
-| `Updated` | Ink. Cream in dark mode. |
-| `Beta` | Info blue. |
-| `Deprecated` | Warn orange. |
+| `New` | Magenta. White on a hero band. |
+| `Updated` | Navy. |
+| `Beta` | Indigo. |
+| `Deprecated` | Orange. White with orange text on a hero band. |
 
 This is not the inline `{{</* badge */>}}` shortcode. That one is a chip in prose. The corner sash is only for cards.
 
@@ -472,16 +472,19 @@ This is not the inline `{{</* badge */>}}` shortcode. That one is a chip in pros
 Magenta. The loudest mark — this module was not in the last run.
 {{< /card >}}
 {{< card title="Digital Experience Analytics" href="/docs/shortcodes/" badge="Updated" >}}
-Ink. The steps changed and are worth doing again.
+Navy. The steps changed and are worth doing again.
 {{< /card >}}
 {{< card title="Session replay" href="/docs/" badge="Beta" >}}
-Info blue. The lab may still change.
+Indigo. The lab may still change.
 {{< /card >}}
 {{< card title="Browser tests" href="/docs/shortcodes/" badge="Deprecated" >}}
-Warn orange. Still linked, but replaced by a newer module.
+Orange. Still linked, but replaced by a newer module.
 {{< /card >}}
 {{< card title="On a hero band" href="/docs/" hero-icon="monitor-smartphone" badge="New" >}}
-New turns white here. Updated, Beta, and Deprecated keep their colors.
+New turns white here, so it still reads on the gradient.
+{{< /card >}}
+{{< card title="Replaced module" href="/docs/" hero-icon="monitor-smartphone" badge="Deprecated" >}}
+Deprecated turns white too, and the word stays orange.
 {{< /card >}}
 {{< card title="Unmarked" href="/docs/shortcodes/03-layout/" badge="Preview" >}}
 `Preview` is not a sash label, so this corner stays empty.

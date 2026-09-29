@@ -370,11 +370,10 @@ a:focus-visible .link-ext { opacity: 1; transform: translate(2px, -2px); }
 .card__check          { bottom: 1.4rem;  right: 1.5rem; }
 .shortcode-card__check { bottom: 1.4rem; right: 1.5rem;  }
 
-/* Corner sash. Four labels only, each a fixed color. Anchored on the
-   top-right diagonal so the word stays centred and overflow:hidden
-   clips the ends. New is magenta, which disappears on a hero band,
-   so that one sash turns white there. Completion tick stays
-   bottom-right. */
+/* Corner sash. Four labels, each a fixed hue, the same in light
+   and dark. Anchored on the top-right diagonal; overflow:hidden
+   clips the ends. New and Deprecated sit on the hero gradient, so
+   those bands turn white there. Completion tick stays bottom-right. */
 .card-ribbon {
   position: absolute;
   top: 1.7rem;
@@ -393,22 +392,23 @@ a:focus-visible .link-ext { opacity: 1; transform: translate(2px, -2px); }
   pointer-events: none;
 }
 .card-ribbon--new        { background: var(--color-accent); }
-.card-ribbon--updated    { background: #0C1724; }
-.card-ribbon--beta       { background: #1d5d99; }
+.card-ribbon--updated    { background: #1E3A8A; }
+.card-ribbon--beta       { background: #4F46E5; }
 .card-ribbon--deprecated {
-  background: #b75c10;
+  background: #C2410C;
   font-size: 0.56rem;
   letter-spacing: 0.04em;
 }
-/* Ink on a dark card disappears, so Updated flips to cream. */
-[data-theme="dark"] .card-ribbon--updated {
-  background: #F4F1EA;
-  color: #0C1724;
-}
 .card:has(.card__hero) .card-ribbon--new,
-.shortcode-card:has(.shortcode-card__hero) .card-ribbon--new {
+.shortcode-card:has(.shortcode-card__hero) .card-ribbon--new,
+.card:has(.card__hero) .card-ribbon--deprecated,
+.shortcode-card:has(.shortcode-card__hero) .card-ribbon--deprecated {
   background: #fff;
   color: #0C1724;
+}
+.card:has(.card__hero) .card-ribbon--deprecated,
+.shortcode-card:has(.shortcode-card__hero) .card-ribbon--deprecated {
+  color: #C2410C;
 }
 
 /* ---- Inline icon ---- */

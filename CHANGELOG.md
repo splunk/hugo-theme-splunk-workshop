@@ -5,6 +5,16 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.13.24] - 2026-09-29
+
+### Changed
+
+- **Corner sash colors are the same in light and dark.** `New` is magenta, `Updated` is navy, `Beta` is indigo, and `Deprecated` is orange, all with white text. `New` turns white on a hero band. `Deprecated` turns white there too, with orange text.
+
+### Removed
+
+- **`hub = true`.** Hero sections are only `layout = "hero"`. The front-matter docs no longer describe `hub` as a deprecated alias, and the theme no longer treats it as a hero in the workshop sidebar or the browse listing.
+
 ## [0.13.23] - 2026-09-29
 
 ### Changed

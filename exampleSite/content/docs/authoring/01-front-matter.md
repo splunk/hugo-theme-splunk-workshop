@@ -18,7 +18,7 @@ Hugo's `layout` front-matter key picks one of three layouts:
 | **`chapter`** | `layout = "chapter"` | Title hero → workshop-meta → body OR auto card-grid of sub-sections. Sidebar + TOC. | Chapter intros inside a workshop. |
 | default | no `layout` key | Breadcrumb → section eyebrow → H1 → lead → workshop-meta → body. Sidebar + TOC. | Workshop content pages and section landings. |
 
-Hero is automatic only for the language home; every other landing (category hubs etc.) needs explicit `layout = "hero"`. The earlier depth-1 auto-detect was removed in v0.9 — see [`hub` (deprecated)](#hub-deprecated) for migration.
+Hero is automatic only for the language home; every other landing (category hubs etc.) needs explicit `layout = "hero"`.
 
 `hero_title` is the only front-matter key that renders markdown in a heading; everything else renders plain. See [Markdown in titles](#markdown-in-titles).
 
@@ -67,8 +67,6 @@ icon        = "book-text"            # Lucide name; renders as the card's hero
                                       #   auto-grid / cards-by-category listing
 hero_title   = "Splunk4*Ninjas*."     # hero-only: H1 text rendered through markdownify
                                       #            (the only surface where `*emphasis*` works)
-# hub       = true                   # DEPRECATED — use `layout = "hero"` instead.
-                                      # Recognised for one release; removal in v0.10.0.
 categories  = ["foundations"]        # bucket assignment for cards-by-category (page-level)
 subtitle    = "Chapter · Foo"        # eyebrow text on chapter pages
 tagline     = "01 · Foundation"      # extra text in the chapter sidebar
@@ -125,10 +123,10 @@ One of four words, painted as a diagonal sash in the card's top-right corner. Th
 
 | Value | Sash |
 | --- | --- |
-| `"New"` | Magenta. White on a hero band, where magenta would disappear. |
-| `"Updated"` | Ink. Cream in dark mode, so it still reads on a dark card. |
-| `"Beta"` | Info blue. |
-| `"Deprecated"` | Warn orange. |
+| `"New"` | Magenta. White on a hero band. |
+| `"Updated"` | Navy. |
+| `"Beta"` | Indigo. |
+| `"Deprecated"` | Orange. White with orange text on a hero band. |
 
 The same key drives every card that represents the page:
 
@@ -252,26 +250,18 @@ layout    = "hero"
 
 **Eyebrow on nested heroes.** The site home shows `eyebrow` (or `params.brandTagline`). Nested hero sections show the **breadcrumb** in that slot instead — there's no other way back to ancestor pages. `eyebrow` is ignored on nested heroes; use `description` for a subtitle.
 
-### `hub` (deprecated)
+### Nested heroes
 
-Replaced by `layout = "hero"`. Recognised for one release with a build warning; removal in v0.10.0.
-
-```toml
-# OLD: hub = true
-# NEW:
-layout = "hero"
-```
-
-Works at any depth. The workshop root for a nested page is the highest non-hero ancestor:
+`layout = "hero"` works at any depth. The workshop root for a nested page is the highest non-hero ancestor:
 
 ```text
-/workshops/                            layout = "hero"   (was: auto-detected at depth-1)
-/workshops/observability/              layout = "hero"   (was: hub = true)
+/workshops/                            layout = "hero"
+/workshops/observability/              layout = "hero"
 /workshops/observability/k8s-monitor/  workshop          ← workshop root
 /workshops/observability/k8s-monitor/01-intro/   page
 ```
 
-The depth-1 auto-detect was removed too — every hero section now needs the explicit key. Re-run `hugo` after upgrading; deprecation warnings list each section to migrate. A separate `hero-trap` warning fires when a hero section has direct `.md` page children (they'd be unreachable in workshop nav).
+A hero section with direct `.md` page children still renders those pages, but they get no sidebar or prev/next pager. Nest them in a sub-section if they need workshop navigation. The build warns when this happens.
 
 ### `categories`
 
