@@ -19,6 +19,7 @@
        own visit-tracker), so Hugo doesn't have to guess what counts
        as a "page" — the sidebar is the source of truth. */ -}}
 <a class="card{{ with $page.Params.icon }} card--has-hero{{ end }}" href="{{ $page.RelPermalink }}"{{ if $newTab }} target="_blank" rel="noopener"{{ end }} data-section-root="{{ $page.RelPermalink }}"{{ if eq $count 0 }} data-section-pages="1"{{ end }}>
+  {{ partial "cards/ribbon.html" $page.Params.badge }}
   {{- /* Head row — num + product chip — comes BEFORE the icon hero so
          the chip sits at the very top-right of the card. `product` is a
          gradient-filled chip labelling which product the workshop covers;

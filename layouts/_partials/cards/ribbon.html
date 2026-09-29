@@ -1,0 +1,9 @@
+{{- /*
+  Diagonal corner sash. Pass the label string. Empty, "true", and
+  "false" render nothing — the label is author text ("New", "Updated"),
+  not a boolean, and it stays until that text is removed.
+*/ -}}
+{{- $text := trim (printf "%v" (. | default "")) " " -}}
+{{- if and $text (ne $text "true") (ne $text "false") (ne $text "<nil>") -}}
+<span class="card-ribbon">{{ $text }}</span>
+{{- end -}}

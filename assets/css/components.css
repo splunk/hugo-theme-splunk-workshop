@@ -370,6 +370,36 @@ a:focus-visible .link-ext { opacity: 1; transform: translate(2px, -2px); }
 .card__check          { bottom: 1.4rem;  right: 1.5rem; }
 .shortcode-card__check { bottom: 1.4rem; right: 1.5rem;  }
 
+/* Corner sash — author label ("New", "Updated", …). Anchored on the
+   top-right diagonal so longer words stay centred on the corner and
+   overflow:hidden on the card clips the ends. Magenta, matching the
+   brand accent. A hero band is the same magenta→orange, so that card
+   flips the sash to white with ink text. Completion tick stays
+   bottom-right. */
+.card-ribbon {
+  position: absolute;
+  top: 1.7rem;
+  right: 1.7rem;
+  z-index: 2;
+  transform: translate(50%, -50%) rotate(45deg);
+  padding: 0.28rem 2.6rem;
+  background: var(--color-accent);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.card:has(.card__hero) .card-ribbon,
+.shortcode-card:has(.shortcode-card__hero) .card-ribbon {
+  background: #fff;
+  color: #0C1724;
+}
+
 /* ---- Inline icon ---- */
 .inline-icon {
   display: inline-flex;

@@ -57,6 +57,8 @@ Args:
 - `showhidden` — `true` to include pages marked `hidden` (default `false`)
 - `notime` — `true` to suppress the time pill on every card in the listing
 
+A corner sash is not an arg of `children`. Set `badge` in the child page's front matter (`badge = "New"`). Only those children get the sash. See [Cards › Corner sash](../03-layout/#corner-sash).
+
 Pairs nicely with the `weight` front-matter key for explicit ordering.
 
 ### `divider`

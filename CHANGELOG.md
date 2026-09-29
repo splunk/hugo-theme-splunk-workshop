@@ -5,6 +5,16 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.13.22] - 2026-09-29
+
+### Added
+
+- **Diagonal corner sash on cards.** Set `badge="New"` (or any short label) on `{{< card >}}`, or `badge = "New"` in a page's front matter for `{{< children type="card" >}}`, the auto card-grid, and `{{< cards-by-category >}}`. The label stays until the text is removed. An explicit `badge=` on a hand-written card wins over the linked page's front matter. The sash is magenta; on a hero band it turns white so it still reads on the gradient. This is separate from the inline `{{< badge >}}` shortcode.
+
+### Docs
+
+- Corner sash examples in `shortcodes/03-layout.md`, the `badge` front-matter key in `authoring/01-front-matter.md`, and a note on `children` in `shortcodes/06-utilities.md`.
+
 ## [0.13.21] - 2026-09-22
 
 ### Removed

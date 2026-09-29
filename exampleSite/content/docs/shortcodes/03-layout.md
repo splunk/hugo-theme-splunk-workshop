@@ -452,6 +452,53 @@ Combine Real User Monitoring and Synthetics to identify and prevent poor custome
 {{</* /cards */>}}
 ```
 
+### Corner sash
+
+A diagonal label in the top-right corner. The text is whatever you write — `New`, `Updated`, `Beta` — and it stays until you delete it. Cards without a label are unchanged. The completion tick stays in the opposite corner.
+
+This is not the inline `{{</* badge */>}}` shortcode. That one is a chip in prose. The corner sash is only for cards.
+
+**Hand-written card.** `badge=` on that card. Only the cards you mark get a sash:
+
+{{< cards >}}
+{{< card title="Beat social media to the issue" href="/docs/shortcodes/03-layout/" badge="New" >}}
+Combine Real User Monitoring and Synthetics to catch a poor experience early.
+{{< /card >}}
+{{< card title="Digital Experience Analytics" href="/docs/shortcodes/" >}}
+No sash on this card. Omit `badge` and the corner stays empty.
+{{< /card >}}
+{{< card title="Session replay" href="/docs/" hero-icon="monitor-smartphone" badge="Updated" >}}
+On a hero band the sash turns white, so it still reads on the magenta–orange gradient.
+{{< /card >}}
+{{< /cards >}}
+
+```markdown
+{{</* cards */>}}
+{{</* card title="Beat social media to the issue" href="/splunk4rookies/o11y-rookies-26/modules/5-dem/" badge="New" */>}}
+Combine Real User Monitoring and Synthetics to identify and prevent poor customer experiences.
+{{</* /card */>}}
+{{</* card title="Digital Experience Analytics" href="/splunk4rookies/o11y-rookies-26/modules/9-dxa/" */>}}
+Explore adoption, frustration, funnels, and user segments.
+{{</* /card */>}}
+{{</* card title="Session replay" href="/rum/" hero-icon="monitor-smartphone" badge="Updated" */>}}
+Watch the journey that led to the checkout drop.
+{{</* /card */>}}
+{{</* /cards */>}}
+```
+
+An explicit `badge=` wins. If you omit it, the card uses the linked page's `badge` front matter when that page has one.
+
+**`children` and the auto card-grid.** There is no shortcode arg — the listing does not know which child is new. Set `badge` on the child page. Both `{{</* children type="card" */>}}` and the auto card-grid read it.
+
+```toml
++++
+title = "Beat social media to the issue"
+badge = "New"
++++
+```
+
+Remove the key when the label should go away. Keep the word short. The card clips the ends of the sash, so a long phrase runs off the corner.
+
 ### Card images
 
 Three ways to attach a banner image to a card, in order of preference:
