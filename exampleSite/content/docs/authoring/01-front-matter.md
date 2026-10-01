@@ -51,7 +51,7 @@ layout      = "chapter"                    # pick a page layout
 time        = "20 min"               # shown in workshop-meta + cards
 duration    = "20 min"               # alias of time (legacy)
 difficulty  = "beginner"             # shown in workshop-meta + cards
-product     = "ITSI"                 # gradient-filled chip on the card meta row
+product     = [["LO", "Log Observer", "blue"], ["RUM", "Real User Monitoring", "orange"]]
 badge       = "New"                  # New | Updated | Beta | Deprecated; omit to hide
 authors     = ["Pieter Hagen",
                "Robert Castley"]     # shown in workshop-meta (plural array, preferred)
@@ -105,17 +105,27 @@ Free-form text. Common values: `beginner`, `intermediate`, `advanced`. Renders i
 
 ### `product`
 
-Free-form short label for the product the workshop covers — `"ITSI"`, `"Observability Cloud"`, `"Splunk Enterprise"`. Renders as a gradient-filled chip at the start of the card's meta row.
+Chips on their own line at the bottom of a listing card, under the time and page count, so the workshop `title` can stay short. Listing cards are the auto card-grid, a hero's child grid, and `{{</* cards-by-category */>}}`. A hand-written `{{</* card */>}}` does not read this key.
 
-The point is to **keep the `title` short**. Authors often pack the product name into the workshop title (`"Alerting and Monitoring with Splunk IT Service Intelligence"`), which makes cards unbalanced in a grid. Split it:
+One product is a string, or a list of abbreviation, full name, and an optional colour. Several products are a list of those lists. The full name shows in a tooltip while the pointer is on that chip. With no colour the chip uses the magenta–orange gradient. Omit `product` and the line disappears.
 
 ```toml
-title       = "Alerting & Monitoring"
-product     = "ITSI"
-description = "Combine Splunk Enterprise, AppDynamics, Observability Cloud, and ITSI for end-to-end alerting and service-level monitoring."
+product = "ITSI"                         # one gradient chip, no tooltip
+product = ["LO", "Log Observer"]         # abbreviation + tooltip
+product = ["LO", "Log Observer", "blue"] # abbreviation + tooltip + colour
+product = ["LO", "blue"]                 # colour and no tooltip, when the second item is a colour name
+product = [["LO", "Log Observer", "blue"], ["RUM", "Real User Monitoring", "orange"]]
 ```
 
-The card renders `Alerting & Monitoring` as the hero with `ITSI` as a category chip in the meta row. Omit `product` and the chip disappears — no layout shift, no empty placeholder.
+```yaml
+product:
+  - [LO, Log Observer, blue]
+  - [RUM, Real User Monitoring, orange]
+```
+
+Colours: `blue`, `magenta`, `orange`, `navy`, `indigo`, `green`, `red`. `info` is blue, `accent` and `pink` are magenta, `warn` is orange, `purple` is indigo, `success` is green, `danger` is red. Anything else is ignored and the chip stays on the gradient.
+
+A flat list of two strings is one product, not two. Two chips with no tooltip are `[["LO"], ["RUM"]]`. A flat list of any other length is one chip per string, with no tooltip.
 
 ### `badge`
 

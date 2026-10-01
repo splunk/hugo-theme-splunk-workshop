@@ -20,16 +20,39 @@
        as a "page" — the sidebar is the source of truth. */ -}}
 <a class="card{{ with $page.Params.icon }} card--has-hero{{ end }}" href="{{ $page.RelPermalink }}"{{ if $newTab }} target="_blank" rel="noopener"{{ end }} data-section-root="{{ $page.RelPermalink }}"{{ if eq $count 0 }} data-section-pages="1"{{ end }}>
   {{ partial "cards/ribbon.html" $page.Params.badge }}
-  {{- /* Head row — num + product chip — comes BEFORE the icon hero so
-         the chip sits at the very top-right of the card. `product` is a
-         gradient-filled chip labelling which product the workshop covers;
-         the chip lives here rather than in the meta row so duration +
-         difficulty + pages stay uncrowded at the bottom. */ -}}
-  {{- $product := $page.Params.product -}}
-  {{- if or $hasIndex $product }}
+  {{- /* product:
+         string                             one chip
+         ["LO", "Log Observer"]             one chip, tooltip
+         ["LO", "Log Observer", "blue"]     one chip, tooltip, colour
+         [["LO", "Log Observer", "blue"], ["RUM", "Real User Monitoring", "orange"]]
+                                            one chip per inner list */ -}}
+  {{- $products := slice -}}
+  {{- with $page.Params.product -}}
+    {{- if reflect.IsSlice . -}}
+      {{- $nested := false -}}
+      {{- range . }}{{ if reflect.IsSlice . }}{{ $nested = true }}{{ end }}{{ end -}}
+      {{- if $nested -}}
+        {{- range . -}}
+          {{- $item := partial "cards/product-fields.html" . -}}
+          {{- if $item.short }}{{ $products = $products | append $item }}{{ end -}}
+        {{- end -}}
+      {{- else if or (eq (len .) 2) (eq (len .) 3) -}}
+        {{- $item := partial "cards/product-fields.html" . -}}
+        {{- if $item.short }}{{ $products = $products | append $item }}{{ end -}}
+      {{- else -}}
+        {{- range . -}}
+          {{- $item := partial "cards/product-fields.html" . -}}
+          {{- if $item.short }}{{ $products = $products | append $item }}{{ end -}}
+        {{- end -}}
+      {{- end -}}
+    {{- else -}}
+      {{- $item := partial "cards/product-fields.html" . -}}
+      {{- if $item.short }}{{ $products = $products | append $item }}{{ end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if $hasIndex }}
   <div class="card__head">
-    {{- if $hasIndex }}<span class="card__num">{{ printf "%02d" (add $index 1) }}</span>{{ end }}
-    {{- with $product }}<span class="card__product">{{ . }}</span>{{ end }}
+    <span class="card__num">{{ printf "%02d" (add $index 1) }}</span>
   </div>
   {{- end }}
   {{- with $page.Params.icon }}
@@ -42,6 +65,14 @@
     {{ with $page.Params.difficulty }}<span class="card__meta-item">{{ . }}</span>{{ end }}
     {{ if gt $count 1 }}<span class="card__meta-item">{{ i18n "pagesCount" (dict "Count" $count) }}</span>{{ end }}
   </div>
+  {{- if gt (len $products) 0 }}
+  <div class="card__products">
+    {{- range $i, $item := $products }}
+    <span class="card__product{{ with $item.color }} card__product--{{ . }}{{ end }}"{{ with $item.name }} style="anchor-name: --card-product-{{ $i }}"{{ end }}>{{ $item.short }}{{ with $item.name }}<span class="sr-only">, {{ . }}</span>{{ end }}</span>
+    {{- with $item.name }}<span class="card__product-tip" style="position-anchor: --card-product-{{ $i }}" aria-hidden="true">{{ . }}</span>{{ end }}
+    {{- end }}
+  </div>
+  {{- end }}
   {{- /* No aria-hidden on the wrapper — that would suppress the sr-only
          "Completed" announcement. The SVG inside icon-svg.html already
          carries aria-hidden, so it stays decorative for AT users. */ -}}

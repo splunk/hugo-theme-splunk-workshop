@@ -1,0 +1,34 @@
+{{- /*
+  One product chip. Pass a string or a list.
+
+    "ITSI"                         chip, no tooltip, gradient
+    ["LO", "Log Observer"]         chip + tooltip
+    ["LO", "Log Observer", "blue"] chip + tooltip + colour
+    ["LO", "blue"]                 chip + colour, when the second item is a colour name
+
+  Returns a dict: short, name, color. Empty short means skip.
+*/ -}}
+{{- $short := "" -}}
+{{- $name := "" -}}
+{{- $color := "" -}}
+{{- $known := dict
+  "blue" "blue" "info" "blue"
+  "magenta" "magenta" "pink" "magenta" "accent" "magenta"
+  "orange" "orange" "warn" "orange"
+  "navy" "navy"
+  "indigo" "indigo" "purple" "indigo"
+  "green" "green" "success" "green"
+  "red" "red" "danger" "red"
+-}}
+{{- if reflect.IsSlice . -}}
+  {{- with index . 0 }}{{ $short = trim (printf "%v" .) " " }}{{ end -}}
+  {{- if gt (len .) 1 }}{{ with index . 1 }}{{ $name = trim (printf "%v" .) " " }}{{ end }}{{ end -}}
+  {{- if gt (len .) 2 }}{{ with index . 2 }}{{ $color = trim (printf "%v" .) " " }}{{ end }}{{ end -}}
+  {{- $asColor := index $known ($name | lower) -}}
+  {{- if and $asColor (not $color) }}{{ $color = $name }}{{ $name = "" }}{{ end -}}
+{{- else -}}
+  {{- $short = trim (printf "%v" .) " " -}}
+{{- end -}}
+{{- if or (eq $name "") (eq $name $short) }}{{ $name = "" }}{{ end -}}
+{{- $color = index $known ($color | lower) | default "" -}}
+{{- return (dict "short" $short "name" $name "color" $color) -}}

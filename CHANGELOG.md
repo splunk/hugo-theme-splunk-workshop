@@ -5,6 +5,17 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.13.25] - 2026-10-01
+
+### Changed
+
+- **Product chips sit on their own line at the bottom of a listing card**, under the time and page count. A string such as `product = "ITSI"` is still one gradient chip with no tooltip.
+- **`product` can name a colour and list several products.** `["LO", "Log Observer", "blue"]` is one chip, a tooltip, and a colour. A list of those lists is one chip each. Colours are `blue`, `magenta`, `orange`, `navy`, `indigo`, `green`, and `red`. `info`, `accent`, `pink`, `warn`, `purple`, `success`, and `danger` are aliases. An unknown colour stays on the gradient. The full name shows in a theme tooltip while the pointer is on that chip.
+
+### Docs
+
+- Front matter `product` examples cover the abbreviation, the colour, several products, and the two-string form.
+
 ## [0.13.24] - 2026-09-29
 
 ### Changed

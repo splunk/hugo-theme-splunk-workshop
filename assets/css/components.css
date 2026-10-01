@@ -292,26 +292,32 @@ a:focus-visible .link-ext { opacity: 1; transform: translate(2px, -2px); }
 .card__meta-item::before { content: ""; width: 4px; height: 4px; background: var(--color-accent); border-radius: 50%; }
 .card__meta-item:first-child::before { display: none; }
 
-/* Card top row — pairs the numbered eyebrow with the product chip so
-   the title below gets the full card width. Either child can be absent
-   (no `index`, or no `product` front matter); the row collapses
-   accordingly and the partial only emits the wrapper when at least one
-   is present. */
+/* Card top row — numbered eyebrow. The product chips are their own
+   line at the bottom of the card, under the meta row. */
 .card__head {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   gap: 0.75rem;
   margin-bottom: 0.5rem;
 }
 .card__head .card__num { margin-bottom: 0; }
 
-/* Product chip — labels which product the workshop covers ("ITSI",
-   "Observability Cloud", …). Gradient fill gives it the visual
-   priority of a category marker; white ink stays AA on the gradient at
-   this size. */
+/* Product chips — own row under the meta line. Gradient unless the
+   author names a colour. The tooltip is a sibling of the chip and
+   anchored to the row, so the card's overflow:hidden (the sash clip)
+   cannot cut the name off. */
+.card__products {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+}
+@supports (anchor-name: --card-product) {
+  .card__products { anchor-scope: all; }
+}
 .card__product {
-  margin-left: auto;  /* always pin right, even when no card__num is present */
   font-family: var(--font-mono);
   font-size: 0.65rem;
   font-weight: 600;
@@ -322,6 +328,66 @@ a:focus-visible .link-ext { opacity: 1; transform: translate(2px, -2px); }
   padding: 0.3rem 0.6rem 0.25rem;
   border-radius: 6px;
   white-space: nowrap;
+}
+.card__product--blue    { background: #2563EB; }
+.card__product--magenta { background: var(--color-accent); }
+.card__product--orange  { background: #C2410C; }
+.card__product--navy    { background: #1E3A8A; }
+.card__product--indigo  { background: #4F46E5; }
+.card__product--green   { background: #1F7A4D; }
+.card__product--red     { background: #D4341F; }
+.card__product-tip {
+  position: absolute;
+  bottom: calc(100% + 0.55rem);
+  top: auto;
+  left: 0;
+  right: auto;
+  z-index: 3;
+  width: max-content;
+  max-width: 100%;
+  padding: 0.4rem 0.65rem;
+  border-radius: var(--radius-sm);
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.35;
+  text-transform: none;
+  text-align: left;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  box-shadow: 0 8px 20px color-mix(in oklab, var(--color-ink) 28%, transparent);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(0.2rem);
+  transition: opacity var(--t-fast) var(--ease), transform var(--t-fast) var(--ease), visibility var(--t-fast);
+}
+@supports (anchor-name: --card-product) {
+  .card__product-tip {
+    /* Line the bubble up with this chip. It grows to the right,
+       inside the row, instead of off the card's left edge. */
+    left: anchor(left);
+  }
+}
+.card__product-tip::before {
+  content: "";
+  position: absolute;
+  bottom: -0.28rem;
+  top: auto;
+  left: 0.7rem;
+  right: auto;
+  width: 0.55rem;
+  height: 0.55rem;
+  background: var(--color-ink);
+  transform: rotate(45deg);
+}
+.card__product:hover + .card__product-tip {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
 }
 
 /* Card hero — opt-in Lucide icon at the top of an auto-grid card via
