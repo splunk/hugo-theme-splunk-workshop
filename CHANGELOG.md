@@ -5,6 +5,12 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.13.26] - 2026-10-07
+
+### Fixed
+
+- **Quiz choices stay buttons inside `notice` and `exercise`.** The shortcode now emits its markup on one line. Percent-form parents run that HTML through Markdown again, and the old indented options were turned into a code block.
+
 ## [0.13.25] - 2026-10-01
 
 ### Changed

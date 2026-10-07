@@ -6,26 +6,25 @@
     {{< quiz-option >}}timechart{{< /quiz-option >}}
     {{< quiz-feedback >}}`stats count` aggregates events.{{< /quiz-feedback >}}
     {{< /quiz >}}
+
+  The markup is one line on purpose. A quiz often sits inside {{% notice %}}
+  or {{% exercise %}}, and those percent-form shortcodes run their inner HTML
+  through Markdown again. An indented option, or a whitespace-only line before
+  it, makes Goldmark turn the buttons into a code block.
 */ -}}
 {{- $q       := .Get "question" | default (.Get 0) | default (i18n "quizQuestion") -}}
 {{- $optsKey := printf "_quiz_opts_%d" .Ordinal -}}
 {{- $fbKey   := printf "_quiz_fb_%d"   .Ordinal -}}
-{{- /* let children run */ -}}
 {{- $_ := .Inner -}}
 {{- $opts := .Page.Store.Get $optsKey | default slice -}}
 {{- $fb   := .Page.Store.Get $fbKey -}}
-<section class="quiz" data-quiz>
-  <p class="quiz__label">{{ i18n "quickCheck" }}</p>
-  <p class="quiz__question">{{ $q }}</p>
-  <ul class="quiz__options">
-    {{ range $i, $o := $opts }}
-      <li>
-        <button class="quiz__option" type="button" data-correct="{{ $o.correct }}">
-          <span class="quiz__marker">{{ printf "%c" (add 65 $i) }}</span>
-          <span class="quiz__option-text">{{ $o.text | safeHTML }}</span>
-        </button>
-      </li>
-    {{ end }}
-  </ul>
-  {{ with $fb }}<div class="quiz__feedback" role="status" aria-live="polite" aria-atomic="true">{{ . | safeHTML }}</div>{{ end }}
-</section>
+{{- $items := slice -}}
+{{- range $i, $o := $opts -}}
+  {{- $text := $o.text | replaceRE "\n+" "" -}}
+  {{- $items = $items | append (printf "<li><button class=\"quiz__option\" type=\"button\" data-correct=\"%t\"><span class=\"quiz__marker\">%s</span><span class=\"quiz__option-text\">%s</span></button></li>" $o.correct (printf "%c" (add 65 $i)) $text) -}}
+{{- end -}}
+{{- $feedback := "" -}}
+{{- with $fb -}}
+  {{- $feedback = printf "<div class=\"quiz__feedback\" role=\"status\" aria-live=\"polite\" aria-atomic=\"true\">%s</div>" (replaceRE "\n+" "" .) -}}
+{{- end -}}
+<section class="quiz" data-quiz><p class="quiz__label">{{ i18n "quickCheck" }}</p><p class="quiz__question">{{ $q }}</p><ul class="quiz__options">{{ delimit $items "" | safeHTML }}</ul>{{ $feedback | safeHTML }}</section>
