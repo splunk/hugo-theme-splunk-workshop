@@ -98,6 +98,14 @@
   translation: "Show solution"
 - id: checkpoint
   translation: "Checkpoint"
+- id: personaLabel
+  translation: "Persona"
+- id: personaYouAre
+  translation: "You are"
+- id: personaSituation
+  translation: "Situation"
+- id: personaGoal
+  translation: "Goal"
 - id: quickCheck
   translation: "Quick check"
 - id: quizQuestion

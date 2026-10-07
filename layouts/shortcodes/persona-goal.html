@@ -1,0 +1,4 @@
+{{- if or (not .Parent) (ne .Parent.Name "persona") -}}
+  {{- errorf "{{< persona-goal >}} must be used inside {{< persona >}} (page %q)" .Page.Path -}}
+{{- end -}}
+{{- .Page.Store.Set (printf "_persona_goal_%d" .Parent.Ordinal) (.Inner | .Page.RenderString | string) -}}

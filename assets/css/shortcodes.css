@@ -544,6 +544,74 @@ details.callout:not([open]) > .callout__body { display: none; }
   letter-spacing: -0.015em;
 }
 
+/* ---------- Persona ----------------------------------------------------- */
+/* Opening scene: who you are, what happened, what finished looks like.
+   Paper card and accent disc, shared with checkpoint. Callouts keep the
+   left rail; this does not, so it is not read as a warning. */
+.persona {
+  display: grid;
+  gap: 1rem;
+  margin: 1.75rem 0;
+  padding: 1.25rem 1.35rem;
+  background: var(--color-paper);
+  border: 1px solid color-mix(in oklab, var(--color-accent) 30%, transparent);
+  border-radius: var(--radius-lg);
+}
+.persona__who {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 0.85rem;
+  row-gap: 0.1rem;
+  align-items: center;
+}
+.persona__mark {
+  grid-row: 1 / span 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--gradient-accent);
+  color: #fff;
+  box-shadow: 0 0 20px color-mix(in oklab, var(--color-accent) 40%, transparent);
+}
+.persona__mark svg { width: 1.05rem; height: 1.05rem; }
+.persona__kicker,
+.persona__label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent-text);
+}
+.persona__kicker { grid-column: 2; }
+.persona__role {
+  grid-column: 2;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  letter-spacing: -0.015em;
+  color: var(--color-ink);
+}
+.persona__facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 1.5rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--color-border);
+}
+.persona__facts--single { grid-template-columns: 1fr; }
+.persona__label { margin-bottom: 0.35rem; }
+.persona__text { font-size: 0.95rem; min-width: 0; }
+.persona__text > :first-child { margin-top: 0; }
+.persona__text > :last-child { margin-bottom: 0; }
+@media (max-width: 640px) {
+  .persona__facts { grid-template-columns: 1fr; }
+}
+
 /* ---------- Tabs -------------------------------------------------------- */
 .tabs {
   margin: 1.5rem 0;

@@ -14,7 +14,7 @@ If you're writing self-paced reference docs rather than workshops, [hugo-theme-r
 - **Light / Dark / Auto** with manual toggle and `prefers-color-scheme`
 - **Built-in search** — `/` or `⌘K` opens a fuzzy modal over a JSON index
 - **Keyboard navigation** — `←` / `→` step through workshop pages
-- **50+ shortcodes** — callouts, steps, exercises, tabs (with sync), terminal, kbd, file-tree, image, quiz, presenter notes, mermaid, math, cards, children, and more
+- **50+ shortcodes** — callouts, steps, exercises, tabs (with sync), terminal, kbd, file-tree, image, quiz, persona, presenter notes, mermaid, math, cards, children, and more
 - **Splunk Data Sans Pro** display/body + **JetBrains Mono** code — same family as `splunk.github.io/observability-workshop`
 - **Accessible by default** — `:focus-visible` rings, ARIA-correct tabs, skip-to-content link
 - **i18n-ready** — every UI string lives in `i18n/en.yaml`

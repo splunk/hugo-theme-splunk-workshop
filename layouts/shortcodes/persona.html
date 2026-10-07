@@ -1,0 +1,41 @@
+{{- /*
+  Persona — the opening scene for a module.
+
+  Args:
+    role (named or positional) — who the learner is. Plain text, rendered
+                                 as the headline.
+
+  Body: {{< persona-situation >}} and {{< persona-goal >}}. Both accept
+  markdown. Situation is what just broke or what someone asked. Goal is
+  what the learner can say when the module is finished.
+
+  Usage:
+    {{< persona role="SRE on-call" >}}
+    {{< persona-situation >}}The error rate is up. You have logs only.{{< /persona-situation >}}
+    {{< persona-goal >}}Name the service and the repeating error.{{< /persona-goal >}}
+    {{< /persona >}}
+
+  Markup is one line. A persona often sits near {{% notice %}} and
+  {{% exercise %}}, and those percent-form shortcodes run inner HTML
+  through Markdown again. Indented tags would become a code block.
+*/ -}}
+{{- $role := .Get "role" | default (.Get 0) -}}
+{{- if not $role -}}
+  {{- errorf "{{< persona >}} requires a role (page %q)" .Page.Path -}}
+{{- end -}}
+{{- $_ := .Inner -}}
+{{- $sit := .Page.Store.Get (printf "_persona_situation_%d" .Ordinal) | default "" | replaceRE "\n+" "" -}}
+{{- $goal := .Page.Store.Get (printf "_persona_goal_%d" .Ordinal) | default "" | replaceRE "\n+" "" -}}
+{{- $mark := `<span class="persona__mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 19.2c1.4-3.1 3.6-4.6 6.5-4.6s5.1 1.5 6.5 4.6"/></svg></span>` -}}
+{{- $facts := slice -}}
+{{- if $sit -}}
+  {{- $facts = $facts | append (printf `<div class="persona__fact"><p class="persona__label">%s</p><div class="persona__text">%s</div></div>` (i18n "personaSituation") $sit) -}}
+{{- end -}}
+{{- if $goal -}}
+  {{- $facts = $facts | append (printf `<div class="persona__fact"><p class="persona__label">%s</p><div class="persona__text">%s</div></div>` (i18n "personaGoal") $goal) -}}
+{{- end -}}
+{{- $factsClass := "persona__facts" -}}
+{{- if eq (len $facts) 1 -}}
+  {{- $factsClass = "persona__facts persona__facts--single" -}}
+{{- end -}}
+<aside class="persona" aria-label="{{ i18n "personaLabel" }}"><div class="persona__who">{{ $mark | safeHTML }}<p class="persona__kicker">{{ i18n "personaYouAre" }}</p><p class="persona__role">{{ $role }}</p></div>{{ if $facts }}<div class="{{ $factsClass }}">{{ delimit $facts "" | safeHTML }}</div>{{ end }}</aside>

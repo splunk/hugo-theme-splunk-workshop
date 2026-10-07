@@ -1,6 +1,6 @@
 +++
 title       = "Workshop structure"
-description = "Steps, exercises, solutions, checkpoints, quizzes, objectives, prerequisites."
+description = "Steps, exercises, solutions, checkpoints, quizzes, personas, objectives, prerequisites."
 weight      = 20
 +++
 
@@ -272,6 +272,24 @@ The title supports inline markdown — `**bold**`, `*italic*`, `` `code` ``, and
 ```
 
 The shortcode is self-closing only — to attach follow-up prose, put it as regular markdown directly under the call.
+
+## Persona
+
+The opening scene for a module. Three fields, always in this order: who the learner is, what just happened, and what they can say when the module is finished. `objectives` stays the list of clicks. The persona is why those clicks matter.
+
+{{< persona role="SRE on-call" >}}
+{{< persona-situation >}}The Astronomy Shop error rate is up. You have logs only.{{< /persona-situation >}}
+{{< persona-goal >}}Name the service behind the errors and the pattern those errors share.{{< /persona-goal >}}
+{{< /persona >}}
+
+```markdown
+{{</* persona role="SRE on-call" */>}}
+{{</* persona-situation */>}}The Astronomy Shop error rate is up. You have logs only.{{</* /persona-situation */>}}
+{{</* persona-goal */>}}Name the service behind the errors and the pattern those errors share.{{</* /persona-goal */>}}
+{{</* /persona */>}}
+```
+
+`role` is plain text, so it stays a headline. Situation and Goal accept markdown. On a narrow screen the two columns stack, with Goal last.
 
 ## Objectives & Prerequisites
 

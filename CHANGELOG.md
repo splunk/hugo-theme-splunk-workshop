@@ -5,6 +5,12 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.13.27] - 2026-10-07
+
+### Added
+
+- **`persona` shortcode.** An opening scene with three fields: role, situation, and goal. Role is the headline. Situation and Goal sit side by side and stack on a narrow screen.
+
 ## [0.13.26] - 2026-10-07
 
 ### Fixed
