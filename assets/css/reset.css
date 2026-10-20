@@ -73,6 +73,10 @@ a:hover { color: var(--color-accent-text); }
 .content :is(p, li, dd) a:not([class]) {
   text-decoration: none;
   color: var(--color-accent-text);
+  /* Hover paints the glyphs with a transparent fill over the gradient.
+     The global colour transition would fade that transparent fill back
+     to pink after the gradient has already gone, so the text blinks. */
+  transition: none;
 }
 .content :is(p, li, dd) a:not([class]):hover,
 .content :is(p, li, dd) a:not([class]):focus-visible {

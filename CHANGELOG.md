@@ -5,6 +5,12 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.13.28] - 2026-10-20
+
+### Fixed
+
+- **Prose links no longer jump or blink on hover.** Download rows keep their padding, so the page stays still. The pink-to-orange gradient and the pink text swap together, so the glyphs do not fade out and the download row does not flash a background.
+
 ## [0.13.27] - 2026-10-07
 
 ### Added

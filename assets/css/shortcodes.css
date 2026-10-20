@@ -1609,9 +1609,14 @@ a.shortcode-card:hover .shortcode-card__title { color: var(--color-accent-text);
   text-decoration: none;
   padding: 0.3rem 0.5rem;
   border-radius: var(--radius-sm);
-  transition: background var(--t-fast) var(--ease);
 }
-.attachments__item a:hover { background: var(--color-surface-alt); color: var(--color-accent); }
+/* The prose-link hover sets padding-bottom for descenders. On an inline
+   anchor that does not change the line box; this link is inline-flex, so
+   the smaller padding shrinks the row and the page jumps. Hold the padding. */
+.content li.attachments__item > a:hover,
+.content li.attachments__item > a:focus-visible {
+  padding: 0.3rem 0.5rem;
+}
 .attachments__icon { display: inline-flex; width: 1rem; height: 1rem; color: var(--color-ink-muted); }
 .attachments__icon svg { width: 100%; height: 100%; }
 
