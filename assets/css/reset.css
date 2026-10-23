@@ -10,6 +10,7 @@ html {
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
   scroll-padding-top: calc(var(--header-h, 4.25rem) + 1rem);
+  background: var(--gradient-canvas);
 }
 
 body {
@@ -18,9 +19,9 @@ body {
   flex-direction: column;
   line-height: 1.6;
   font-family: var(--font-body);
-  background: var(--color-paper);
+  background: var(--gradient-canvas);
   color: var(--color-ink);
-  transition: background-color var(--t-base) var(--ease), color var(--t-base) var(--ease);
+  transition: background var(--t-base) var(--ease), color var(--t-base) var(--ease);
 }
 
 /* Sticky footer: main grows to fill available space so the footer sits

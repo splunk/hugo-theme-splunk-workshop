@@ -94,23 +94,25 @@ enableGitInfo = true
 
   colorInk          = "#0C1724"
   colorInkMuted     = "#585B61"   # bumped from #4B4D52 to clear the AA threshold (≈4.6:1)
-  colorPaper        = "#FFFFFF"
-  # Cool gray neutrals — paired with the cool navy dark-mode palette so
-  # toggling between modes reads as two ends of one hue family instead of
-  # warm-light + cool-dark mismatch. Splunk magenta brand accents pop
-  # against these neutrals; warm beige muddied them. Harmonizes with the
-  # already-cool --code-bg (#EDF0F4).
-  colorSurface      = "#F4F6FA"
-  colorSurfaceAlt   = "#E9EDF2"
+  colorPaper        = "#FFFFFF"   # solid panels (header, cards) on the canvas gradient
+  # Official background primer. The page canvas is Neutral light 95 → 98
+  # at 10%/90%. Surfaces use those same stops.
+  colorCanvasFrom    = "#E9EEF4"  # Neutral light 95 · rgb(233, 238, 244)
+  colorCanvasTo      = "#F2F5FA"  # Neutral light 98 · rgb(242, 245, 250)
+  colorSurface       = "#F2F5FA"  # Neutral light 98
+  colorSurfaceAlt    = "#E9EEF4"  # Neutral light 95
   colorBorder       = "#E1E5EC"
   colorBorderStrong = "#C7CDD8"
 
   # ---- Colors (dark mode) ------------------------------------------------
+  # Page canvas is Neutral dark 5 → 15 at 10%/90%. Panels use Neutral dark 15.
   colorInkDark          = "#F4F1EA"
   colorInkMutedDark     = "#9CA3AF"
-  colorPaperDark        = "#0C1724"
-  colorSurfaceDark      = "#141E2F"
-  colorSurfaceAltDark   = "#1B2740"
+  colorCanvasFromDark   = "#04070B"  # Neutral dark 5  · rgb(4, 7, 11)
+  colorCanvasToDark     = "#0B1118"  # Neutral dark 15 · rgb(11, 17, 24)
+  colorPaperDark        = "#0B1118"
+  colorSurfaceDark      = "#0B1118"
+  colorSurfaceAltDark   = "#04070B"
   colorBorderDark       = "#1F2C44"
   colorBorderStrongDark = "#2A3A56"
 

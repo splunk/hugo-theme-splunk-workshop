@@ -494,9 +494,9 @@ details.callout:not([open]) > .callout__body { display: none; }
   position: relative;
   padding: 1.5rem 1.75rem 1.5rem 4.25rem;
   margin: 2rem 0;
-  background: linear-gradient(135deg,
-    color-mix(in oklab, var(--color-accent) 6%, transparent),
-    color-mix(in oklab, var(--color-accent-3) 6%, transparent));
+  background: linear-gradient(95deg,
+    color-mix(in oklab, var(--color-accent) 6%, transparent) 10%,
+    color-mix(in oklab, var(--color-accent-2) 6%, transparent) 90%);
   border: 1px solid color-mix(in oklab, var(--color-accent) 30%, transparent);
   border-radius: var(--radius-lg);
   overflow: hidden;
@@ -1516,20 +1516,15 @@ a.shortcode-card:hover .shortcode-card__title { color: var(--color-accent-text);
 }
 
 /* Hero icon — `hero-icon=` on {{< card >}}, or a child's `icon`
-   front-matter key on {{< children type="card" >}}. Light-mode band
-   continues the page hero: saturated Magenta 50 → Orange 50, the same
-   brand trail as `--gradient-accent`. Orange→Amber alone fights the
-   magenta bloom; paper-tinting washes the trail out. 1px inset keeps
-   the card hover ring visible. Auto-grid `.card__hero` is unchanged. */
+   front-matter key on {{< children type="card" >}}. The band is the
+   official Magenta 50 → Orange 50 gradient (10% / 90%). 1px inset
+   keeps the card hover ring visible. Auto-grid `.card__hero` is unchanged. */
 .shortcode-card__hero {
   display: grid;
   place-items: center;
   height: 10rem;
   margin: calc(-1.4rem + 1px) calc(-1.5rem + 1px) 1.1rem;
-  background: linear-gradient(118deg,
-    var(--color-accent) 0%,
-    color-mix(in srgb, var(--color-accent) 45%, var(--color-accent-2)) 52%,
-    var(--color-accent-2) 100%);
+  background: var(--gradient-accent);
   overflow: hidden;
 }
 .shortcode-card__hero svg {
@@ -1542,17 +1537,6 @@ a.shortcode-card:hover .shortcode-card__title { color: var(--color-accent-text);
      as a light mark on the magenta–orange band. */
   stroke: #fff;
 }
-[data-theme="dark"] .shortcode-card__hero {
-  background: linear-gradient(120deg,
-    color-mix(in srgb, var(--color-accent) 28%, var(--color-accent-2)) 0%,
-    var(--color-accent-2) 48%,
-    var(--color-accent-3) 100%);
-}
-[data-theme="dark"] .shortcode-card__hero svg,
-[data-theme="dark"] .shortcode-card__hero svg * {
-  stroke: var(--color-ink-dark);
-}
-
 /* Meta row — shared by {{< card >}} (opt-in via show-time= / show-pages=)
    and {{< children type="card" >}} (time + difficulty + page count by
    default). Hairline top border, mono uppercase, magenta-bullet separators.

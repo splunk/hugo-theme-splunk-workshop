@@ -48,15 +48,31 @@ The 10% / 90% offsets match the official brand spec — they keep the pure brand
 
 To rebrand to a single accent (no gradient), set both `colorAccent` and `colorAccent2` to the same value.
 
+## Page background
+
+The page canvas is a second official gradient, also stopped at 10% and 90%. Header, sidebar, and cards stay solid `--color-paper` so they sit on top of it.
+
+| Mode | 10% | 90% |
+| --- | --- | --- |
+| Light | Neutral light 95 `#E9EEF4` | Neutral light 98 `#F2F5FA` |
+| Dark | Neutral dark 5 `#04070B` | Neutral dark 15 `#0B1118` |
+
+```toml
+colorCanvasFrom     = "#E9EEF4"
+colorCanvasTo       = "#F2F5FA"
+colorCanvasFromDark = "#04070B"
+colorCanvasToDark   = "#0B1118"
+```
+
 ## Light mode tokens
 
 | Token | Default | Used for |
 | --- | --- | --- |
 | `colorInk` | `#0C1724` | Body text |
 | `colorInkMuted` | `#585B61` | Muted text, captions (AA-safe; bumped from the bare `#4B4D52` to hit ~4.6:1 on white) |
-| `colorPaper` | `#FFFFFF` | Page background |
-| `colorSurface` | `#F4F6FA` | Callout fills, card surfaces (cool gray to harmonize with the dark-mode navy palette) |
-| `colorSurfaceAlt` | `#E9EDF2` | Inline code chip background |
+| `colorPaper` | `#FFFFFF` | Solid panels: header, sidebar, cards |
+| `colorSurface` | `#F2F5FA` | Callout fills (Neutral light 98) |
+| `colorSurfaceAlt` | `#E9EEF4` | Inline code chip background (Neutral light 95) |
 | `colorBorder` | `#E1E5EC` | Hairlines |
 | `colorBorderStrong` | `#C7CDD8` | Strong borders, code-block borders |
 
@@ -68,9 +84,9 @@ Every light token has a `…Dark` counterpart that takes effect when `data-theme
 | --- | --- |
 | `colorInkDark` | `#F4F1EA` |
 | `colorInkMutedDark` | `#9CA3AF` |
-| `colorPaperDark` | `#0C1724` |
-| `colorSurfaceDark` | `#141E2F` |
-| `colorSurfaceAltDark` | `#1B2740` |
+| `colorPaperDark` | `#0B1118` |
+| `colorSurfaceDark` | `#0B1118` |
+| `colorSurfaceAltDark` | `#04070B` |
 | `colorBorderDark` | `#1F2C44` |
 | `colorBorderStrongDark` | `#2A3A56` |
 

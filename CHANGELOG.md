@@ -11,6 +11,8 @@ versions follow [Semantic Versioning](https://semver.org/).
 
 - **Default favicon is `static/favicon.png`.** `static/favicon.svg` is removed. The icon link type follows the file extension, so a site can still point `favicon` at an svg, ico, jpg, or webp.
 - **Bundled header logos are the Splunk wordmark with "by Cisco".** `images/splunk-logo-black.png` and `images/splunk-logo-white.png` are replaced.
+- **Brand gradients use Magenta 50 `#FF007F` at 10% and Orange 50 `#FF9000` at 90%.** The code-block ring, card hero band, section divider, and checkpoint wash no longer blend in amber or a custom stop list.
+- **The page canvas is the official background primer.** Light is Neutral light 95 `#E9EEF4` to Neutral light 98 `#F2F5FA`. Dark is Neutral dark 5 `#04070B` to Neutral dark 15 `#0B1118`. Header, sidebar, and cards stay solid panels on top.
 
 ## [0.13.28] - 2026-10-20
 
