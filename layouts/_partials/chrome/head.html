@@ -13,9 +13,13 @@
 <meta property="og:url" content="{{ .Permalink }}">
 <meta name="twitter:card" content="summary_large_image">
 
-{{- /* Favicon */ -}}
+{{- /* Favicon. Default is static/favicon.png. The type follows the
+       extension so a site can still point favicon at an svg or ico. */ -}}
 {{- with $p.favicon }}
-<link rel="icon" href="{{ . | relURL }}" type="image/svg+xml">
+{{- $ext := lower (path.Ext .) -}}
+{{- $type := "image/png" -}}
+{{- if eq $ext ".svg" }}{{ $type = "image/svg+xml" }}{{ else if eq $ext ".ico" }}{{ $type = "image/x-icon" }}{{ else if or (eq $ext ".jpg") (eq $ext ".jpeg") }}{{ $type = "image/jpeg" }}{{ else if eq $ext ".webp" }}{{ $type = "image/webp" }}{{ end }}
+<link rel="icon" href="{{ . | relURL }}" type="{{ $type }}">
 {{- end }}
 
 {{- /* search.js reads this; Home.OutputFormats handles both subpath and

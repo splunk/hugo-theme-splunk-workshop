@@ -41,10 +41,10 @@ The wordmark uses `--font-display` and the `--color-accent` (the `>` is colored 
 ## Favicon
 
 ```toml
-favicon = "favicon.svg"
+favicon = "favicon.png"
 ```
 
-Path relative to `static/`. The theme defaults to a small SVG at `static/favicon.svg` that uses the accent gradient — replace it with your own.
+Path relative to `static/`. The theme ships `static/favicon.png`. Replace that file, or point `favicon` at another image in `static/`.
 
 For multi-format favicon coverage (legacy browsers, iOS app icons, etc.), you can drop additional files into `static/` and add a custom partial — see [Advanced → Custom partials](/docs/advanced/) for the override pattern.
 

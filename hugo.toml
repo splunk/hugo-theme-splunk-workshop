@@ -70,7 +70,7 @@ enableGitInfo = true
   logoLight       = "images/splunk-logo-black.png"
   logoDark        = "images/splunk-logo-white.png"
   logoHeight      = "40"
-  favicon         = "favicon.svg"
+  favicon         = "favicon.png"
 
   # ---- Hero background (the "light trails" gradient bloom) ----------------
   # Set both to "" to fall back to the bundled CSS radial gradient.

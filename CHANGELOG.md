@@ -5,6 +5,13 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.13.29] - 2026-10-23
+
+### Changed
+
+- **Default favicon is `static/favicon.png`.** `static/favicon.svg` is removed. The icon link type follows the file extension, so a site can still point `favicon` at an svg, ico, jpg, or webp.
+- **Bundled header logos are the Splunk wordmark with "by Cisco".** `images/splunk-logo-black.png` and `images/splunk-logo-white.png` are replaced.
+
 ## [0.13.28] - 2026-10-20
 
 ### Fixed
