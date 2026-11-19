@@ -8,8 +8,8 @@
     <div class="site-footer__brand">
       <a href="{{ partial "site-href.html" "/" }}" class="brand brand--block brand--footer">
         {{- if $p.logoLight -}}
-          <img class="brand__logo brand__logo--light" src="{{ $p.logoLight | relURL }}" alt="{{ site.Title | markdownify | plainify }}">
-          {{ with $p.logoDark }}<img class="brand__logo brand__logo--dark" src="{{ . | relURL }}" alt="{{ site.Title | markdownify | plainify }}">{{ end }}
+          <img class="brand__logo brand__logo--light" src="{{ $p.logoLight | relURL }}" alt="{{ site.Title | markdownify | plainify | htmlUnescape }}">
+          {{ with $p.logoDark }}<img class="brand__logo brand__logo--dark" src="{{ . | relURL }}" alt="{{ site.Title | markdownify | plainify | htmlUnescape }}">{{ end }}
         {{- else -}}
           <span class="brand__mark">{{ $p.brandName | default "splunk>" }}</span>
         {{- end -}}

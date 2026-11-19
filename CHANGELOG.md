@@ -5,6 +5,12 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.13.30] - 2026-11-19
+
+### Fixed
+
+- **Ampersands in titles display as `&`.** Search results, the browser title, Open Graph tags, logo alt text, and the slide-deck button no longer show the literal entity `&amp;` when a title contains `&`.
+
 ## [0.13.29] - 2026-10-23
 
 ### Changed

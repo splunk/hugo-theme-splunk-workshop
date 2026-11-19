@@ -4,7 +4,7 @@
     {{- /* aria-label and alt are plain-text contexts; strip any markdown
            markers from `site.Title` so screen readers don't announce
            literal asterisks if a site sets a markdown-styled title. */ -}}
-    {{- $brandText := site.Title | markdownify | plainify -}}
+    {{- $brandText := site.Title | markdownify | plainify | htmlUnescape -}}
     <a href="{{ partial "site-href.html" "/" }}" class="brand" aria-label="{{ $brandText }} — home">
       {{- if $p.logoLight -}}
         <img class="brand__logo brand__logo--light" src="{{ $p.logoLight | relURL }}" alt="{{ $brandText }}">

@@ -18,15 +18,18 @@
 {{- $pageIdx := slice -}}
 {{- range $pages -}}
   {{- $section := "" -}}
-  {{- with .CurrentSection }}{{ $section = .Title | markdownify | plainify }}{{ end -}}
+  {{- /* htmlUnescape: markdownify/plainify leave `&amp;` in the
+         text, and this file is JSON, not HTML, so the entity would
+         show up literally in search. */ -}}
+  {{- with .CurrentSection }}{{ $section = .Title | markdownify | plainify | htmlUnescape }}{{ end -}}
   {{- $entry := dict
-    "title"       ((.Title | default .LinkTitle) | markdownify | plainify)
-    "linkTitle"   (.LinkTitle | markdownify | plainify)
-    "description" .Description
+    "title"       ((.Title | default .LinkTitle) | markdownify | plainify | htmlUnescape)
+    "linkTitle"   (.LinkTitle | markdownify | plainify | htmlUnescape)
+    "description" (.Description | plainify | htmlUnescape)
     "section"     $section
     "url"         .RelPermalink
     "tags"        (.Params.tags | default slice)
-    "summary"     (.Content | truncate 10000 "" | plainify | truncate 4000 "")
+    "summary"     (.Content | truncate 10000 "" | plainify | htmlUnescape | truncate 4000 "")
   -}}
   {{- $pageIdx = $pageIdx | append $entry -}}
 {{- end -}}
@@ -58,8 +61,8 @@
   {{- $latest := $cat.Lastmod -}}
   {{- range $roots -}}{{- if .Lastmod.After $latest }}{{ $latest = .Lastmod }}{{ end -}}{{- end -}}
   {{- $ws := dict
-    "title"       ($cat.LinkTitle | markdownify | plainify)
-    "description" $cat.Description
+    "title"       ($cat.LinkTitle | markdownify | plainify | htmlUnescape)
+    "description" ($cat.Description | plainify | htmlUnescape)
     "url"         $cat.RelPermalink
     "lastmod"     $latest.Unix
     "icon"        ($cat.Params.icon | default "")

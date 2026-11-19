@@ -62,7 +62,7 @@
     <p class="slides-card__kicker">{{ i18n "slidesKicker" | default "Slide deck" }} · {{ $count }} {{ if eq $count 1 }}{{ i18n "slidesSlide" | default "slide" }}{{ else }}{{ i18n "slidesSlides" | default "slides" }}{{ end }}</p>
     <h3 class="slides-card__title">{{ $title | markdownify }}</h3>
   </div>
-  <button class="slides-card__cta" type="button" data-slides-trigger data-slides-target="{{ $deckID }}" aria-label="{{ $label }}: {{ $title | plainify }}">
+  <button class="slides-card__cta" type="button" data-slides-trigger data-slides-target="{{ $deckID }}" aria-label="{{ $label }}: {{ $title | plainify | htmlUnescape }}">
     <svg class="slides-card__play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 4 20 12 6 20 6 4" fill="currentColor"/></svg>
     <span>{{ $label }}</span>
   </button>
