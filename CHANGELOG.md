@@ -5,6 +5,12 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.13.31] - 2026-11-23
+
+### Added
+
+- **"Report an issue" link.** Set `github_repo` to show a link at the top of the right rail on workshop pages. It opens a new GitHub issue in a new tab, titled with the section and page, with the page URL filled in. Set `github_issue_template` to fill the `page` field of an issue form instead of a plain body. While `github_repo` is set, the rail is drawn even on pages without headings. Below 1100px wide the link moves under the pager, and it is hidden in print.
+
 ## [0.13.30] - 2026-11-19
 
 ### Fixed

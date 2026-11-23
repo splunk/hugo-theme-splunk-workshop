@@ -1,0 +1,29 @@
+{{- /*
+  "Report an issue" URL for a page, or "" when `github_repo` is unset or
+  the page has no backing source file.
+
+  Title is "<parent section>: <page>" so pages that share a title
+  ("Getting Started", "Conclusion") stay distinguishable in the issue list.
+  With `github_issue_template` set, the page URL fills the issue form's
+  `page` field; without it, the URL goes into a plain issue body.
+*/ -}}
+{{- $url := "" -}}
+{{- with site.Params.github_repo -}}
+  {{- if $.File -}}
+    {{- $repo := strings.TrimSuffix "/" . -}}
+    {{- $title := $.Title | plainify | htmlUnescape -}}
+    {{- with $.Parent -}}
+      {{- if not .IsHome -}}
+        {{- $title = printf "%s: %s" (.Title | plainify | htmlUnescape) $title -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $query := "" -}}
+    {{- with site.Params.github_issue_template -}}
+      {{- $query = querify "template" . "title" $title "page" $.Permalink -}}
+    {{- else -}}
+      {{- $query = querify "title" $title "body" (printf "Page: %s" $.Permalink) -}}
+    {{- end -}}
+    {{- $url = printf "%s/issues/new?%s" $repo $query -}}
+  {{- end -}}
+{{- end -}}
+{{- return $url -}}

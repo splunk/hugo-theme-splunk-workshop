@@ -531,6 +531,26 @@
   font-weight: 500;
 }
 
+/* ---- "Report an issue" (github_repo) ---- */
+.page-issue { margin: 0 0 1.25rem; }
+.page-issue a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--color-ink-muted);
+  font-size: 0.85rem;
+  font-weight: 450;
+  transition: color var(--t-fast) var(--ease);
+}
+.page-issue a:hover { color: var(--color-accent-text); }
+.page-issue svg { flex: none; width: 0.95rem; height: 0.95rem; }
+.toc .page-issue:not(:last-child) {
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--color-border);
+}
+/* Shown only once the rail is hidden (see the 1100px breakpoint). */
+.page-issue--inline { display: none; margin: 2rem 0 0; }
+
 /* ---- Footer ----
    Two-tier close. The brand row follows the page theme and reuses the
    hero bloom asset (same WebP, quieter). The legal row stays navy so
@@ -798,6 +818,7 @@
   :root { --toc-w: 0; --sidebar-w: 16rem; }
   .page { grid-template-columns: var(--sidebar-w) minmax(0, 1fr); }
   .toc { display: none; }
+  .page-issue--inline { display: block; }
 }
 @media (max-width: 820px) {
   .page {

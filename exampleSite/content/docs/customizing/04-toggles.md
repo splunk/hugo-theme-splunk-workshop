@@ -98,6 +98,44 @@ editURL = "https://github.com/your-org/workshop/edit/main/content/"
 
 The link auto-suppresses on pages that don't have a backing source file (generated index pages, taxonomies). Leave empty to omit the link entirely.
 
+### `github_repo`
+
+Adds a "Report an issue" link to the top of the right rail on every workshop page. It opens a new GitHub issue in a new tab, with the title and a link to the page already filled in.
+
+```toml
+[params]
+  github_repo           = "https://github.com/your-org/your-workshop"
+  github_issue_template = "page-issue.yml"   # optional
+```
+
+- **Title:** the parent section and the page, for example `Application Security: 3. Runtime Vulnerabilities`. Pages that share a title, such as "Conclusion", stay distinguishable.
+- **Page link:** with `github_issue_template` set, the page URL fills the form field with `id: page` in `.github/ISSUE_TEMPLATE/<github_issue_template>`, and the form supplies the prompts and labels. Without it, the issue body is `Page: <url>`.
+- **Right rail:** the rail is drawn on every workshop page while `github_repo` is set, even when the page has no headings for "On this page". Below 1100px wide, where the rail is hidden, the link appears under the prev/next pager instead.
+- **Print:** the link is hidden.
+
+The link auto-suppresses on pages without a backing source file. Leave `github_repo` empty (the default) to omit the link and keep the rail only on pages with a TOC.
+
+A minimal issue form:
+
+```yaml
+name: Report a page issue
+description: Something is wrong or unclear on a workshop page.
+labels: [documentation]
+body:
+  - type: input
+    id: page
+    attributes:
+      label: Page
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What's wrong?
+    validations:
+      required: true
+```
+
 ### `copyright`
 
 The text in the footer's bottom-left, next to "Built with Hugo". HTML is allowed (the value is passed through `safeHTML`), so you can include entity references like `&copy;` for the copyright symbol or wrap parts in `<a>` tags.

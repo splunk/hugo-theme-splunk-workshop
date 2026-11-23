@@ -12,6 +12,8 @@
   translation: "Skip to content"
 - id: editOnGitHub
   translation: "Edit this page on GitHub"
+- id: reportIssue
+  translation: "Report an issue"
 - id: searchPlaceholder
   translation: "Search workshops…"   # used inside the modal as the input placeholder
 - id: searchTrigger

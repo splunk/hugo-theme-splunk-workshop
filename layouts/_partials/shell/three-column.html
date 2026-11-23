@@ -19,8 +19,12 @@
        longstanding convention for config keys. */ -}}
 {{- $showToc := cond (isset $page.Params "show_toc") $page.Params.show_toc $p.showToc -}}
 {{- $hasToc := and $showToc (strings.Contains (printf "%s" $page.TableOfContents) "<li") -}}
+{{- $issueURL := partial "nav/issue-url.html" $page -}}
+{{- /* With `github_repo` set, the right rail is drawn even on pages
+       without headings so "Report an issue" has a home. */ -}}
+{{- $hasRail := or $hasToc $issueURL -}}
 
-<main class="page {{ if not $hasSidebar }}page--narrow{{ else if not $hasToc }}page--with-sidebar-only{{ end }}">
+<main class="page {{ if not $hasSidebar }}page--narrow{{ else if not $hasRail }}page--with-sidebar-only{{ end }}">
 
   {{ if $hasSidebar }}{{ partial "nav/sidebar.html" $page }}{{ end }}
 
@@ -38,7 +42,23 @@
         </a>
       </p>
     {{ end }}{{ end }}
+
+    {{- /* The rail is hidden below 1100px, so repeat the link here. */ -}}
+    {{ with $issueURL }}
+      <p class="page-issue page-issue--inline">
+        <a href="{{ . }}" target="_blank" rel="noopener">{{ partial "icon-svg.html" "github" }}{{ i18n "reportIssue" | default "Report an issue" }}</a>
+      </p>
+    {{ end }}
   </article>
 
-  {{ if $hasToc }}{{ partial "nav/toc.html" $page }}{{ end }}
+  {{ if $hasRail }}
+  <aside class="toc"{{ if $hasToc }} data-toc{{ end }} aria-label="{{ i18n "onThisPage" }}">
+    {{ with $issueURL }}
+      <p class="page-issue">
+        <a href="{{ . }}" target="_blank" rel="noopener">{{ partial "icon-svg.html" "github" }}{{ i18n "reportIssue" | default "Report an issue" }}</a>
+      </p>
+    {{ end }}
+    {{ if $hasToc }}{{ partial "nav/toc.html" $page }}{{ end }}
+  </aside>
+  {{ end }}
 </main>

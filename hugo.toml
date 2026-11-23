@@ -136,6 +136,8 @@ enableGitInfo = true
   # ---- Repo / edit-on-github --------------------------------------------
   editURL = ""
   repoURL = ""
+  github_repo           = ""   # e.g. "https://github.com/owner/repo" → "Report an issue" link
+  github_issue_template = ""   # optional issue form, e.g. "page-issue.yml"
 
   # ---- Workshop version badge (rendered in the site footer) -------------
   # Set versionBadgeRepo to "owner/repo" on GitHub to render a shields.io
