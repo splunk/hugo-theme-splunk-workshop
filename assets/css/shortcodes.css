@@ -57,7 +57,7 @@
    border stays 5px on every severity so inline text alignment is
    identical across stacked callouts. */
 .callout--tip     { --callout-color: #0d9488; --callout-bg: color-mix(in oklab, #0d9488 10%, transparent); --callout-border: color-mix(in oklab, #0d9488 35%, transparent); }
-.callout--note    { --callout-color: #6b7280; --callout-bg: var(--color-surface);                              --callout-border: var(--color-border); }
+.callout--note    { --callout-color: #475569; --callout-bg: color-mix(in oklab, #475569 10%, transparent); --callout-border: color-mix(in oklab, #475569 35%, transparent); }
 .callout--info    { --callout-color: #0284c7; --callout-bg: color-mix(in oklab, #0284c7 10%, transparent); --callout-border: color-mix(in oklab, #0284c7 35%, transparent); }
 .callout--success { --callout-color: #16a34a; --callout-bg: color-mix(in oklab, #16a34a 10%, transparent); --callout-border: color-mix(in oklab, #16a34a 35%, transparent); }
 
@@ -96,11 +96,17 @@
 /* Dark mode: brighten the quiet severities for contrast on dark
    surfaces. Warning/danger keep their loud light-mode treatment
    (they already pop against dark navy). */
-[data-theme="dark"] .callout--note    { --callout-color: #9ca3af; --callout-bg: var(--color-surface); --callout-border: var(--color-border); }
+[data-theme="dark"] .callout--note    { --callout-color: #94a3b8; --callout-bg: color-mix(in oklab, #94a3b8 12%, transparent); --callout-border: color-mix(in oklab, #94a3b8 35%, transparent); }
 [data-theme="dark"] .callout--info    { --callout-color: #38bdf8; --callout-bg: color-mix(in oklab, #0284c7 14%, transparent); }
 [data-theme="dark"] .callout--tip     { --callout-color: #2dd4bf; --callout-bg: color-mix(in oklab, #0d9488 14%, transparent); }
 [data-theme="dark"] .callout--success { --callout-color: #4ade80; --callout-bg: color-mix(in oklab, #16a34a 14%, transparent); }
 [data-theme="dark"] .callout--warning { --callout-bg: color-mix(in oklab, #ea580c 22%, transparent); }
+/* The brightened dark-mode circles are too light for a white glyph
+   (1.7–2.6:1); the page's dark ink clears the 3:1 graphics minimum. */
+[data-theme="dark"] .callout--note    .callout__icon,
+[data-theme="dark"] .callout--info    .callout__icon,
+[data-theme="dark"] .callout--tip     .callout__icon,
+[data-theme="dark"] .callout--success .callout__icon { color: var(--color-paper); }
 
 /* ---------- Collapsible callout (relearn-compatible expanded notices) ----- */
 details.callout {

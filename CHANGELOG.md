@@ -5,6 +5,13 @@ All notable changes to the Splunk Workshop Theme are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.13.32] - 2026-11-23
+
+### Fixed
+
+- **Note callouts stand out from the page.** The note used the page surface as its background, so it disappeared against the canvas in both modes. It now uses a slate tint and bar like tip, info, and success: `#475569` in light mode and `#94a3b8` in dark mode.
+- **Callout icons are readable in dark mode.** Tip, note, info, and success icons drew a white glyph on a bright circle (1.7–2.6:1). They now use the page's dark ink, which gives 7.4:1 or more.
+
 ## [0.13.31] - 2026-11-23
 
 ### Added
